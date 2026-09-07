@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bolxfxsdhue4p"]
+
+[ext_resource type="Script" uid="uid://cely8r5gxpr7f" path="res://gustavo.gd" id="1_rwi5a"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_0hplv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w6tk4"]
+size = Vector2(38, 62)
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1202967882]
+script = ExtResource("1_rwi5a")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=624356736]
+position = Vector2(17.75, 30.75)
+scale = Vector2(36.5, 62.5)
+texture = SubResource("CanvasTexture_0hplv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1117269634]
+position = Vector2(18, 30.999998)
+shape = SubResource("RectangleShape2D_w6tk4")
