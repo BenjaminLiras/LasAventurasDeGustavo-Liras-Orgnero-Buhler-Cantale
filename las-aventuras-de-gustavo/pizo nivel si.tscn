@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://bxtggodc55idl"]
 
 [ext_resource type="PackedScene" uid="uid://bolxfxsdhue4p" path="res://Gustavo.tscn" id="1_clll0"]
+[ext_resource type="Script" uid="uid://dgpujt7p0qis5" path="res://pizo_nivel_si.gd" id="1_y8mgb"]
 [ext_resource type="Texture2D" uid="uid://cr5gc707f5hek" path="res://icon.svg" id="2_y8mgb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_w6o3f"]
@@ -136,6 +137,7 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_w6o3f")
 
 [node name="Node2D" type="Node2D" unique_id=651118040]
+script = ExtResource("1_y8mgb")
 
 [node name="TileMap" type="TileMap" parent="." unique_id=848261749]
 tile_set = SubResource("TileSet_0hplv")
@@ -151,3 +153,27 @@ tile_set = SubResource("TileSet_0hplv")
 position = Vector2(454, 361)
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=615469867]
+
+[node name="TextEdit4" type="TextEdit" parent="CharacterBody2D/Camera2D" unique_id=432102330]
+offset_left = -573.0
+offset_top = -215.0
+offset_right = -208.0
+offset_bottom = -179.0
+
+[node name="Dash" type="TextEdit" parent="CharacterBody2D/Camera2D" unique_id=720847248]
+offset_left = -577.0
+offset_top = -251.0
+offset_right = -212.0
+offset_bottom = -215.0
+
+[node name="Direccion" type="TextEdit" parent="CharacterBody2D/Camera2D" unique_id=196914211]
+offset_left = -576.0
+offset_top = -287.0
+offset_right = -211.0
+offset_bottom = -251.0
+
+[node name="Velocidad" type="TextEdit" parent="CharacterBody2D/Camera2D" unique_id=1037082357]
+offset_left = -576.0
+offset_top = -322.0
+offset_right = -211.0
+offset_bottom = -286.0
