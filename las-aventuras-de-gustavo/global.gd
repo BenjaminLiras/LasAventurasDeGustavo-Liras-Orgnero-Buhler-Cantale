@@ -12,7 +12,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func setDireccion(direccionParametro : float) -> void :
+func setDireccion(direccionParametro : Vector2) -> void :
 	direccion = direccionParametro
 	
 func setVelocidad(velocidadParametro : Vector2) -> void :
@@ -21,7 +21,7 @@ func setVelocidad(velocidadParametro : Vector2) -> void :
 func setDash(dashParametro : bool) -> void :
 	dash = dashParametro
 
-func getDireccion() -> float :
+func getDireccion() -> Vector2 :
 	return direccion
 	
 func getVelocidad() -> Vector2 :

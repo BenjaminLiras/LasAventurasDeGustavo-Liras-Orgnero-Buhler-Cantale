@@ -12,7 +12,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	$CharacterBody2D/Camera2D/Velocidad.text = "velocidad:" + str(Global.getVelocidad())
 	$CharacterBody2D/Camera2D/Dash.text = "Dash:" + str(Global.getDash())
-	$CharacterBody2D/Camera2D/Direccion.text = "Direccion:" + str(Global.getDireccion())
+	$CharacterBody2D/Camera2D/Direccion.text = "Direccion:x" + str(Global.getDireccion().x) + "y" + str(Global.getDireccion().y)
 
 
 	

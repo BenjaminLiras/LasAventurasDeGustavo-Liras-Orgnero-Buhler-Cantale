@@ -5,7 +5,10 @@
 [sub_resource type="CanvasTexture" id="CanvasTexture_0hplv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6tk4"]
-size = Vector2(38, 62)
+size = Vector2(40, 65)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rwi5a"]
+size = Vector2(66, 91)
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1202967882]
 script = ExtResource("1_rwi5a")
@@ -18,3 +21,13 @@ texture = SubResource("CanvasTexture_0hplv")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1117269634]
 position = Vector2(18, 30.999998)
 shape = SubResource("RectangleShape2D_w6tk4")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=2114695616]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=844606985]
+position = Vector2(18, 30.5)
+shape = SubResource("RectangleShape2D_rwi5a")
+debug_color = Color(0.91536766, 8.20148e-05, 0.71483475, 0.41960785)
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
