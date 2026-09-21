@@ -14,20 +14,46 @@ size = Vector2(66, 91)
 script = ExtResource("1_rwi5a")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=624356736]
-position = Vector2(17.75, 30.75)
+position = Vector2(-0.75, 0.25)
 scale = Vector2(36.5, 62.5)
 texture = SubResource("CanvasTexture_0hplv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1117269634]
-position = Vector2(18, 30.999998)
+position = Vector2(-0.5, 0.4999981)
 shape = SubResource("RectangleShape2D_w6tk4")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=2114695616]
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=844606985]
-position = Vector2(18, 30.5)
+position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_rwi5a")
 debug_color = Color(0.91536766, 8.20148e-05, 0.71483475, 0.41960785)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2062437399]
+
+[node name="TextEdit4" type="TextEdit" parent="Camera2D" unique_id=1710631366]
+offset_left = -575.0
+offset_top = -215.0
+offset_right = -210.0
+offset_bottom = -179.0
+
+[node name="Dash" type="TextEdit" parent="Camera2D" unique_id=565034665]
+offset_left = -576.0
+offset_top = -251.0
+offset_right = -211.0
+offset_bottom = -215.0
+
+[node name="Direccion" type="TextEdit" parent="Camera2D" unique_id=893500267]
+offset_left = -576.0
+offset_top = -287.0
+offset_right = -211.0
+offset_bottom = -251.0
+
+[node name="Velocidad" type="TextEdit" parent="Camera2D" unique_id=1475505269]
+offset_left = -576.0
+offset_top = -322.0
+offset_right = -211.0
+offset_bottom = -286.0
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
