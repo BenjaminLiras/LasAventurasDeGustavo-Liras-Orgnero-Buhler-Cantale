@@ -13,22 +13,29 @@ const FRAMES_IDLE = [Rect2i(218, 110, 96, 160), Rect2i(314, 110, 96, 160), Rect2
 const FRAMES_RUN = [Rect2i(758, 110, 120, 160), Rect2i(878, 110, 100, 160), Rect2i(978, 110, 98, 160), Rect2i(1076, 110, 100, 160), Rect2i(1176, 110, 84, 160), Rect2i(1256, 110, 90, 160), Rect2i(1346, 110, 90, 160), Rect2i(1436, 110, 100, 160)]
 const FRAMES_JUMP = [Rect2i(32, 400, 96, 100), Rect2i(117, 355, 96, 120), Rect2i(227, 325, 96, 135), Rect2i(437, 365, 96, 135)]
 const FRAMES_ATTACK = [Rect2i(620, 350, 96, 150), Rect2i(736, 350, 96, 150), Rect2i(852, 350, 96, 150), Rect2i(966, 350, 104, 150), Rect2i(1085, 350, 102, 150), Rect2i(1207, 350, 96, 150), Rect2i(1324, 350, 96, 150), Rect2i(1410, 350, 100, 150)]
+var vidaMaxima: int = 100
+var duracion_invulnerabilidad: float = 0.5
 
 var DASH_DIRECTION : Vector2
 var direction: Vector2 = Vector2(0,0)
 var ultimaDireccionDeApuntado: Vector2 = Vector2.RIGHT
 var dashActivo = false
 var dashEnCooldown = false
+var vida: int
+var invulnerable := false
 
 func _ready() -> void:
+	vida = vidaMaxima
 	$AnimatedSprite2D.sprite_frames = crear_animaciones()
 	$AnimatedSprite2D.play("quieto")
+	actualizar_vida_ui()
 
 
 func _process(delta: float) -> void:
 	$Camera2D/Velocidad.text = "velocidad:" + str(Global.getVelocidad())
 	$Camera2D/Dash.text = "Dash:" + str(Global.getDash())
 	$Camera2D/Direccion.text = "Direccion:x" + str(Global.getDireccion().x) + "y" + str(Global.getDireccion().y)
+	actualizar_vida_ui()
 
 
 func _physics_process(delta: float) -> void:
@@ -79,6 +86,25 @@ func ataqueSimple() -> void:
 	add_child(ataqueSimple)
 	ataqueSimple.position = ataqueDireccion * 20.0
 	ataqueSimple.global_rotation = ataqueDireccion.angle()
+
+
+func recibir_golpe(cantidad: int = 1) -> void:
+	if cantidad <= 0 or invulnerable or vida <= 0:
+		return
+	vida = maxi(vida - cantidad, 0)
+	actualizar_vida_ui()
+	if vida == 0:
+		queue_free()
+		return
+	invulnerable = true
+	await get_tree().create_timer(duracion_invulnerabilidad).timeout
+	invulnerable = false
+
+
+func actualizar_vida_ui() -> void:
+	var indicador: Label = get_node_or_null("Camera2D/Vida")
+	if indicador != null:
+		indicador.text = "Vida: %d/%d" % [vida, vidaMaxima]
 
 
 func obtenerDireccionDeApuntado() -> Vector2:
@@ -259,3 +285,5 @@ func agregar_pixel_de_fondo(imagen: Image, x: int, y: int, color_fondo: Color, c
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	dashActivo = false
+	if body.has_method("obtener_daño_contacto"):
+		recibir_golpe(int(body.call("obtener_daño_contacto")))
