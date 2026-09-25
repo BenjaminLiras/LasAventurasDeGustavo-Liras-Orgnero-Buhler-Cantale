@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" uid="uid://nhlsudbafumk" path="res://ataqueBase.gd" id="1_ataque"]
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_mdtmo"]
-specular_color = Color(0, 1, 1, 1)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mywey"]
 size = Vector2(32, 65)
 
@@ -13,10 +10,10 @@ collision_layer = 16
 collision_mask = 0
 script = ExtResource("1_ataque")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1138438826]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1138438826]
 position = Vector2(0, -0.5)
-scale = Vector2(31.999998, 65)
-texture = SubResource("CanvasTexture_mdtmo")
+scale = Vector2(2, 2)
+texture_filter = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=366362008]
 position = Vector2(0, -0.49999905)
