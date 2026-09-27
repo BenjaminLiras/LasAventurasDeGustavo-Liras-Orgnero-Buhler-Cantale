@@ -1,0 +1,192 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Theme" path="res://ui/menu_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://ui/main_menu.gd" id="2_script"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Sky" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0431373, 0.0745098, 0.0784314, 1)
+
+[node name="BackgroundImage" type="TextureRect" parent="Background"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="FarTrees" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -360.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+color = Color(0.0627451, 0.129412, 0.0980392, 1)
+
+[node name="NearTrees" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -210.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+color = Color(0.0392157, 0.0941176, 0.0705882, 1)
+
+[node name="Ground" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+color = Color(0.113725, 0.196078, 0.121569, 1)
+
+[node name="GrassLine" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -76.0
+offset_bottom = -62.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+color = Color(0.207843, 0.447059, 0.227451, 1)
+
+[node name="Vignette" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.27451)
+
+[node name="Taxi" type="TextureRect" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -170.0
+offset_top = 20.0
+offset_right = 170.0
+offset_bottom = 150.0
+grow_horizontal = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 150.0
+offset_bottom = 280.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.976471, 0.792157, 0.337255, 1)
+theme_override_colors/font_outline_color = Color(0.0313726, 0.0588235, 0.0470588, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 50
+text = "Las aventuras de\nGUSTAVO"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Character" type="TextureRect" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -320.0
+offset_right = 290.0
+offset_bottom = -20.0
+grow_vertical = 0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MenuButtons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -330.0
+offset_right = 200.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 14
+
+[node name="PlayButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_neighbor_top = NodePath("../ExitButton")
+text = "JUGAR"
+
+[node name="SettingsButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "CONFIGURACIÓN"
+
+[node name="InstructionsButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "INSTRUCCIONES"
+
+[node name="ExitButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_neighbor_bottom = NodePath("../PlayButton")
+text = "SALIR"
+
+[connection signal="pressed" from="MenuButtons/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="MenuButtons/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="MenuButtons/InstructionsButton" to="." method="_on_instructions_button_pressed"]
+[connection signal="pressed" from="MenuButtons/ExitButton" to="." method="_on_exit_button_pressed"]

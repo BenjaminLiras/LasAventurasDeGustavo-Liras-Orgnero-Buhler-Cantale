@@ -1,0 +1,23 @@
+IMÁGENES DEL MENÚ PRINCIPAL
+===========================
+
+Copiá acá tus PNG (pixel art) con estos nombres exactos:
+
+  background.png  -> fondo del bosque / plataformas (recomendado 1152 x 648 o mayor)
+  taxi.png        -> el taxi que va arriba del título (recortado del spritesheet)
+  character.png   -> Gustavo (pose IDLE), va abajo a la izquierda
+
+Después, en Godot:
+
+  1. Abrí res://ui/MainMenu.tscn
+  2. Seleccioná el nodo Background/BackgroundImage y arrastrá background.png
+     a la propiedad "Texture".
+  3. Seleccioná el nodo Taxi y arrastrá taxi.png a "Texture".
+  4. Seleccioná el nodo Character y arrastrá character.png a "Texture".
+  5. Guardá la escena (Ctrl+S).
+
+Los tres nodos ya tienen filtro de textura "Nearest", así que el pixel art
+se va a ver nítido y sin borrosidad.
+
+Si no ponés ninguna imagen, el menú igual funciona: el fondo se dibuja con
+colores planos (cielo oscuro, árboles y pasto).
