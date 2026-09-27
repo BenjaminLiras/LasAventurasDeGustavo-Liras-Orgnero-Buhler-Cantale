@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://pajaro.gd" id="1_pajaro"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cuerpo"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_contacto"]
+radius = 19.0
+
+[node name="Pajaro" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_pajaro")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(2, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_cuerpo")
+
+[node name="AreaDeContacto" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaDeContacto"]
+shape = SubResource("CircleShape2D_contacto")

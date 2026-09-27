@@ -6,6 +6,7 @@ const JUMP_VELOCITY = -400.0
 const ataqueSimpleEscena = preload("res://ataqueBase.tscn")
 const SPRITE_SHEET = preload("res://assets/asstesgustavo.png")
 const DASH_DURATION = 0.3
+const UMBRAL_STICK = 0.2
 const FRAME_WIDTH = 112
 const FRAME_HEIGHT = 160
 
@@ -47,7 +48,9 @@ func _physics_process(delta: float) -> void:
 			velocity.y = JUMP_VELOCITY
 
 	
-	direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	direction = obtenerDireccionDeMovimiento()
+	# Actualiza continuamente el apuntado y conserva la última dirección al soltar el stick.
+	obtenerDireccionDeApuntado()
 
 	if Input.is_action_just_pressed("dash") :
 		dash()
@@ -108,24 +111,43 @@ func actualizar_vida_ui() -> void:
 
 
 func obtenerDireccionDeApuntado() -> Vector2:
-	var direccionStick := Input.get_vector("apuntar_izquierda", "apuntar_derecha", "apuntar_arriba", "apuntar_abajo")
-	if direccionStick.length() >= 0.25:
-		ultimaDireccionDeApuntado = direccionStick.normalized()
+	var mandos := Input.get_connected_joypads()
+	if not mandos.is_empty():
+		var mando := mandos[0]
+		var direccionStick := Vector2(
+			Input.get_joy_axis(mando, JOY_AXIS_RIGHT_X),
+			Input.get_joy_axis(mando, JOY_AXIS_RIGHT_Y)
+		)
+		if direccionStick.length() >= UMBRAL_STICK:
+			ultimaDireccionDeApuntado = direccionStick.normalized()
 		return ultimaDireccionDeApuntado
 
-	if not Input.get_connected_joypads().is_empty():
-		return ultimaDireccionDeApuntado
 	var direccionRaton := (get_global_mouse_position() - global_position).normalized()
 	if direccionRaton != Vector2.ZERO:
 		ultimaDireccionDeApuntado = direccionRaton
 	return ultimaDireccionDeApuntado
 
 
+func obtenerDireccionDeMovimiento() -> Vector2:
+	var direccionTeclado := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var mandos := Input.get_connected_joypads()
+	if mandos.is_empty():
+		return direccionTeclado
+
+	var mando := mandos[0]
+	var stickIzquierdo := Vector2(
+		Input.get_joy_axis(mando, JOY_AXIS_LEFT_X),
+		Input.get_joy_axis(mando, JOY_AXIS_LEFT_Y)
+	)
+	if stickIzquierdo.length() >= UMBRAL_STICK:
+		return stickIzquierdo.limit_length()
+	return direccionTeclado
+
+
 func actualizar_animacion() -> void:
 	var sprite: AnimatedSprite2D = $AnimatedSprite2D
 	if sprite.animation == "ataque" and sprite.is_playing():
 		return
-
 	var animacion := "quieto"
 	if not is_on_floor():
 		animacion = "salto"
