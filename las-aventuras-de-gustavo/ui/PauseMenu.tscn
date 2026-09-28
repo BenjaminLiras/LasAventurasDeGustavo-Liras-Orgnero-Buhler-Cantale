@@ -1,0 +1,152 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://ui/pause_menu.gd" id="1_script"]
+[ext_resource type="Theme" path="res://ui/menu_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/ui/taxi.svg" id="3_taxi"]
+
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+content_margin_left = 36.0
+content_margin_top = 28.0
+content_margin_right = 36.0
+content_margin_bottom = 28.0
+bg_color = Color(0.0627451, 0.109804, 0.180392, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.847059, 0.894118, 0.917647, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+script = ExtResource("1_script")
+
+[node name="Overlay" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+color = Color(0, 0, 0, 0.5)
+
+[node name="CenterContainer" type="CenterContainer" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Overlay/CenterContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelStyle")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Overlay/CenterContainer/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Taxi" type="TextureRect" parent="Overlay/CenterContainer/Panel/VBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+texture = ExtResource("3_taxi")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Titulo" type="Label" parent="Overlay/CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.972549, 0.976471, 0.968627, 1)
+theme_override_font_sizes/font_size = 48
+text = "PAUSA"
+horizontal_alignment = 1
+
+[node name="Continuar" type="Button" parent="Overlay/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(360, 56)
+layout_mode = 2
+text = "CONTINUAR"
+
+[node name="Configuracion" type="Button" parent="Overlay/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(360, 56)
+layout_mode = 2
+text = "CONFIGURACIÓN"
+
+[node name="VolverMenu" type="Button" parent="Overlay/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(360, 56)
+layout_mode = 2
+text = "VOLVER AL MENÚ"
+
+[node name="Salir" type="Button" parent="Overlay/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(360, 56)
+layout_mode = 2
+text = "SALIR AL ESCRITORIO"
+
+[node name="ConfiguracionCenter" type="CenterContainer" parent="Overlay"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Overlay/ConfiguracionCenter"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelStyle")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Overlay/ConfiguracionCenter/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Titulo" type="Label" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "CONFIGURACIÓN"
+horizontal_alignment = 1
+
+[node name="FilaVolumen" type="HBoxContainer" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LabelVolumen" type="Label" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaVolumen"]
+layout_mode = 2
+text = "Volumen"
+
+[node name="SliderVolumen" type="HSlider" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaVolumen"]
+custom_minimum_size = Vector2(320, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="FilaPantalla" type="HBoxContainer" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LabelPantalla" type="Label" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaPantalla"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Pantalla completa"
+
+[node name="CheckPantalla" type="CheckButton" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaPantalla"]
+layout_mode = 2
+
+[node name="VolverConfig" type="Button" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+text = "VOLVER"
+
+[connection signal="pressed" from="Overlay/CenterContainer/Panel/VBoxContainer/Continuar" to="." method="_on_continuar_pressed"]
+[connection signal="pressed" from="Overlay/CenterContainer/Panel/VBoxContainer/Configuracion" to="." method="_on_configuracion_pressed"]
+[connection signal="pressed" from="Overlay/CenterContainer/Panel/VBoxContainer/VolverMenu" to="." method="_on_volver_menu_pressed"]
+[connection signal="pressed" from="Overlay/CenterContainer/Panel/VBoxContainer/Salir" to="." method="_on_salir_pressed"]
+[connection signal="value_changed" from="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaVolumen/SliderVolumen" to="." method="_on_slider_volumen_value_changed"]
+[connection signal="toggled" from="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaPantalla/CheckPantalla" to="." method="_on_check_pantalla_toggled"]
+[connection signal="pressed" from="Overlay/ConfiguracionCenter/Panel/VBoxContainer/VolverConfig" to="." method="_on_volver_config_pressed"]

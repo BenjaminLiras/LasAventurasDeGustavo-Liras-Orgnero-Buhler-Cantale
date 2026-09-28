@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cr5gc707f5hek" path="res://icon.svg" id="5_eh6km"]
 [ext_resource type="Texture2D" uid="uid://ccdsp07lbxj65" path="res://assets/Mossy Tileset/Mossy - Decorations&Hazards.png" id="22_ldkg1"]
 [ext_resource type="PackedScene" path="res://Pajaro.tscn" id="23_pajaro"]
+[ext_resource type="PackedScene" path="res://ui/PauseMenu.tscn" id="24_pause"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p31r2"]
 texture = ExtResource("22_ldkg1")
@@ -221,3 +222,5 @@ texture = ExtResource("5_eh6km")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1906875108]
 position = Vector2(2, -4)
 shape = SubResource("RectangleShape2D_reijt")
+
+[node name="PauseMenu" parent="." instance=ExtResource("24_pause")]
