@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://ccdsp07lbxj65" path="res://assets/Mossy Tileset/Mossy - Decorations&Hazards.png" id="22_ldkg1"]
 [ext_resource type="PackedScene" path="res://Pajaro.tscn" id="23_pajaro"]
 [ext_resource type="PackedScene" path="res://ui/PauseMenu.tscn" id="24_pause"]
+[ext_resource type="PackedScene" path="res://EnemigoNavajero.tscn" id="25_enemigo_navajero"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p31r2"]
 texture = ExtResource("22_ldkg1")
@@ -3301,6 +3302,9 @@ collision_mask = 9
 
 [node name="PajaroIntermedio" parent="." unique_id=1690533377 instance=ExtResource("23_pajaro")]
 position = Vector2(4820, 315)
+
+[node name="EnemigoNavajero" parent="." instance=ExtResource("25_enemigo_navajero")]
+position = Vector2(690, 361)
 
 [node name="Pisos" type="TileMapLayer" parent="." unique_id=442980951]
 scale = Vector2(0.23539612, 0.23539612)

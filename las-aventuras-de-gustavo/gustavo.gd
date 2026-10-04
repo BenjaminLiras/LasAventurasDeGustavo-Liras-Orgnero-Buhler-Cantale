@@ -4,7 +4,7 @@ extends CharacterBody2D
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 const ataqueSimpleEscena = preload("res://ataqueBase.tscn")
-const SPRITE_SHEET = preload("res://assets/asstesgustavo.png")
+const SPRITE_SHEET = preload("res://assets/asstesgustavo_sin_fondo.png")
 const DASH_DURATION = 0.3
 const UMBRAL_STICK = 0.2
 const FRAME_WIDTH = 112
@@ -220,135 +220,12 @@ func agregar_animacion(frames: SpriteFrames, imagen_original: Image, nombre: Str
 
 	for region in regiones:
 		var imagen_cuadro := imagen_original.get_region(region)
-		imagen_cuadro.convert(Image.FORMAT_RGBA8)
-		hacer_fondo_transparente(imagen_cuadro)
-		quitar_componentes_separados(imagen_cuadro)
 		var limites := imagen_cuadro.get_used_rect()
 		var imagen_normalizada := Image.create(FRAME_WIDTH, FRAME_HEIGHT, false, Image.FORMAT_RGBA8)
 		imagen_normalizada.fill(Color.TRANSPARENT)
 		var destino := Vector2i(floori(float(FRAME_WIDTH - limites.size.x) / 2.0), FRAME_HEIGHT - limites.size.y - 3)
 		imagen_normalizada.blit_rect(imagen_cuadro, limites, destino)
 		frames.add_frame(nombre, ImageTexture.create_from_image(imagen_normalizada))
-
-
-func quitar_componentes_separados(imagen: Image) -> void:
-	var ancho := imagen.get_width()
-	var alto := imagen.get_height()
-	var identificadores: Array[int] = []
-	identificadores.resize(ancho * alto)
-	identificadores.fill(0)
-	var identificador_mayor := 0
-	var tamano_mayor := 0
-	var proximo_identificador := 0
-
-	for indice_inicial in ancho * alto:
-		var color_inicial := imagen.get_pixel(indice_inicial % ancho, floori(float(indice_inicial) / float(ancho)))
-		if color_inicial.a == 0.0 or identificadores[indice_inicial] != 0:
-			continue
-		proximo_identificador += 1
-		var tamano_componente := 1
-		var cola: Array[int] = [indice_inicial]
-		identificadores[indice_inicial] = proximo_identificador
-		var siguiente := 0
-		while siguiente < cola.size():
-			var indice := cola[siguiente]
-			siguiente += 1
-			var x := indice % ancho
-			var y: int = floori(float(indice) / float(ancho))
-			if x > 0:
-				tamano_componente += agregar_pixel_de_componente(imagen, x - 1, y, ancho, proximo_identificador, identificadores, cola)
-			if x < ancho - 1:
-				tamano_componente += agregar_pixel_de_componente(imagen, x + 1, y, ancho, proximo_identificador, identificadores, cola)
-			if y > 0:
-				tamano_componente += agregar_pixel_de_componente(imagen, x, y - 1, ancho, proximo_identificador, identificadores, cola)
-			if y < alto - 1:
-				tamano_componente += agregar_pixel_de_componente(imagen, x, y + 1, ancho, proximo_identificador, identificadores, cola)
-
-		if tamano_componente > tamano_mayor:
-			tamano_mayor = tamano_componente
-			identificador_mayor = proximo_identificador
-
-	for indice in ancho * alto:
-		if identificadores[indice] != 0 and identificadores[indice] != identificador_mayor:
-			imagen.set_pixel(indice % ancho, floori(float(indice) / float(ancho)), Color.TRANSPARENT)
-
-
-func agregar_pixel_de_componente(imagen: Image, x: int, y: int, ancho: int, identificador: int, identificadores: Array[int], cola: Array[int]) -> int:
-	var indice := y * ancho + x
-	if identificadores[indice] != 0 or imagen.get_pixel(x, y).a == 0.0:
-		return 0
-	identificadores[indice] = identificador
-	cola.append(indice)
-	return 1
-
-
-func hacer_fondo_transparente(imagen: Image) -> void:
-	var ancho := imagen.get_width()
-	var alto := imagen.get_height()
-	var color_fondo := obtener_color_del_fondo(imagen)
-	var cola: Array[int] = []
-
-	for x in ancho:
-		agregar_pixel_de_fondo(imagen, x, 0, color_fondo, cola)
-		agregar_pixel_de_fondo(imagen, x, alto - 1, color_fondo, cola)
-	for y in alto:
-		agregar_pixel_de_fondo(imagen, 0, y, color_fondo, cola)
-		agregar_pixel_de_fondo(imagen, ancho - 1, y, color_fondo, cola)
-
-	var siguiente := 0
-	while siguiente < cola.size():
-		var indice := cola[siguiente]
-		siguiente += 1
-		var x := indice % ancho
-		var y: int = floori(float(indice) / float(ancho))
-		if x > 0:
-			agregar_pixel_de_fondo(imagen, x - 1, y, color_fondo, cola)
-		if x < ancho - 1:
-			agregar_pixel_de_fondo(imagen, x + 1, y, color_fondo, cola)
-		if y > 0:
-			agregar_pixel_de_fondo(imagen, x, y - 1, color_fondo, cola)
-		if y < alto - 1:
-			agregar_pixel_de_fondo(imagen, x, y + 1, color_fondo, cola)
-
-
-func obtener_color_del_fondo(imagen: Image) -> Color:
-	var rojos: Array[float] = []
-	var verdes: Array[float] = []
-	var azules: Array[float] = []
-	var ancho := imagen.get_width()
-	var alto := imagen.get_height()
-
-	for x in range(0, ancho, 4):
-		agregar_color_borde(imagen, x, 0, rojos, verdes, azules)
-		agregar_color_borde(imagen, x, alto - 1, rojos, verdes, azules)
-	for y in range(0, alto, 4):
-		agregar_color_borde(imagen, 0, y, rojos, verdes, azules)
-		agregar_color_borde(imagen, ancho - 1, y, rojos, verdes, azules)
-
-	rojos.sort()
-	verdes.sort()
-	azules.sort()
-	var medio := floori(float(rojos.size()) / 2.0)
-	return Color(rojos[medio], verdes[medio], azules[medio])
-
-
-func agregar_color_borde(imagen: Image, x: int, y: int, rojos: Array[float], verdes: Array[float], azules: Array[float]) -> void:
-	var color := imagen.get_pixel(x, y)
-	rojos.append(color.r)
-	verdes.append(color.g)
-	azules.append(color.b)
-
-
-func agregar_pixel_de_fondo(imagen: Image, x: int, y: int, color_fondo: Color, cola: Array[int]) -> void:
-	var color := imagen.get_pixel(x, y)
-	if color.a > 0.0 and Vector3(color.r - color_fondo.r, color.g - color_fondo.g, color.b - color_fondo.b).length() < 0.085:
-		imagen.set_pixel(x, y, Color.TRANSPARENT)
-		cola.append(y * imagen.get_width() + x)
-
-
-
-
-
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	dashActivo = false
 	if body.has_method("obtener_daño_contacto"):
