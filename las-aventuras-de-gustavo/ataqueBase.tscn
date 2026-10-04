@@ -7,7 +7,7 @@ size = Vector2(32, 65)
 
 [node name="AtaqueBase" type="Area2D" unique_id=1383470958]
 collision_layer = 16
-collision_mask = 2
+collision_mask = 10
 script = ExtResource("1_ataque")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1138438826]

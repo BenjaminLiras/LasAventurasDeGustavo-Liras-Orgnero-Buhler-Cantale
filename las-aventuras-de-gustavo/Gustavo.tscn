@@ -3,25 +3,28 @@
 [ext_resource type="Script" uid="uid://cely8r5gxpr7f" path="res://gustavo.gd" id="1_rwi5a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6tk4"]
-size = Vector2(40, 65)
+size = Vector2(48, 78)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rwi5a"]
-size = Vector2(66, 91)
+size = Vector2(80, 109)
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1202967882 groups=["jugador"]]
+collision_layer = 1
+collision_mask = 14
 script = ExtResource("1_rwi5a")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=624356736]
 texture_filter = 1
 position = Vector2(-0.75, 0.25)
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.6, 0.6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1117269634]
 position = Vector2(-0.5, 0.4999981)
 shape = SubResource("RectangleShape2D_w6tk4")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=2114695616]
-collision_mask = 2
+collision_layer = 1
+collision_mask = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=844606985]
 position = Vector2(-0.5, 0)

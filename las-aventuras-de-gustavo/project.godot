@@ -110,7 +110,11 @@ apuntar_abajo={
 
 [layer_names]
 
-2d_physics/layer_5="Ataque PJ"
+2d_physics/layer_1="Jugador"
+2d_physics/layer_2="Enemigos"
+2d_physics/layer_3="Escenario"
+2d_physics/layer_4="Objetos rompibles"
+2d_physics/layer_5="Ataque del jugador"
 
 [physics]
 
