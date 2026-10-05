@@ -1,7 +1,7 @@
 extends Control
 
 # Cambia estas rutas si mueves las escenas.
-const GAME_SCENE := "res://nivel1.tscn"
+const GAME_SCENE := "res://Niveles/nivel1/nivel1.tscn"
 const SETTINGS_SCENE := "res://ui/SettingsMenu.tscn"
 const INSTRUCTIONS_SCENE := "res://ui/InstructionsMenu.tscn"
 

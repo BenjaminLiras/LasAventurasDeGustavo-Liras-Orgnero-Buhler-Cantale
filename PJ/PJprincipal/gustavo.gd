@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
-const ataqueSimpleEscena = preload("res://ataqueBase.tscn")
+const ataqueSimpleEscena = preload("res://PJ/PJprincipal/Gustavo.tscn")
 const SPRITE_SHEET = preload("res://assets/asstesgustavo_sin_fondo.png")
 const DASH_DURATION = 0.3
 const UMBRAL_STICK = 0.2

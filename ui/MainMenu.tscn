@@ -1,11 +1,11 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://usvqy752kf8t"]
 
-[ext_resource type="Script" path="res://ui/main_menu.gd" id="1_script"]
-[ext_resource type="Theme" path="res://ui/menu_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/ui/taxi.svg" id="3_taxi"]
-[ext_resource type="Texture2D" path="res://assets/ui/gustavo.svg" id="4_character"]
+[ext_resource type="Script" uid="uid://cf26k3ovxn25h" path="res://ui/main_menu.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://w5xhdmnjwdsn" path="res://ui/menu_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://daqlaljiqttw2" path="res://assets/ui/taxi.svg" id="3_taxi"]
+[ext_resource type="Texture2D" uid="uid://dy2m3wox8w15r" path="res://assets/ui/gustavo.svg" id="4_character"]
 
-[node name="MainMenu" type="Control"]
+[node name="MainMenu" type="Control" unique_id=1824850005]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,7 +15,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=163202172]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,7 +24,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0627451, 0.129412, 0.0941176, 1)
 
-[node name="BackgroundImage" type="TextureRect" parent="Background"]
+[node name="BackgroundImage" type="TextureRect" parent="Background" unique_id=801714495]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
@@ -35,22 +35,25 @@ grow_vertical = 2
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Taxi" type="TextureRect" parent="."]
+[node name="Taxi" type="TextureRect" parent="." unique_id=327599225]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
+anchor_bottom = 1.0
 offset_left = -110.0
 offset_top = 8.0
 offset_right = 110.0
 offset_bottom = 118.0
 grow_horizontal = 2
+grow_vertical = 0
 texture = ExtResource("3_taxi")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1853349075]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -65,7 +68,7 @@ text = "Las aventuras de GUSTAVO"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Character" type="TextureRect" parent="."]
+[node name="Character" type="TextureRect" parent="." unique_id=1928661403]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 2
@@ -80,7 +83,7 @@ texture = ExtResource("4_character")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MenuButtons" type="VBoxContainer" parent="."]
+[node name="MenuButtons" type="VBoxContainer" parent="." unique_id=1188959645]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -95,22 +98,22 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 16
 
-[node name="PlayButton" type="Button" parent="MenuButtons"]
+[node name="PlayButton" type="Button" parent="MenuButtons" unique_id=1276813176]
 custom_minimum_size = Vector2(360, 62)
 layout_mode = 2
 text = "JUGAR"
 
-[node name="SettingsButton" type="Button" parent="MenuButtons"]
+[node name="SettingsButton" type="Button" parent="MenuButtons" unique_id=1024085342]
 custom_minimum_size = Vector2(360, 62)
 layout_mode = 2
 text = "CONFIGURACIÓN"
 
-[node name="InstructionsButton" type="Button" parent="MenuButtons"]
+[node name="InstructionsButton" type="Button" parent="MenuButtons" unique_id=1931639593]
 custom_minimum_size = Vector2(360, 62)
 layout_mode = 2
 text = "INSTRUCCIONES"
 
-[node name="ExitButton" type="Button" parent="MenuButtons"]
+[node name="ExitButton" type="Button" parent="MenuButtons" unique_id=1382154747]
 custom_minimum_size = Vector2(360, 62)
 layout_mode = 2
 text = "SALIR"
