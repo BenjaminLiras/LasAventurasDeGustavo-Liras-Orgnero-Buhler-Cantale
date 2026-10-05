@@ -50,7 +50,6 @@ func perseguir_o_atacar() -> void:
 	direccion = signf(jugador.global_position.x - global_position.x)
 	if direccion == 0.0:
 		direccion = 1.0
-
 	if absf(jugador.global_position.x - global_position.x) > ALCANCE_ATAQUE:
 		velocity.x = direccion * VELOCIDAD
 		reproducir_animacion("caminar")
