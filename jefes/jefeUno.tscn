@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://jefes/jefeUno.gd" id="1_jefe"]
+[ext_resource type="Texture2D" path="res://assets/jefe/benjamin.png" id="2_benjamin"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_reposo_1"]
+atlas = ExtResource("2_benjamin")
+region = Rect2(0, 0, 443, 887)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_reposo_2"]
+atlas = ExtResource("2_benjamin")
+region = Rect2(419, 0, 443, 887)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_benjamin"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_reposo_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_reposo_2")
+}],
+"loop": true,
+"name": &"reposo",
+"speed": 1.5
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_benjamin"]
+radius = 10.0
+height = 86.0
+
+[node name="Benjamin" type="CharacterBody2D" groups=["enemigo"]]
+collision_layer = 2
+collision_mask = 13
+script = ExtResource("1_jefe")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -56)
+scale = Vector2(0.2, 0.2)
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_benjamin")
+animation = &"reposo"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -40)
+shape = SubResource("CapsuleShape2D_benjamin")
