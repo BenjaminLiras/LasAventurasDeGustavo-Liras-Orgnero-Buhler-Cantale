@@ -3,26 +3,70 @@
 [ext_resource type="Script" path="res://jefes/jefeUno.gd" id="1_jefe"]
 [ext_resource type="Texture2D" path="res://assets/jefe/benjamin.png" id="2_benjamin"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_reposo_1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_pose_1"]
 atlas = ExtResource("2_benjamin")
 region = Rect2(0, 0, 443, 887)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_reposo_2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_pose_2"]
 atlas = ExtResource("2_benjamin")
 region = Rect2(419, 0, 443, 887)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pose_3"]
+atlas = ExtResource("2_benjamin")
+region = Rect2(838, 0, 443, 887)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pose_4"]
+atlas = ExtResource("2_benjamin")
+region = Rect2(1322, 0, 443, 887)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_benjamin"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_reposo_1")
+"texture": SubResource("AtlasTexture_pose_1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_reposo_2")
+"texture": SubResource("AtlasTexture_pose_2")
 }],
 "loop": true,
-"name": &"reposo",
-"speed": 1.5
+"name": &"quieto",
+"speed": 1.75
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pose_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pose_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pose_3")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_pose_4")
+}],
+"loop": false,
+"name": &"atacar",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pose_3")
+}],
+"loop": false,
+"name": &"herido",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pose_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pose_3")
+}],
+"loop": false,
+"name": &"morir",
+"speed": 4.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_benjamin"]
@@ -39,7 +83,7 @@ position = Vector2(0, -56)
 scale = Vector2(0.2, 0.2)
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_benjamin")
-animation = &"reposo"
+animation = &"quieto"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -40)

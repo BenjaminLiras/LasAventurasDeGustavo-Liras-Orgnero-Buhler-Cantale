@@ -1,8 +1,8 @@
 [gd_scene format=4 uid="uid://bqgib8sdrk46h"]
 
-[ext_resource type="PackedScene" uid="uid://bolxfxsdhue4p" path="res://Gustavo.tscn" id="1_clll0"]
+[ext_resource type="PackedScene" uid="uid://bolxfxsdhue4p" path="res://PJ/PJprincipal/Gustavo.tscn" id="1_clll0"]
 [ext_resource type="Texture2D" uid="uid://cfd3jdsjelabm" path="res://assets/Mossy Tileset/Mossy - TileSet.png" id="2_clll0"]
-[ext_resource type="Script" uid="uid://ba6b34md7kfuk" path="res://static_body_2d.gd" id="4_1ulo1"]
+[ext_resource type="Script" uid="uid://ba6b34md7kfuk" path="res://piezasEscenario/bloque/static_body_2d.gd" id="4_1ulo1"]
 [ext_resource type="Texture2D" uid="uid://cr5gc707f5hek" path="res://icon.svg" id="5_eh6km"]
 [ext_resource type="Texture2D" uid="uid://ccdsp07lbxj65" path="res://assets/Mossy Tileset/Mossy - Decorations&Hazards.png" id="22_ldkg1"]
 
