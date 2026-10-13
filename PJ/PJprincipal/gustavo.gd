@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
-const ataqueSimpleEscena = preload("res://PJ/PJprincipal/Gustavo.tscn")
+const ataqueSimpleEscena = preload("res://PJ/ataqueSimple/ataqueBase.tscn")
 const SPRITE_SHEET = preload("res://assets/asstesgustavo_sin_fondo.png")
 const DASH_DURATION = 0.3
 const UMBRAL_STICK = 0.2
@@ -11,6 +11,11 @@ const FRAME_WIDTH = 112
 const FRAME_HEIGHT = 160
 const CAPA_COLISION_PLATAFORMA = 4
 const TIEMPO_MAXIMO_CAIDA_PLATAFORMA = 0.75
+const CAPA_COLISION_ENEMIGOS = 2
+const VENTANA_COMBO = 0.1
+const COOLDOWN_ATAQUE_SIMPLE = 0.2
+const DANIO_ATAQUE_COMBO = 3
+const ESCALA_ATAQUE_COMBO = 1.5
 
 const FRAMES_IDLE = [Rect2i(218, 110, 96, 160), Rect2i(314, 110, 96, 160), Rect2i(410, 110, 96, 160), Rect2i(506, 110, 96, 160), Rect2i(602, 110, 96, 160)]
 const FRAMES_RUN = [Rect2i(758, 110, 120, 160), Rect2i(878, 110, 100, 160), Rect2i(978, 110, 98, 160), Rect2i(1076, 110, 100, 160), Rect2i(1176, 110, 84, 160), Rect2i(1256, 110, 90, 160), Rect2i(1346, 110, 90, 160), Rect2i(1436, 110, 100, 160)]
@@ -26,7 +31,16 @@ var dashActivo: bool = false
 var dashEnCooldown: bool = false
 var dash_salio_del_suelo: bool = false
 var vida: int
-var invulnerable := false
+var invulnerable_por_golpe := false
+var intangible_por_dash := false
+var tiempo_desde_dash: float = INF
+var cooldown_ataque_simple := 0.0
+var invulnerable: bool:
+	get:
+		return invulnerable_por_golpe or intangible_por_dash
+	set(valor):
+		invulnerable_por_golpe = valor
+var muerto := false
 var cayendo_a_traves_de_plataforma: bool = false
 var objetivo_y_caida: float = 0.0
 var tiempo_caida: float = 0.0
@@ -40,18 +54,13 @@ func _ready() -> void:
 	actualizar_vida_ui()
 
 
-func _process(delta: float) -> void:
-	$Camera2D/Velocidad.text = "velocidad:" + str(Global.getVelocidad())
-	$Camera2D/Dash.text = "Dash:" + str(Global.getDash())
-	$Camera2D/Direccion.text = "Direccion:x" + str(Global.getDireccion().x) + "y" + str(Global.getDireccion().y)
-	var estado_capa_plataformas: String = "ACTIVA" if get_collision_mask_value(CAPA_COLISION_PLATAFORMA) else "DESACTIVADA"
-	var estado_caida: String = "SI" if cayendo_a_traves_de_plataforma else "NO"
-	var estado_ascenso: String = "SI" if atravesando_plataforma_al_subir else "NO"
-	$Camera2D/EstadoPlataformas.text = "Capa: %s | Caida: %s\nAscenso atravesable: %s" % [estado_capa_plataformas, estado_caida, estado_ascenso]
+func _process(_delta: float) -> void:
 	actualizar_vida_ui()
 
 
 func _physics_process(delta: float) -> void:
+	if muerto:
+		return
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
@@ -66,11 +75,16 @@ func _physics_process(delta: float) -> void:
 	# Actualiza continuamente el apuntado y conserva la última dirección al soltar el stick.
 	obtenerDireccionDeApuntado()
 
-	if Input.is_action_just_pressed("dash") :
+	cooldown_ataque_simple = maxf(cooldown_ataque_simple - delta, 0.0)
+	tiempo_desde_dash += delta
+	if Input.is_action_just_pressed("dash"):
 		dash()
 		
-	if Input.is_action_just_pressed("ataqueSimple") :
-		ataqueSimple()
+	if Input.is_action_just_pressed("ataqueSimple"):
+		var es_combo := tiempo_desde_dash <= VENTANA_COMBO
+		if es_combo:
+			tiempo_desde_dash = INF
+		ataqueSimple(es_combo)
 	if !dashEnCooldown:
 		if direction:
 			velocity.x = direction.x * SPEED
@@ -122,17 +136,33 @@ func dash() -> void:
 	dash_salio_del_suelo = not is_on_floor()
 	DASH_DIRECTION = obtenerDireccionDeApuntado()
 	velocity = DASH_DIRECTION * 700.0
+	tiempo_desde_dash = 0.0
+	cambiar_intangibilidad_dash(true)
 	await get_tree().create_timer(DASH_DURATION).timeout
 	dashActivo = false
+	cambiar_intangibilidad_dash(false)
 
-func ataqueSimple() -> void:
+func ataqueSimple(combo: bool = false) -> void:
+	if cooldown_ataque_simple > 0.0:
+		return
+	cooldown_ataque_simple = COOLDOWN_ATAQUE_SIMPLE
 	var ataqueDireccion := obtenerDireccionDeApuntado()
 	$AnimatedSprite2D.play("ataque")
 	$AnimatedSprite2D.flip_h = ataqueDireccion.x < 0.0
 	var ataqueSimple := ataqueSimpleEscena.instantiate() as Area2D
+	if combo:
+		ataqueSimple.set("daño", DANIO_ATAQUE_COMBO)
+		ataqueSimple.scale = Vector2.ONE * ESCALA_ATAQUE_COMBO
 	add_child(ataqueSimple)
 	ataqueSimple.position = ataqueDireccion * 20.0
 	ataqueSimple.global_rotation = ataqueDireccion.angle()
+
+
+func cambiar_intangibilidad_dash(activa: bool) -> void:
+	intangible_por_dash = activa
+	set_collision_mask_value(CAPA_COLISION_ENEMIGOS, not activa)
+	$Area2D.set_collision_mask_value(CAPA_COLISION_ENEMIGOS, not activa)
+	$AnimatedSprite2D.modulate.a = 0.45 if activa else 1.0
 
 
 func recibir_golpe(cantidad: int = 1) -> void:
@@ -141,17 +171,70 @@ func recibir_golpe(cantidad: int = 1) -> void:
 	vida = maxi(vida - cantidad, 0)
 	actualizar_vida_ui()
 	if vida == 0:
-		queue_free()
+		morir()
 		return
 	invulnerable = true
+	animar_impacto()
 	await get_tree().create_timer(duracion_invulnerabilidad).timeout
-	invulnerable = false
+	if not muerto:
+		invulnerable = false
+
+
+func morir() -> void:
+	if muerto:
+		return
+	muerto = true
+	velocity = Vector2.ZERO
+	dashActivo = false
+	$AnimatedSprite2D.modulate = Color(0.8, 0.25, 0.25, 0.7)
+	await get_tree().create_timer(0.65).timeout
+	if not is_inside_tree():
+		return
+	global_position = Global.punto_reaparicion
+	velocity = Vector2.ZERO
+	vida = vidaMaxima
+	dashEnCooldown = false
+	var tiempo_recarga_dash = 0.0
+	invulnerable = true
+	muerto = false
+	$AnimatedSprite2D.modulate = Color.WHITE
+	actualizar_vida_ui()
+	await get_tree().create_timer(1.0).timeout
+	if is_inside_tree():
+		invulnerable = false
+
+
+func animar_impacto() -> void:
+	var sprite: AnimatedSprite2D = $AnimatedSprite2D
+	var tween := create_tween()
+	tween.tween_property(sprite, "modulate", Color(1.0, 0.35, 0.35), 0.06)
+	tween.parallel().tween_property(sprite, "scale", Vector2(0.72, 0.48), 0.06)
+	tween.tween_property(sprite, "modulate", Color.WHITE, 0.14)
+	tween.parallel().tween_property(sprite, "scale", Vector2(0.6, 0.6), 0.14)
+
+
+func obtener_fragmento_vida() -> void:
+	vidaMaxima += 20
+	vida = vidaMaxima
+	actualizar_vida_ui()
 
 
 func actualizar_vida_ui() -> void:
-	var indicador: Label = get_node_or_null("Camera2D/Vida")
-	if indicador != null:
-		indicador.text = "Vida: %d/%d" % [vida, vidaMaxima]
+	var barra: ProgressBar = get_node_or_null("Camera2D/HUD/Vida")
+	var texto_vida: Label = get_node_or_null("Camera2D/HUD/VidaTexto")
+	var texto_dash: Label = get_node_or_null("Camera2D/HUD/Dash")
+	if barra != null:
+		barra.max_value = vidaMaxima
+		barra.value = vida
+	if texto_vida != null:
+		texto_vida.text = "VIDA %d / %d" % [vida, vidaMaxima]
+	if texto_dash != null:
+		if dashActivo:
+			texto_dash.text = "DASH: EN USO"
+		elif dashEnCooldown:
+			texto_dash.text = "DASH: RECARGANDO"
+		else:
+			texto_dash.text = "DASH: LISTO"
 
 
 func obtenerDireccionDeApuntado() -> Vector2:

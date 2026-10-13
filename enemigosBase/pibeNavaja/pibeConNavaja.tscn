@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://dxpp5drsh5e02" path="res://pibeConNavaja.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://dxpp5drsh5e02" path="res://enemigosBase/pibeNavaja/pibeConNavaja.gd" id="1_enemy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_enemy"]
 radius = 10.0
@@ -26,3 +26,11 @@ points = PackedVector2Array(0, 0, 8, -1, 20, -5)
 width = 3.0
 default_color = Color(0.82, 0.88, 0.95, 1)
 visible = false
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(0, -32)
+enabled = true
+exclude_parent = true
+collision_mask = 13
+collide_with_areas = false
+target_position = Vector2(1, 0)

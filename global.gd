@@ -1,5 +1,6 @@
 extends Node
 
+var punto_reaparicion: Vector2 = Vector2.ZERO
 var dash: bool = false
 var direccion: Vector2 = Vector2.ZERO
 var velocidad: Vector2 = Vector2.ZERO

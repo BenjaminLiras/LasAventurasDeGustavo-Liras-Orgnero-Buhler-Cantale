@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://chk8br0ub8isg"]
 
-[ext_resource type="Script" uid="uid://nhlsudbafumk" path="res://ataqueBase.gd" id="1_ataque"]
+[ext_resource type="Script" uid="uid://nhlsudbafumk" path="res://PJ/ataqueSimple/ataqueBase.gd" id="1_ataque"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mywey"]
 size = Vector2(32, 65)

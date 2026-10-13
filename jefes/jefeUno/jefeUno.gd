@@ -63,7 +63,7 @@ const ANTICIPACION_ATAQUE_DISTANCIA: float = 0.45
 const DURACION_EJECUCION_ATAQUE_DISTANCIA: float = 0.16
 const DURACION_RECUPERACION_ATAQUE_DISTANCIA: float = 0.65
 const ESPERA_ATAQUE_DISTANCIA: float = 1.0
-const ESCENA_PROYECTIL_DISTANCIA: PackedScene = preload("res://jefes/proyectilBenjamin.tscn")
+const ESCENA_PROYECTIL_DISTANCIA: PackedScene = preload("res://jefes/jefeUno/proyectilBenjamin.tscn")
 
 @export var danio_extra_brazo: int = 1
 @export var danio_extra_vulnerable: int = 1

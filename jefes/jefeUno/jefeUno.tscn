@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dq32qfr4g3md6"]
 
-[ext_resource type="Script" uid="uid://cfd7rc8bjgksi" path="res://jefes/jefeUno.gd" id="1_jefe"]
+[ext_resource type="Script" uid="uid://cfd7rc8bjgksi" path="res://jefes/jefeUno/jefeUno.gd" id="1_jefe"]
 [ext_resource type="Texture2D" uid="uid://b4wk5i40njqn4" path="res://assets/jefe/benjamin.png" id="2_benjamin"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pose_1"]

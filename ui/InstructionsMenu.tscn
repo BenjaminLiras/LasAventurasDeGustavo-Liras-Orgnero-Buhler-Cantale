@@ -70,8 +70,8 @@ theme_override_constants/line_spacing = 10
 text = "A / Flecha izquierda  -  Moverse a la izquierda
 D / Flecha derecha  -  Moverse a la derecha
 W / Espacio  -  Saltar
-Shift  -  Dash
-Click izquierdo  -  Atacar
+L / Espacio  -  Dash
+O  -  Atacar
 ESC  -  Pausa"
 horizontal_alignment = 1
 vertical_alignment = 1

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bolxfxsdhue4p"]
 
-[ext_resource type="Script" uid="uid://cely8r5gxpr7f" path="res://gustavo.gd" id="1_rwi5a"]
+[ext_resource type="Script" uid="uid://cely8r5gxpr7f" path="res://PJ/PJprincipal/gustavo.gd" id="1_rwi5a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6tk4"]
 size = Vector2(48, 78)
@@ -33,36 +33,28 @@ debug_color = Color(0.91536766, 8.20148e-05, 0.71483475, 0.41960785)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2062437399]
 
-[node name="Vida" type="Label" parent="Camera2D" unique_id=1710631366]
-offset_left = -575.0
-offset_top = -215.0
-offset_right = -210.0
-offset_bottom = -179.0
-text = "Vida: 5/5"
+[node name="HUD" type="VBoxContainer" parent="Camera2D"]
+offset_left = -560.0
+offset_top = -310.0
+offset_right = -300.0
+offset_bottom = -230.0
+theme_override_constants/separation = 4
 
-[node name="Dash" type="TextEdit" parent="Camera2D" unique_id=565034665]
-offset_left = -576.0
-offset_top = -251.0
-offset_right = -211.0
-offset_bottom = -215.0
+[node name="Vida" type="ProgressBar" parent="Camera2D/HUD"]
+custom_minimum_size = Vector2(240, 22)
+layout_mode = 2
+max_value = 100.0
+value = 100.0
+show_percentage = false
 
-[node name="Direccion" type="TextEdit" parent="Camera2D" unique_id=893500267]
-offset_left = -576.0
-offset_top = -287.0
-offset_right = -211.0
-offset_bottom = -251.0
+[node name="VidaTexto" type="Label" parent="Camera2D/HUD"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "VIDA 100 / 100"
 
-[node name="Velocidad" type="TextEdit" parent="Camera2D" unique_id=1475505269]
-offset_left = -576.0
-offset_top = -322.0
-offset_right = -211.0
-offset_bottom = -286.0
-
-[node name="EstadoPlataformas" type="TextEdit" parent="Camera2D"]
-offset_left = -576.0
-offset_top = -179.0
-offset_right = -211.0
-offset_bottom = -125.0
-editable = false
+[node name="Dash" type="Label" parent="Camera2D/HUD"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "DASH: LISTO"
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

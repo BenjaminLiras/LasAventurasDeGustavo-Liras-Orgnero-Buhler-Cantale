@@ -5,15 +5,19 @@ const FRAME_SIZE := Vector2i(32, 32)
 const VELOCIDAD := 75.0
 const ALCANCE_ATAQUE := 54.0
 const DANIO := 10
-const DURACION_ATAQUE := 0.34
+const DURACION_ATAQUE := 0.6
 const ESPERA_ATAQUE := 0.85
+const INTERVALO_VISION := 0.08
 
-var vida := 3
+@export var vida: int = 3
+@export var multiplicador_velocidad := 1.0
 var jugador: Node2D
 var direccion := 1.0
 var tiempo_ataque := 0.0
 var espera_ataque := 0.0
 var golpe_aplicado := false
+var tiempo_revision_vision := 0.0
+var jugador_visible := false
 
 
 func _ready() -> void:
@@ -34,9 +38,15 @@ func _physics_process(delta: float) -> void:
 		return
 
 	espera_ataque = maxf(espera_ataque - delta, 0.0)
+	if enemigo_en_camara():
+		actualizar_vision(delta)
+	else:
+		jugador_visible = false
+		tiempo_revision_vision = 0.0
+
 	if tiempo_ataque > 0.0:
 		procesar_ataque(delta)
-	elif enemigo_en_camara():
+	elif jugador_visible:
 		perseguir_o_atacar()
 	else:
 		velocity.x = 0.0
@@ -46,12 +56,23 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
+func actualizar_vision(delta: float) -> void:
+	tiempo_revision_vision -= delta
+	if tiempo_revision_vision > 0.0:
+		return
+	tiempo_revision_vision = INTERVALO_VISION
+
+	var rayo: RayCast2D = $RayCast2D
+	rayo.target_position = rayo.to_local(jugador.global_position + Vector2(0.0, -32.0))
+	rayo.force_raycast_update()
+	jugador_visible = rayo.is_colliding() and rayo.get_collider() == jugador
+	if jugador_visible and not is_zero_approx(rayo.target_position.x):
+		direccion = signf(rayo.target_position.x)
+
+
 func perseguir_o_atacar() -> void:
-	direccion = signf(jugador.global_position.x - global_position.x)
-	if direccion == 0.0:
-		direccion = 1.0
 	if absf(jugador.global_position.x - global_position.x) > ALCANCE_ATAQUE:
-		velocity.x = direccion * VELOCIDAD
+		velocity.x = direccion * VELOCIDAD * multiplicador_velocidad
 		reproducir_animacion("caminar")
 	elif espera_ataque == 0.0:
 		velocity.x = 0.0
@@ -65,13 +86,15 @@ func perseguir_o_atacar() -> void:
 
 func procesar_ataque(delta: float) -> void:
 	tiempo_ataque -= delta
-	$Navaja.visible = tiempo_ataque <= DURACION_ATAQUE * 0.55 and tiempo_ataque > 0.0
+	var avisando := tiempo_ataque > DURACION_ATAQUE * 0.5
+	$Navaja.visible = tiempo_ataque > 0.0
+	$Navaja.default_color = Color(1.0, 0.42, 0.22) if avisando else Color(0.82, 0.88, 0.95)
 	$Navaja.scale.x = direccion
 	$Navaja.position.x = direccion * 9.0
-	velocity.x = direccion * VELOCIDAD * 1.6 if $Navaja.visible else 0.0
-	reproducir_animacion("caminar" if $Navaja.visible else "quieto")
+	velocity.x = direccion * VELOCIDAD * 1.6 * multiplicador_velocidad if $Navaja.visible and not avisando else 0.0
+	reproducir_animacion("caminar" if $Navaja.visible and not avisando else "quieto")
 
-	if $Navaja.visible and not golpe_aplicado:
+	if $Navaja.visible and not avisando and not golpe_aplicado:
 		var diferencia := jugador.global_position - global_position
 		if absf(diferencia.x) <= ALCANCE_ATAQUE and absf(diferencia.y) <= 40.0:
 			if jugador.has_method("recibir_golpe"):

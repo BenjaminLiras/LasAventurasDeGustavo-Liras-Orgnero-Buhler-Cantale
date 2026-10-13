@@ -1,14 +1,16 @@
 [gd_scene format=4 uid="uid://blaebn752r11u"]
 
-[ext_resource type="PackedScene" uid="uid://bolxfxsdhue4p" path="res://Gustavo.tscn" id="1_clll0"]
+[ext_resource type="PackedScene" uid="uid://bolxfxsdhue4p" path="res://PJ/PJprincipal/Gustavo.tscn" id="1_clll0"]
 [ext_resource type="Texture2D" uid="uid://cfd3jdsjelabm" path="res://assets/Mossy Tileset/Mossy - TileSet.png" id="2_clll0"]
-[ext_resource type="Script" uid="uid://ba6b34md7kfuk" path="res://static_body_2d.gd" id="4_1ulo1"]
+[ext_resource type="Script" uid="uid://ba6b34md7kfuk" path="res://piezasEscenario/bloque/static_body_2d.gd" id="4_1ulo1"]
 [ext_resource type="Texture2D" uid="uid://cr5gc707f5hek" path="res://icon.svg" id="5_eh6km"]
 [ext_resource type="Texture2D" uid="uid://bvyrpeemwslii" path="res://assets/Plataformas/Hoja de Plataformas Boscosas.png" id="7_bm00u"]
 [ext_resource type="Texture2D" uid="uid://ccdsp07lbxj65" path="res://assets/Mossy Tileset/Mossy - Decorations&Hazards.png" id="22_ldkg1"]
-[ext_resource type="PackedScene" path="res://Pajaro.tscn" id="23_pajaro"]
+[ext_resource type="PackedScene" path="res://enemigosBase/pajaroPicada/Pajaro.tscn" id="23_pajaro"]
 [ext_resource type="PackedScene" path="res://ui/PauseMenu.tscn" id="24_pause"]
-[ext_resource type="PackedScene" path="res://EnemigoNavajero.tscn" id="25_enemigo_navajero"]
+[ext_resource type="PackedScene" path="res://enemigosBase/pibeNavaja/pibeConNavaja.tscn" id="25_enemigo_navajero"]
+[ext_resource type="Script" uid="uid://u0letn138v02" path="res://Niveles/nivel1/nivel1.gd" id="26_nivel1"]
+[ext_resource type="Theme" uid="uid://w5xhdmnjwdsn" path="res://ui/menu_theme.tres" id="27_tema"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p31r2"]
 texture = ExtResource("22_ldkg1")
@@ -3285,10 +3287,41 @@ texture_region_size = Vector2i(64, 64)
 
 [sub_resource type="TileSet" id="TileSet_unbbg"]
 physics_layer_0/collision_layer = 8
-physics_layer_0/one_way = true
 sources/0 = SubResource("TileSetAtlasSource_f28hs")
 
+[sub_resource type="RectangleShape2D" id="Shape_checkpoint"]
+size = Vector2(88, 120)
+
+[sub_resource type="RectangleShape2D" id="Shape_desvio_bajo"]
+size = Vector2(130, 12)
+
+[sub_resource type="RectangleShape2D" id="Shape_desvio_alto"]
+size = Vector2(110, 12)
+
+[sub_resource type="CircleShape2D" id="Shape_fragmento"]
+radius = 18.0
+
+[sub_resource type="RectangleShape2D" id="Shape_salida"]
+size = Vector2(100, 150)
+
+[sub_resource type="StyleBoxFlat" id="Panel_final"]
+content_margin_left = 32.0
+content_margin_top = 28.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+bg_color = Color(0.07, 0.13, 0.09, 0.98)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.56, 0.72, 0.39, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="Node2D" type="Node2D" unique_id=651118040]
+script = ExtResource("26_nivel1")
 
 [node name="Bg" type="TileMapLayer" parent="." unique_id=557761124]
 modulate = Color(1, 1, 1, 0.5529412)
@@ -3303,8 +3336,11 @@ collision_mask = 9
 [node name="PajaroIntermedio" parent="." unique_id=1690533377 instance=ExtResource("23_pajaro")]
 position = Vector2(4820, 315)
 
-[node name="EnemigoNavajero" parent="." instance=ExtResource("25_enemigo_navajero")]
-position = Vector2(690, 361)
+[node name="EnemigoNavajero" parent="." unique_id=1085944218 instance=ExtResource("25_enemigo_navajero")]
+position = Vector2(1750, 361)
+
+[node name="EnemigoNavajeroIntermedio" parent="." unique_id=758709603 instance=ExtResource("25_enemigo_navajero")]
+position = Vector2(3120, 361)
 
 [node name="Pisos" type="TileMapLayer" parent="." unique_id=442980951]
 scale = Vector2(0.23539612, 0.23539612)
@@ -3324,8 +3360,145 @@ texture = ExtResource("5_eh6km")
 position = Vector2(2, -4)
 shape = SubResource("RectangleShape2D_reijt")
 
-[node name="PauseMenu" parent="." instance=ExtResource("24_pause")]
+[node name="PauseMenu" parent="." unique_id=1318248529 instance=ExtResource("24_pause")]
 
 [node name="Plataformas" type="TileMapLayer" parent="." unique_id=1146333774]
 tile_map_data = PackedByteArray("AADWAAoAAAAYAAUAAADYAAoAAAAYAAUAAADbAAoAAAAYAAUAAADeAAoAAAAYAAUAAADgAAoAAAAYAAUAAADjAAoAAAAYAAUAAADWAPr/AAAYAAUAAADXAPr/AAAYAAUAAADYAPr/AAAYAAUAAADZAPr/AAAYAAUAAADaAPr/AAAYAAUAAADbAPr/AAAYAAUAAADcAPr/AAAYAAUAAADdAPr/AAAYAAUAAADeAPr/AAAYAAUAAADfAPr/AAAYAAUAAADgAPr/AAAYAAUAAADhAPr/AAAYAAUAAADiAPr/AAAYAAUAAADjAPr/AAAYAAUAAADXAOn/AAAYAAUAAADYAOn/AAAYAAUAAADZAOn/AAAYAAUAAADaAOn/AAAYAAUAAADbAOn/AAAYAAUAAADcAOn/AAAYAAUAAADdAOn/AAAYAAUAAADeAOn/AAAYAAUAAADfAOn/AAAYAAUAAADgAOn/AAAYAAUAAADhAOn/AAAYAAUAAADiAOn/AAAYAAUAAADjAOn/AAAYAAUAAADWAND/AAAYAAUAAADXAND/AAAYAAUAAADYAND/AAAYAAUAAADZAND/AAAYAAUAAADaAND/AAAYAAUAAADbAND/AAAYAAUAAADcAND/AAAYAAUAAADdAND/AAAYAAUAAADeAND/AAAYAAUAAADfAND/AAAYAAUAAADgAND/AAAYAAUAAADhAND/AAAYAAUAAADiAND/AAAYAAUAAADjAND/AAAYAAUAAADkAND/AAAYAAUAAADWABYAAAAYAAUAAADbABYAAAAYAAUAAADZABYAAAAYAAUAAADfABYAAAAYAAUAAADiABYAAAAYAAUAAADkABYAAAAYAAUAAAAMABYAAAAYAAUAAAA=")
 tile_set = SubResource("TileSet_unbbg")
+
+[node name="Checkpoint" type="Area2D" parent="." unique_id=116960357]
+position = Vector2(3891, 495)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint" unique_id=1442197502]
+shape = SubResource("Shape_checkpoint")
+
+[node name="Respaldo" type="Polygon2D" parent="Checkpoint" unique_id=1379849117]
+color = Color(0.39, 0.24, 0.12, 1)
+polygon = PackedVector2Array(-22, -38, 22, -38, 22, -29, -22, -29)
+
+[node name="Asiento" type="Polygon2D" parent="Checkpoint" unique_id=1256778135]
+color = Color(0.48, 0.3, 0.14, 1)
+polygon = PackedVector2Array(-30, -22, 30, -22, 30, -14, -30, -14)
+
+[node name="PataIzquierda" type="Polygon2D" parent="Checkpoint" unique_id=1271103257]
+color = Color(0.24, 0.2, 0.12, 1)
+polygon = PackedVector2Array(-24, -14, -17, -14, -19, 0, -25, 0)
+
+[node name="PataDerecha" type="Polygon2D" parent="Checkpoint" unique_id=947034410]
+color = Color(0.24, 0.2, 0.12, 1)
+polygon = PackedVector2Array(17, -14, 24, -14, 25, 0, 19, 0)
+
+[node name="DesvioBajo" type="StaticBody2D" parent="." unique_id=1292367967]
+z_index = 1
+position = Vector2(4200, 366)
+collision_layer = 3
+collision_mask = 0
+
+[node name="Visual" type="Polygon2D" parent="DesvioBajo" unique_id=1414850878]
+color = Color(0.24, 0.43, 0.23, 1)
+polygon = PackedVector2Array(-65, -6, 65, -6, 65, 6, -65, 6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DesvioBajo" unique_id=1564292828]
+shape = SubResource("Shape_desvio_bajo")
+
+[node name="DesvioAlto" type="StaticBody2D" parent="." unique_id=188354961]
+z_index = 1
+position = Vector2(4290, 325)
+collision_layer = 3
+collision_mask = 0
+
+[node name="Visual" type="Polygon2D" parent="DesvioAlto" unique_id=1083349783]
+color = Color(0.3, 0.52, 0.27, 1)
+polygon = PackedVector2Array(-55, -6, 55, -6, 55, 6, -55, 6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DesvioAlto" unique_id=2084687100]
+shape = SubResource("Shape_desvio_alto")
+
+[node name="FragmentoVida" type="Area2D" parent="." unique_id=848835354]
+position = Vector2(4290, 285)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FragmentoVida" unique_id=1081259077]
+shape = SubResource("Shape_fragmento")
+
+[node name="Cristal" type="Polygon2D" parent="FragmentoVida" unique_id=826598619]
+color = Color(1, 0.34, 0.27, 1)
+polygon = PackedVector2Array(0, -14, 10, -4, 7, 7, 0, 14, -7, 7, -10, -4)
+
+[node name="Brillo" type="Polygon2D" parent="FragmentoVida" unique_id=506153005]
+color = Color(1, 0.82, 0.46, 1)
+polygon = PackedVector2Array(0, -8, 4, -3, 3, 3, 0, 7, -3, 3, -4, -3)
+
+[node name="Salida" type="Area2D" parent="." unique_id=262357196]
+position = Vector2(6298, 361)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Salida" unique_id=1803175538]
+shape = SubResource("Shape_salida")
+
+[node name="ArcoSalida" type="Node2D" parent="." unique_id=1440820883]
+position = Vector2(6298, 361)
+
+[node name="Visual" type="Polygon2D" parent="ArcoSalida" unique_id=754437600]
+color = Color(0.91, 0.54, 0.23, 0.45)
+polygon = PackedVector2Array(-12, -75, 12, -75, 12, 75, -12, 75)
+
+[node name="Resultados" type="CanvasLayer" parent="." unique_id=1404643342]
+process_mode = 3
+layer = 20
+
+[node name="Aviso" type="Label" parent="Resultados" unique_id=2040259831]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -280.0
+offset_top = 36.0
+offset_right = 280.0
+offset_bottom = 76.0
+theme = ExtResource("27_tema")
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+
+[node name="PantallaFinal" type="ColorRect" parent="Resultados" unique_id=1793550092]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.05, 0.04, 0.82)
+
+[node name="CenterContainer" type="CenterContainer" parent="Resultados/PantallaFinal" unique_id=435854438]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Resultados/PantallaFinal/CenterContainer" unique_id=1510260150]
+layout_mode = 2
+theme = ExtResource("27_tema")
+theme_override_styles/panel = SubResource("Panel_final")
+
+[node name="Contenido" type="VBoxContainer" parent="Resultados/PantallaFinal/CenterContainer/Panel" unique_id=604863663]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Titulo" type="Label" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido" unique_id=1915888085]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "NIVEL COMPLETADO"
+horizontal_alignment = 1
+
+[node name="Reintentar" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido" unique_id=2081717226]
+custom_minimum_size = Vector2(320, 54)
+layout_mode = 2
+text = "JUGAR DE NUEVO"
+
+[node name="Menu" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido" unique_id=511739785]
+custom_minimum_size = Vector2(320, 54)
+layout_mode = 2
+text = "VOLVER AL MENÚ"
