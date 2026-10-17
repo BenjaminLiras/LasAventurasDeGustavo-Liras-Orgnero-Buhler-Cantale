@@ -18,6 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 Global="*uid://l7npc72qyx0"
+Sonido="*res://sonido/sonido.gd"
+Estadisticas="*res://estadisticas/Estadisticas.tscn"
 
 [display]
 

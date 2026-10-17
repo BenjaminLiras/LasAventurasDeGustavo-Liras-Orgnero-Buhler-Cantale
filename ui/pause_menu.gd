@@ -8,6 +8,7 @@ const MAIN_MENU_SCENE := "res://ui/MainMenu.tscn"
 @onready var panel_configuracion: CenterContainer = $Overlay/ConfiguracionCenter
 @onready var slider_volumen: HSlider = $Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaVolumen/SliderVolumen
 @onready var check_pantalla: CheckButton = $Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaPantalla/CheckPantalla
+@onready var check_estadisticas: CheckButton = $Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaEstadisticas/CheckEstadisticas
 @onready var boton_volver_config: Button = $Overlay/ConfiguracionCenter/Panel/VBoxContainer/VolverConfig
 
 
@@ -58,6 +59,7 @@ func _on_configuracion_pressed() -> void:
 	var bus := AudioServer.get_bus_index("Master")
 	slider_volumen.value = db_to_linear(AudioServer.get_bus_volume_db(bus))
 	check_pantalla.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+	check_estadisticas.set_pressed_no_signal(Estadisticas.activas)
 	panel_configuracion.show()
 	boton_volver_config.grab_focus()
 
@@ -82,6 +84,10 @@ func _on_check_pantalla_toggled(activado: bool) -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+
+func _on_check_estadisticas_toggled(activado: bool) -> void:
+	Estadisticas.establecer_activas(activado)
 
 
 func _on_volver_config_pressed() -> void:

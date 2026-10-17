@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal derrotado
+
 enum Estado {
 	ESPERA,
 	PERSEGUIR,
@@ -63,7 +65,7 @@ const ANTICIPACION_ATAQUE_DISTANCIA: float = 0.45
 const DURACION_EJECUCION_ATAQUE_DISTANCIA: float = 0.16
 const DURACION_RECUPERACION_ATAQUE_DISTANCIA: float = 0.65
 const ESPERA_ATAQUE_DISTANCIA: float = 1.0
-const ESCENA_PROYECTIL_DISTANCIA: PackedScene = preload("res://jefes/jefeUno/proyectilBenjamin.tscn")
+const ESCENA_PROYECTIL_DISTANCIA: PackedScene = preload("res://jefes/jefeUno/Ataques/proyectil/proyectilBenjamin.tscn")
 
 @export var danio_extra_brazo: int = 1
 @export var danio_extra_vulnerable: int = 1
@@ -73,6 +75,7 @@ const ESCENA_PROYECTIL_DISTANCIA: PackedScene = preload("res://jefes/jefeUno/pro
 @export var velocidad_retroceso: float = 700.0
 @export var distancia_maxima_retroceso: float = 280.0
 @export var duracion_defensiva: float = 8.0
+@export var distancia_activacion: float = 0.0
 
 @onready var barra_vida: ProgressBar = $BarraVida
 
@@ -110,6 +113,8 @@ var proyectiles_activos: Array[Area2D] = []
 func _ready() -> void:
 	reproducir_animacion("quieto")
 	jugador = get_tree().get_first_node_in_group("jugador") as Node2D
+	if distancia_activacion > 0.0:
+		estado = Estado.ESPERA
 	actualizar_barra_vida()
 	actualizar_zona_brazo()
 
@@ -128,6 +133,7 @@ func _physics_process(delta: float) -> void:
 	match estado:
 		Estado.ESPERA:
 			detenerse()
+			revisar_activacion()
 		Estado.PERSEGUIR:
 			if not is_instance_valid(jugador):
 				jugador = get_tree().get_first_node_in_group("jugador") as Node2D
@@ -188,6 +194,13 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if estado == Estado.EMBESTIR or estado == Estado.DESPLAZARSE_RAPIDO:
 		revisar_colision_dash()
+
+
+func revisar_activacion() -> void:
+	if not is_instance_valid(jugador):
+		jugador = get_tree().get_first_node_in_group("jugador") as Node2D
+	if is_instance_valid(jugador) and global_position.distance_to(jugador.global_position) <= distancia_activacion:
+		estado = Estado.PERSEGUIR
 
 
 func perseguir_jugador() -> void:
@@ -696,6 +709,7 @@ func aplicar_danio(cantidad: int, golpe_en_brazo: bool) -> void:
 		inmune_hasta_alejarse = false
 		tiempo_estrategia_defensiva = 0.0
 		detener_proyectiles()
+		derrotado.emit()
 		reproducir_animacion("morir")
 		await $AnimatedSprite2D.animation_finished
 		queue_free()

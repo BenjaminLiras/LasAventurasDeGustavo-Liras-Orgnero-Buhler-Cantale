@@ -46,6 +46,8 @@ var objetivo_y_caida: float = 0.0
 var tiempo_caida: float = 0.0
 var capa_plataforma_estaba_activada: bool = false
 var atravesando_plataforma_al_subir: bool = false
+var mascara_enemigos_antes_del_dash := false
+var mascara_area_enemigos_antes_del_dash := false
 
 func _ready() -> void:
 	vida = vidaMaxima
@@ -69,6 +71,7 @@ func _physics_process(delta: float) -> void:
 	elif Input.is_action_just_pressed("ui_accept"):
 		if is_on_floor():
 			velocity.y = JUMP_VELOCITY
+			Sonido.reproducir("salto")
 
 	
 	direction = obtenerDireccionDeMovimiento()
@@ -133,6 +136,7 @@ func dash() -> void:
 		return	
 	dashActivo = true
 	dashEnCooldown = true
+	Sonido.reproducir("dash")
 	dash_salio_del_suelo = not is_on_floor()
 	DASH_DIRECTION = obtenerDireccionDeApuntado()
 	velocity = DASH_DIRECTION * 700.0
@@ -146,6 +150,7 @@ func ataqueSimple(combo: bool = false) -> void:
 	if cooldown_ataque_simple > 0.0:
 		return
 	cooldown_ataque_simple = COOLDOWN_ATAQUE_SIMPLE
+	Sonido.reproducir("combo" if combo else "ataque")
 	var ataqueDireccion := obtenerDireccionDeApuntado()
 	$AnimatedSprite2D.play("ataque")
 	$AnimatedSprite2D.flip_h = ataqueDireccion.x < 0.0
@@ -159,9 +164,12 @@ func ataqueSimple(combo: bool = false) -> void:
 
 
 func cambiar_intangibilidad_dash(activa: bool) -> void:
+	if activa:
+		mascara_enemigos_antes_del_dash = get_collision_mask_value(CAPA_COLISION_ENEMIGOS)
+		mascara_area_enemigos_antes_del_dash = $Area2D.get_collision_mask_value(CAPA_COLISION_ENEMIGOS)
 	intangible_por_dash = activa
-	set_collision_mask_value(CAPA_COLISION_ENEMIGOS, not activa)
-	$Area2D.set_collision_mask_value(CAPA_COLISION_ENEMIGOS, not activa)
+	set_collision_mask_value(CAPA_COLISION_ENEMIGOS, false if activa else mascara_enemigos_antes_del_dash)
+	$Area2D.set_collision_mask_value(CAPA_COLISION_ENEMIGOS, false if activa else mascara_area_enemigos_antes_del_dash)
 	$AnimatedSprite2D.modulate.a = 0.45 if activa else 1.0
 
 
@@ -173,6 +181,7 @@ func recibir_golpe(cantidad: int = 1) -> void:
 	if vida == 0:
 		morir()
 		return
+	Sonido.reproducir("dano")
 	invulnerable = true
 	animar_impacto()
 	await get_tree().create_timer(duracion_invulnerabilidad).timeout
@@ -184,6 +193,7 @@ func morir() -> void:
 	if muerto:
 		return
 	muerto = true
+	Sonido.reproducir("muerte")
 	velocity = Vector2.ZERO
 	dashActivo = false
 	$AnimatedSprite2D.modulate = Color(0.8, 0.25, 0.25, 0.7)

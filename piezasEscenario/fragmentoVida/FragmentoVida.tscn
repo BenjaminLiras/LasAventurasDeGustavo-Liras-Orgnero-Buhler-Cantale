@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[sub_resource type="CircleShape2D" id="Shape_fragmento"]
+radius = 18.0
+
+[node name="FragmentoVida" type="Area2D" groups=["fragmentos_vida"]]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Shape_fragmento")
+
+[node name="Cristal" type="Polygon2D" parent="."]
+color = Color(1, 0.34, 0.27, 1)
+polygon = PackedVector2Array(0, -14, 10, -4, 7, 7, 0, 14, -7, 7, -10, -4)
+
+[node name="Brillo" type="Polygon2D" parent="."]
+color = Color(1, 0.82, 0.46, 1)
+polygon = PackedVector2Array(0, -8, 4, -3, 3, 3, 0, 7, -3, 3, -4, -3)

@@ -138,6 +138,18 @@ text = "Pantalla completa"
 [node name="CheckPantalla" type="CheckButton" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaPantalla"]
 layout_mode = 2
 
+[node name="FilaEstadisticas" type="HBoxContainer" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LabelEstadisticas" type="Label" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaEstadisticas"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Estadísticas de desarrollo"
+
+[node name="CheckEstadisticas" type="CheckButton" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaEstadisticas"]
+layout_mode = 2
+
 [node name="VolverConfig" type="Button" parent="Overlay/ConfiguracionCenter/Panel/VBoxContainer"]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
@@ -149,4 +161,5 @@ text = "VOLVER"
 [connection signal="pressed" from="Overlay/CenterContainer/Panel/VBoxContainer/Salir" to="." method="_on_salir_pressed"]
 [connection signal="value_changed" from="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaVolumen/SliderVolumen" to="." method="_on_slider_volumen_value_changed"]
 [connection signal="toggled" from="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaPantalla/CheckPantalla" to="." method="_on_check_pantalla_toggled"]
+[connection signal="toggled" from="Overlay/ConfiguracionCenter/Panel/VBoxContainer/FilaEstadisticas/CheckEstadisticas" to="." method="_on_check_estadisticas_toggled"]
 [connection signal="pressed" from="Overlay/ConfiguracionCenter/Panel/VBoxContainer/VolverConfig" to="." method="_on_volver_config_pressed"]

@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://piezasEscenario/cartel/cartel.gd" id="1_cartel"]
+[ext_resource type="Theme" uid="uid://w5xhdmnjwdsn" path="res://ui/menu_theme.tres" id="2_tema"]
+
+[sub_resource type="StyleBoxFlat" id="Tablero"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(0.3, 0.19, 0.1, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.62, 0.43, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="Cartel" type="Node2D"]
+script = ExtResource("1_cartel")
+
+[node name="Poste" type="Polygon2D" parent="."]
+color = Color(0.24, 0.15, 0.08, 1)
+polygon = PackedVector2Array(-4, 0, 4, 0, 4, -56, -4, -56)
+
+[node name="Tablero" type="PanelContainer" parent="."]
+offset_top = -56.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme = ExtResource("2_tema")
+theme_override_styles/panel = SubResource("Tablero")
+
+[node name="Texto" type="Label" parent="Tablero"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1

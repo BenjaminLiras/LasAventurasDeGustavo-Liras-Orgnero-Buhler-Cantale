@@ -92,6 +92,18 @@ text = "Pantalla completa"
 [node name="FullscreenCheck" type="CheckButton" parent="Panel/Options/FullscreenRow"]
 layout_mode = 2
 
+[node name="StatsRow" type="HBoxContainer" parent="Panel/Options"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="StatsLabel" type="Label" parent="Panel/Options/StatsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Estadísticas de desarrollo"
+
+[node name="StatsCheck" type="CheckButton" parent="Panel/Options/StatsRow"]
+layout_mode = 2
+
 [node name="BackButton" type="Button" parent="Panel/Options"]
 custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
@@ -99,4 +111,5 @@ text = "VOLVER"
 
 [connection signal="value_changed" from="Panel/Options/VolumeRow/VolumeSlider" to="." method="_on_volume_slider_value_changed"]
 [connection signal="toggled" from="Panel/Options/FullscreenRow/FullscreenCheck" to="." method="_on_fullscreen_check_toggled"]
+[connection signal="toggled" from="Panel/Options/StatsRow/StatsCheck" to="." method="_on_stats_check_toggled"]
 [connection signal="pressed" from="Panel/Options/BackButton" to="." method="_on_back_button_pressed"]

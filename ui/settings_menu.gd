@@ -4,6 +4,7 @@ const MAIN_MENU_SCENE := "res://ui/MainMenu.tscn"
 
 @onready var volume_slider: HSlider = $Panel/Options/VolumeRow/VolumeSlider
 @onready var fullscreen_check: CheckButton = $Panel/Options/FullscreenRow/FullscreenCheck
+@onready var stats_check: CheckButton = $Panel/Options/StatsRow/StatsCheck
 @onready var back_button: Button = $Panel/Options/BackButton
 
 
@@ -11,6 +12,7 @@ func _ready() -> void:
 	var bus := AudioServer.get_bus_index("Master")
 	volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(bus))
 	fullscreen_check.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+	stats_check.set_pressed_no_signal(Estadisticas.activas)
 	back_button.grab_focus()
 
 
@@ -24,6 +26,10 @@ func _on_fullscreen_check_toggled(enabled: bool) -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+
+func _on_stats_check_toggled(enabled: bool) -> void:
+	Estadisticas.establecer_activas(enabled)
 
 
 func _on_back_button_pressed() -> void:

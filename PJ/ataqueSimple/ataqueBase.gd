@@ -32,3 +32,4 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.has_method("recibir_golpe"):
 		objetivos_golpeados[id_objetivo] = true
 		body.call("recibir_golpe", daño)
+		Sonido.reproducir("impacto")
