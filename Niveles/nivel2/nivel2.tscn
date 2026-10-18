@@ -1,0 +1,297 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://PJ/PJprincipal/Gustavo.tscn" id="1_gustavo"]
+[ext_resource type="PackedScene" path="res://enemigosBase/pibeNavaja/pibeConNavaja.tscn" id="2_navajero"]
+[ext_resource type="PackedScene" path="res://enemigosBase/pajaroPicada/Pajaro.tscn" id="3_pajaro"]
+[ext_resource type="PackedScene" path="res://piezasEscenario/checkpoint/Checkpoint.tscn" id="4_checkpoint"]
+[ext_resource type="PackedScene" path="res://piezasEscenario/fragmentoVida/FragmentoVida.tscn" id="5_fragmento"]
+[ext_resource type="PackedScene" path="res://piezasEscenario/cartel/Cartel.tscn" id="6_cartel"]
+[ext_resource type="PackedScene" path="res://ui/PauseMenu.tscn" id="7_pause"]
+[ext_resource type="Script" path="res://Niveles/nivel1/nivel1.gd" id="8_level_script"]
+[ext_resource type="Theme" path="res://ui/menu_theme.tres" id="9_theme"]
+
+[sub_resource type="RectangleShape2D" id="GroundStart"]
+size = Vector2(850, 100)
+
+[sub_resource type="RectangleShape2D" id="GroundMiddle"]
+size = Vector2(750, 100)
+
+[sub_resource type="RectangleShape2D" id="GroundEnd"]
+size = Vector2(1700, 100)
+
+[sub_resource type="RectangleShape2D" id="FloatingPlatform"]
+size = Vector2(180, 16)
+
+[sub_resource type="RectangleShape2D" id="FallZone"]
+size = Vector2(4000, 1000)
+
+[sub_resource type="RectangleShape2D" id="ExitShape"]
+size = Vector2(100, 150)
+
+[sub_resource type="StyleBoxFlat" id="FinalPanel"]
+content_margin_left = 32.0
+content_margin_top = 28.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+bg_color = Color(0.07, 0.13, 0.09, 0.98)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.56, 0.72, 0.39, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="Nivel2" type="Node2D"]
+script = ExtResource("8_level_script")
+
+[node name="Fondo" type="CanvasLayer" parent="."]
+layer = -10
+
+[node name="Color" type="ColorRect" parent="Fondo"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.025, 0.07, 0.06, 1)
+
+[node name="LomasLejanas" type="Polygon2D" parent="."]
+z_index = -10
+color = Color(0.07, 0.17, 0.11, 1)
+polygon = PackedVector2Array(-1000, 310, -700, 175, -350, 295, 40, 130, 440, 300, 850, 155, 1220, 320, 1630, 155, 2040, 305, 2440, 140, 2850, 300, 3270, 160, 3750, 320, 4300, 175, 4300, 900, -1000, 900)
+
+[node name="LomasCercanas" type="Polygon2D" parent="."]
+z_index = -9
+color = Color(0.045, 0.12, 0.085, 1)
+polygon = PackedVector2Array(-1000, 370, -620, 260, -200, 365, 240, 225, 700, 375, 1160, 245, 1580, 365, 2010, 230, 2440, 375, 2860, 245, 3290, 370, 3750, 265, 4300, 390, 4300, 900, -1000, 900)
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("1_gustavo")]
+position = Vector2(454, 361)
+collision_mask = 9
+
+[node name="SueloInicio" type="StaticBody2D" parent="."]
+position = Vector2(425, 450)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Tierra" type="Polygon2D" parent="SueloInicio"]
+color = Color(0.18, 0.24, 0.15, 1)
+polygon = PackedVector2Array(-425, -50, 425, -50, 425, 50, -425, 50)
+
+[node name="Musgo" type="Polygon2D" parent="SueloInicio"]
+color = Color(0.31, 0.49, 0.24, 1)
+polygon = PackedVector2Array(-425, -50, 425, -50, 425, -38, -425, -38)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloInicio"]
+shape = SubResource("GroundStart")
+
+[node name="SueloCentral" type="StaticBody2D" parent="."]
+position = Vector2(1375, 450)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Tierra" type="Polygon2D" parent="SueloCentral"]
+color = Color(0.18, 0.24, 0.15, 1)
+polygon = PackedVector2Array(-375, -50, 375, -50, 375, 50, -375, 50)
+
+[node name="Musgo" type="Polygon2D" parent="SueloCentral"]
+color = Color(0.31, 0.49, 0.24, 1)
+polygon = PackedVector2Array(-375, -50, 375, -50, 375, -38, -375, -38)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloCentral"]
+shape = SubResource("GroundMiddle")
+
+[node name="SueloFinal" type="StaticBody2D" parent="."]
+position = Vector2(2750, 450)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Tierra" type="Polygon2D" parent="SueloFinal"]
+color = Color(0.18, 0.24, 0.15, 1)
+polygon = PackedVector2Array(-850, -50, 850, -50, 850, 50, -850, 50)
+
+[node name="Musgo" type="Polygon2D" parent="SueloFinal"]
+color = Color(0.31, 0.49, 0.24, 1)
+polygon = PackedVector2Array(-850, -50, 850, -50, 850, -38, -850, -38)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloFinal"]
+shape = SubResource("GroundEnd")
+
+[node name="Puente1" type="StaticBody2D" parent="."]
+position = Vector2(925, 350)
+collision_layer = 8
+collision_mask = 0
+
+[node name="Visual" type="Polygon2D" parent="Puente1"]
+color = Color(0.19, 0.34, 0.19, 1)
+polygon = PackedVector2Array(-90, -8, 90, -8, 90, 8, -90, 8)
+
+[node name="Musgo" type="Polygon2D" parent="Puente1"]
+color = Color(0.35, 0.56, 0.27, 1)
+polygon = PackedVector2Array(-90, -8, 90, -8, 90, -3, -90, -3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Puente1"]
+shape = SubResource("FloatingPlatform")
+
+[node name="Puente2" type="StaticBody2D" parent="."]
+position = Vector2(1825, 350)
+collision_layer = 8
+collision_mask = 0
+
+[node name="Visual" type="Polygon2D" parent="Puente2"]
+color = Color(0.19, 0.34, 0.19, 1)
+polygon = PackedVector2Array(-90, -8, 90, -8, 90, 8, -90, 8)
+
+[node name="Musgo" type="Polygon2D" parent="Puente2"]
+color = Color(0.35, 0.56, 0.27, 1)
+polygon = PackedVector2Array(-90, -8, 90, -8, 90, -3, -90, -3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Puente2"]
+shape = SubResource("FloatingPlatform")
+
+[node name="Mirador" type="StaticBody2D" parent="."]
+position = Vector2(1375, 350)
+collision_layer = 8
+collision_mask = 0
+
+[node name="Visual" type="Polygon2D" parent="Mirador"]
+color = Color(0.19, 0.34, 0.19, 1)
+polygon = PackedVector2Array(-90, -8, 90, -8, 90, 8, -90, 8)
+
+[node name="Musgo" type="Polygon2D" parent="Mirador"]
+color = Color(0.35, 0.56, 0.27, 1)
+polygon = PackedVector2Array(-90, -8, 90, -8, 90, -3, -90, -3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mirador"]
+shape = SubResource("FloatingPlatform")
+
+[node name="EnemigoNavajero" parent="." instance=ExtResource("2_navajero")]
+position = Vector2(740, 394)
+
+[node name="Pajaro" parent="." instance=ExtResource("3_pajaro")]
+position = Vector2(1320, 235)
+
+[node name="EnemigoNavajero2" parent="." instance=ExtResource("2_navajero")]
+position = Vector2(1650, 394)
+vida = 4
+
+[node name="Checkpoint" parent="." instance=ExtResource("4_checkpoint")]
+position = Vector2(1980, 400)
+
+[node name="FragmentoVida" parent="." instance=ExtResource("5_fragmento")]
+position = Vector2(1375, 300)
+
+[node name="EnemigoNavajero3" parent="." instance=ExtResource("2_navajero")]
+position = Vector2(2450, 394)
+vida = 4
+multiplicador_velocidad = 1.15
+
+[node name="Checkpoint2" parent="." instance=ExtResource("4_checkpoint")]
+position = Vector2(2850, 400)
+
+[node name="PajaroFinal" parent="." instance=ExtResource("3_pajaro")]
+position = Vector2(3100, 235)
+
+[node name="CartelBosque" parent="." instance=ExtResource("6_cartel")]
+position = Vector2(610, 400)
+texto = "EL SENDERO SE CORTA\nSALTA Y USA EL DASH"
+
+[node name="CartelCheckpoint" parent="." instance=ExtResource("6_cartel")]
+position = Vector2(2070, 400)
+texto = "PUNTO DE CONTROL\nCADA CAIDA TE DEVUELVE A ESTE PUNTO"
+
+[node name="CartelSalida" parent="." instance=ExtResource("6_cartel")]
+position = Vector2(3190, 400)
+texto = "EL ARCO MARCA EL FINAL\nDEL RECORRIDO"
+
+[node name="Salida" type="Area2D" parent="."]
+position = Vector2(3470, 361)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Salida"]
+shape = SubResource("ExitShape")
+
+[node name="ArcoSalida" type="Node2D" parent="."]
+position = Vector2(3470, 361)
+
+[node name="Visual" type="Polygon2D" parent="ArcoSalida"]
+color = Color(0.91, 0.54, 0.23, 0.45)
+polygon = PackedVector2Array(-12, -75, 12, -75, 12, 75, -12, 75)
+
+[node name="ZonaCaida" type="Area2D" parent="."]
+position = Vector2(1800, 1100)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaCaida"]
+shape = SubResource("FallZone")
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_pause")]
+
+[node name="Resultados" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 20
+
+[node name="Aviso" type="Label" parent="Resultados"]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -280.0
+offset_top = 36.0
+offset_right = 280.0
+offset_bottom = 76.0
+theme = ExtResource("9_theme")
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+
+[node name="PantallaFinal" type="ColorRect" parent="Resultados"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.05, 0.04, 0.82)
+
+[node name="CenterContainer" type="CenterContainer" parent="Resultados/PantallaFinal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Resultados/PantallaFinal/CenterContainer"]
+layout_mode = 2
+theme = ExtResource("9_theme")
+theme_override_styles/panel = SubResource("FinalPanel")
+
+[node name="Contenido" type="VBoxContainer" parent="Resultados/PantallaFinal/CenterContainer/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Titulo" type="Label" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "NIVEL COMPLETADO"
+horizontal_alignment = 1
+
+[node name="Siguiente" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido"]
+custom_minimum_size = Vector2(320, 54)
+layout_mode = 2
+text = "SIGUIENTE NIVEL"
+
+[node name="Reintentar" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido"]
+custom_minimum_size = Vector2(320, 54)
+layout_mode = 2
+text = "JUGAR DE NUEVO"
+
+[node name="Menu" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido"]
+custom_minimum_size = Vector2(320, 54)
+layout_mode = 2
+text = "VOLVER AL MENÚ"

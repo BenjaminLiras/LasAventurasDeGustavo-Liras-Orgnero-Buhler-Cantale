@@ -3323,6 +3323,7 @@ corner_radius_bottom_left = 4
 
 [node name="Node2D" type="Node2D" unique_id=651118040]
 script = ExtResource("26_nivel1")
+siguiente_nivel = "res://Niveles/nivel2/nivel2.tscn"
 
 [node name="Bg" type="TileMapLayer" parent="." unique_id=557761124]
 modulate = Color(1, 1, 1, 0.5529412)

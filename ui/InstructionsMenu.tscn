@@ -69,9 +69,10 @@ size_flags_vertical = 3
 theme_override_constants/line_spacing = 10
 text = "A / Flecha izquierda  -  Moverse a la izquierda
 D / Flecha derecha  -  Moverse a la derecha
-W / Espacio  -  Saltar
+W / Enter  -  Saltar
+S / Flecha abajo  -  Bajar de una plataforma
 L / Espacio  -  Dash
-O  -  Atacar
+O  -  Atacar hacia el mouse
 ESC  -  Pausa"
 horizontal_alignment = 1
 vertical_alignment = 1

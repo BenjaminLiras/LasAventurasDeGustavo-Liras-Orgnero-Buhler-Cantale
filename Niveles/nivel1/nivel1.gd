@@ -10,6 +10,7 @@ const COLOR_SALIDA_BLOQUEADA := Color(0.55, 0.55, 0.65, 0.6)
 @onready var salida: Area2D = $Salida
 @onready var arco_salida: Node2D = $ArcoSalida
 @onready var panel_final: ColorRect = $Resultados/PantallaFinal
+@onready var titulo_final: Label = $Resultados/PantallaFinal/CenterContainer/Panel/Contenido/Titulo
 @onready var boton_siguiente: Button = $Resultados/PantallaFinal/CenterContainer/Panel/Contenido/Siguiente
 @onready var boton_reintentar: Button = $Resultados/PantallaFinal/CenterContainer/Panel/Contenido/Reintentar
 @onready var aviso: Label = $Resultados/Aviso
@@ -28,6 +29,7 @@ func _ready() -> void:
 	salida.body_entered.connect(_on_salida_body_entered)
 	$ZonaCaida.body_entered.connect(_on_zona_caida_body_entered)
 	boton_siguiente.visible = not siguiente_nivel.is_empty()
+	titulo_final.text = "NIVEL COMPLETADO" if boton_siguiente.visible else "FIN DE LA DEMO"
 	boton_siguiente.pressed.connect(_on_siguiente_pressed)
 	boton_reintentar.pressed.connect(_on_reintentar_pressed)
 	$Resultados/PantallaFinal/CenterContainer/Panel/Contenido/Menu.pressed.connect(_on_menu_pressed)
