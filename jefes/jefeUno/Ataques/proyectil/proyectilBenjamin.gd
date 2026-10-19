@@ -29,7 +29,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_body_entered(cuerpo: Node2D) -> void:
-	if impacto_aplicado:
+	if impacto_aplicado or bool(cuerpo.get("intangible_por_dash")):
 		return
 	impacto_aplicado = true
 	if cuerpo.is_in_group("jugador") and cuerpo.has_method("recibir_golpe"):

@@ -13,7 +13,6 @@
 [ext_resource type="Theme" uid="uid://w5xhdmnjwdsn" path="res://ui/menu_theme.tres" id="27_tema"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/checkpoint/Checkpoint.tscn" id="28_checkpoint"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/fragmentoVida/FragmentoVida.tscn" id="29_fragmento"]
-[ext_resource type="PackedScene" path="res://piezasEscenario/cartel/Cartel.tscn" id="30_cartel"]
 [ext_resource type="PackedScene" uid="uid://dq32qfr4g3md6" path="res://jefes/jefeUno/Main/jefeUno.tscn" id="31_jefe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p31r2"]
@@ -3305,6 +3304,12 @@ size = Vector2(100, 150)
 [sub_resource type="RectangleShape2D" id="Shape_zona_caida"]
 size = Vector2(11000, 1000)
 
+[sub_resource type="RectangleShape2D" id="Shape_zona_jefe"]
+size = Vector2(2940, 2048)
+
+[sub_resource type="RectangleShape2D" id="Shape_puerta_jefe"]
+size = Vector2(124, 730)
+
 [sub_resource type="StyleBoxFlat" id="Panel_final"]
 content_margin_left = 32.0
 content_margin_top = 28.0
@@ -3351,7 +3356,7 @@ position = Vector2(2300, 300)
 position = Vector2(4550, 440)
 
 [node name="Benjamin" parent="." unique_id=1835244827 instance=ExtResource("31_jefe")]
-position = Vector2(5900, 470)
+position = Vector2(7900, 470)
 distancia_activacion = 500.0
 
 [node name="Pisos" type="TileMapLayer" parent="." unique_id=442980951]
@@ -3383,34 +3388,6 @@ position = Vector2(3891, 495)
 
 [node name="Checkpoint2" parent="." unique_id=1929655709 instance=ExtResource("28_checkpoint")]
 position = Vector2(5000, 495)
-
-[node name="CartelControles" parent="." unique_id=792644198 instance=ExtResource("30_cartel")]
-position = Vector2(620, 482)
-texto = "A / D: MOVERSE
-W: SALTAR
-S: BAJAR DE UNA PLATAFORMA
-ESC: PAUSA"
-
-[node name="CartelAtaque" parent="." unique_id=1384868644 instance=ExtResource("30_cartel")]
-position = Vector2(1100, 482)
-texto = "O: ATACAR
-El golpe sale hacia donde apunta el mouse"
-
-[node name="CartelDash" parent="." unique_id=39500779 instance=ExtResource("30_cartel")]
-position = Vector2(1450, 482)
-texto = "ESPACIO / L: DASH
-Intangible mientras dura
-Atacar al empezar el dash: COMBO"
-
-[node name="CartelFragmento" parent="." unique_id=1444166221 instance=ExtResource("30_cartel")]
-position = Vector2(4010, 482)
-texto = "FRAGMENTO DE VIDA ARRIBA
-Salto + dash para llegar"
-
-[node name="CartelJefe" parent="." unique_id=155163419 instance=ExtResource("30_cartel")]
-position = Vector2(5200, 482)
-texto = "CUIDADO
-El jefe te espera adelante"
 
 [node name="DesvioBajo" type="StaticBody2D" parent="." unique_id=1292367967]
 z_index = 1
@@ -3483,6 +3460,90 @@ position = Vector2(6298, 361)
 [node name="Visual" type="Polygon2D" parent="ArcoSalida" unique_id=754437600]
 color = Color(0.91, 0.54, 0.23, 0.45)
 polygon = PackedVector2Array(-12, -75, 12, -75, 12, 75, -12, 75)
+
+[node name="ZonaJefe" type="Area2D" parent="."]
+position = Vector2(7930, -542)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaJefe"]
+shape = SubResource("Shape_zona_jefe")
+
+[node name="PuertaJefe" type="StaticBody2D" parent="."]
+visible = false
+z_index = 1
+position = Vector2(6327, 120)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PuertaJefe"]
+shape = SubResource("Shape_puerta_jefe")
+disabled = true
+
+[node name="Roca1" type="Polygon2D" parent="PuertaJefe"]
+position = Vector2(0, -305)
+color = Color(0.42, 0.41, 0.45, 1)
+polygon = PackedVector2Array(-60, -34, -42, -58, 8, -61, 48, -52, 61, -8, 57, 40, 28, 59, -24, 61, -56, 46)
+
+[node name="Borde" type="Line2D" parent="PuertaJefe/Roca1"]
+points = PackedVector2Array(-60, -34, -42, -58, 8, -61, 48, -52, 61, -8, 57, 40, 28, 59, -24, 61, -56, 46)
+closed = true
+width = 4.0
+default_color = Color(0.14, 0.14, 0.17, 1)
+
+[node name="Roca2" type="Polygon2D" parent="PuertaJefe"]
+position = Vector2(0, -183)
+color = Color(0.35, 0.34, 0.39, 1)
+polygon = PackedVector2Array(60, -34, 42, -58, -8, -61, -48, -52, -61, -8, -57, 40, -28, 59, 24, 61, 56, 46)
+
+[node name="Borde" type="Line2D" parent="PuertaJefe/Roca2"]
+points = PackedVector2Array(60, -34, 42, -58, -8, -61, -48, -52, -61, -8, -57, 40, -28, 59, 24, 61, 56, 46)
+closed = true
+width = 4.0
+default_color = Color(0.14, 0.14, 0.17, 1)
+
+[node name="Roca3" type="Polygon2D" parent="PuertaJefe"]
+position = Vector2(0, -61)
+color = Color(0.47, 0.45, 0.43, 1)
+polygon = PackedVector2Array(-60, -34, -42, -58, 8, -61, 48, -52, 61, -8, 57, 40, 28, 59, -24, 61, -56, 46)
+
+[node name="Borde" type="Line2D" parent="PuertaJefe/Roca3"]
+points = PackedVector2Array(-60, -34, -42, -58, 8, -61, 48, -52, 61, -8, 57, 40, 28, 59, -24, 61, -56, 46)
+closed = true
+width = 4.0
+default_color = Color(0.14, 0.14, 0.17, 1)
+
+[node name="Roca4" type="Polygon2D" parent="PuertaJefe"]
+position = Vector2(0, 61)
+color = Color(0.38, 0.37, 0.42, 1)
+polygon = PackedVector2Array(60, -34, 42, -58, -8, -61, -48, -52, -61, -8, -57, 40, -28, 59, 24, 61, 56, 46)
+
+[node name="Borde" type="Line2D" parent="PuertaJefe/Roca4"]
+points = PackedVector2Array(60, -34, 42, -58, -8, -61, -48, -52, -61, -8, -57, 40, -28, 59, 24, 61, 56, 46)
+closed = true
+width = 4.0
+default_color = Color(0.14, 0.14, 0.17, 1)
+
+[node name="Roca5" type="Polygon2D" parent="PuertaJefe"]
+position = Vector2(0, 183)
+color = Color(0.44, 0.43, 0.46, 1)
+polygon = PackedVector2Array(-60, -34, -42, -58, 8, -61, 48, -52, 61, -8, 57, 40, 28, 59, -24, 61, -56, 46)
+
+[node name="Borde" type="Line2D" parent="PuertaJefe/Roca5"]
+points = PackedVector2Array(-60, -34, -42, -58, 8, -61, 48, -52, 61, -8, 57, 40, 28, 59, -24, 61, -56, 46)
+closed = true
+width = 4.0
+default_color = Color(0.14, 0.14, 0.17, 1)
+
+[node name="Roca6" type="Polygon2D" parent="PuertaJefe"]
+position = Vector2(0, 305)
+color = Color(0.36, 0.35, 0.4, 1)
+polygon = PackedVector2Array(60, -34, 42, -58, -8, -61, -48, -52, -61, -8, -57, 40, -28, 59, 24, 61, 56, 46)
+
+[node name="Borde" type="Line2D" parent="PuertaJefe/Roca6"]
+points = PackedVector2Array(60, -34, 42, -58, -8, -61, -48, -52, -61, -8, -57, 40, -28, 59, 24, 61, 56, 46)
+closed = true
+width = 4.0
+default_color = Color(0.14, 0.14, 0.17, 1)
 
 [node name="ZonaCaida" type="Area2D" parent="." unique_id=1453643189]
 position = Vector2(4500, 1150)

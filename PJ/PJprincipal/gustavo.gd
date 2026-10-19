@@ -168,6 +168,12 @@ func cambiar_intangibilidad_dash(activa: bool) -> void:
 		mascara_enemigos_antes_del_dash = get_collision_mask_value(CAPA_COLISION_ENEMIGOS)
 		mascara_area_enemigos_antes_del_dash = $Area2D.get_collision_mask_value(CAPA_COLISION_ENEMIGOS)
 	intangible_por_dash = activa
+	# Las mascaras de los enemigos incluyen al jugador: sin la excepcion empujan al jugador durante el dash.
+	for enemigo in get_tree().get_nodes_in_group("enemigo"):
+		if activa:
+			enemigo.add_collision_exception_with(self)
+		else:
+			enemigo.remove_collision_exception_with(self)
 	set_collision_mask_value(CAPA_COLISION_ENEMIGOS, false if activa else mascara_enemigos_antes_del_dash)
 	$Area2D.set_collision_mask_value(CAPA_COLISION_ENEMIGOS, false if activa else mascara_area_enemigos_antes_del_dash)
 	$AnimatedSprite2D.modulate.a = 0.45 if activa else 1.0

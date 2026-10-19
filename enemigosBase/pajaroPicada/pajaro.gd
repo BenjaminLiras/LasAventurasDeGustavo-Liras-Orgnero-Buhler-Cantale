@@ -96,7 +96,7 @@ func hacer_picada(delta: float) -> void:
 	global_position = global_position.move_toward(destino_picada, velocidad_picada * delta)
 	if not golpeo_en_picada:
 		for cuerpo in $AreaDeContacto.get_overlapping_bodies():
-			if cuerpo.is_in_group("jugador") and cuerpo.has_method("recibir_golpe"):
+			if cuerpo.is_in_group("jugador") and cuerpo.has_method("recibir_golpe") and not bool(cuerpo.get("intangible_por_dash")):
 				cuerpo.recibir_golpe(dano_picada)
 				golpeo_en_picada = true
 				break
