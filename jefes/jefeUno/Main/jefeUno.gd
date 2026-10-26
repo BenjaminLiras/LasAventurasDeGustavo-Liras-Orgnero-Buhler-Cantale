@@ -31,24 +31,36 @@ const ALTURA_ATAQUE: float = 40.0
 const DANIO_ATAQUE: int = 12
 const DANIO_DASH: int = 30
 const EMPUJE_JUGADOR: float = 22.0
+const CAPA_PLATAFORMAS: int = 4
+const DIFERENCIA_VERTICAL_PLATAFORMA: float = 72.0
+const VELOCIDAD_DESCENSO_PLATAFORMAS: float = 120.0
+const ALTURA_MINIMA_SALTO: float = 190.0
+const ALTURA_MAXIMA_SALTO: float = 460.0
+const DURACION_MAXIMA_DESCENSO_PLATAFORMAS: float = 2.5
+const DISTANCIA_MAXIMA_ATAQUE_DISTANCIA: float = 1100.0
+const ESPERA_CAMBIO_PLATAFORMA_DEFENSIVO: float = 2.4
+const DISTANCIA_DESCENSO_DEFENSIVO: float = 120.0
+const DURACION_PLATAFORMA_SUPERIOR: float = 8.0
+const ESPERA_REINTENTO_PLATAFORMA: float = 2.0
+const DISTANCIA_PATRULLA_PLATAFORMA: float = 150.0
 const ANTICIPACION_ATAQUE: float = 0.1
 const VENTANA_GOLPE: float = 0.15
 const DURACION_ATAQUE: float = 0.4
 const ESPERA_ATAQUE: float = 0.2
 const DURACION_REACCION_BRAZO: float = 0.2
 const DURACION_RECUPERACION_ATAQUE: float = 0.12
-const DISTANCIA_MAXIMA_EMBESTIDA: float = 220.0
-const DISTANCIA_MAXIMA_DESPLAZAMIENTO: float = 205.0
+const DISTANCIA_MAXIMA_EMBESTIDA: float = 300.0
+const DISTANCIA_MAXIMA_DESPLAZAMIENTO: float = 260.0
 const ANTICIPACION_EMBESTIDA: float = 0.3
 const DURACION_EMBESTIDA: float = 0.5
-const VELOCIDAD_EMBESTIDA: float = 430.0
+const VELOCIDAD_EMBESTIDA: float = 520.0
 const DURACION_RECUPERACION_EMBESTIDA: float = 0.45
 const ESPERA_EMBESTIDA: float = 0.65
 const ALCANCE_EMBESTIDA: float = 40.0
 const ALTURA_EMBESTIDA: float = 48.0
 const ANTICIPACION_DESPLAZAMIENTO: float = 0.15
-const DURACION_DESPLAZAMIENTO: float = 0.45
-const VELOCIDAD_DESPLAZAMIENTO: float = 600.0
+const DURACION_DESPLAZAMIENTO: float = 0.4
+const VELOCIDAD_DESPLAZAMIENTO: float = 700.0
 const DURACION_RECUPERACION_DESPLAZAMIENTO: float = 0.4
 const ESPERA_DESPLAZAMIENTO: float = 0.65
 const ALCANCE_DESPLAZAMIENTO: float = 38.0
@@ -61,10 +73,12 @@ const ALTURA_ATAQUE_BRAZO: float = 45.0
 const DANIO_ATAQUE_BRAZO: int = 15
 const DURACION_RECUPERACION_BRAZO: float = 0.2
 const ESPERA_ATAQUE_BRAZO: float = 0.3
-const ANTICIPACION_ATAQUE_DISTANCIA: float = 0.45
+const ANTICIPACION_ATAQUE_DISTANCIA: float = 0.35
 const DURACION_EJECUCION_ATAQUE_DISTANCIA: float = 0.16
 const DURACION_RECUPERACION_ATAQUE_DISTANCIA: float = 0.65
-const ESPERA_ATAQUE_DISTANCIA: float = 1.0
+const ESPERA_ATAQUE_DISTANCIA: float = 0.85
+const INTERVALO_RAFAGA_DISTANCIA: float = 0.22
+const CANTIDAD_DISPAROS_RAFAGA: int = 3
 const ESCENA_PROYECTIL_DISTANCIA: PackedScene = preload("res://jefes/jefeUno/Ataques/proyectil/proyectilBenjamin.tscn")
 
 @export var danio_extra_brazo: int = 1
@@ -80,7 +94,7 @@ const ESCENA_PROYECTIL_DISTANCIA: PackedScene = preload("res://jefes/jefeUno/Ata
 @onready var barra_vida: ProgressBar = $BarraVida
 
 var vida: int = VIDA_MAXIMA
-var velocidad: float = 60.0
+var velocidad: float = 135.0
 var distancia_minima: float = 60.0
 var jugador: Node2D
 var direccion: float = 1.0
@@ -104,15 +118,35 @@ var estrategia_defensiva_pendiente: bool = false
 var estrategia_defensiva_activa: bool = false
 var inmune_hasta_alejarse: bool = false
 var tiempo_estrategia_defensiva: float = 0.0
+var espera_cambio_plataforma_defensivo: float = 0.0
+var direccion_vertical_defensiva: float = 0.0
+var patron_movimiento_defensivo: int = 0
 var distancia_retrocedida: float = 0.0
 var posicion_anterior_retroceso_x: float = 0.0
-var proyectil_lanzado: bool = false
 var proyectiles_activos: Array[Area2D] = []
+var patron_proyectiles: int = 0
+var patron_disparo_actual: int = 0
+var cantidad_disparos_patron: int = 1
+var disparos_patron_emitidos: int = 0
+var objetivo_patron_distancia: Vector2 = Vector2.ZERO
+var atravesando_plataformas_hacia_arriba: bool = false
+var atravesando_plataformas_hacia_abajo: bool = false
+var mascara_plataformas_anterior: bool = true
+var tiempo_descenso_plataformas: float = 0.0
+var destino_descenso_plataformas: float = 0.0
+var altura_base_plataformas: float = 0.0
+var tiempo_plataforma_superior: float = 0.0
+var espera_reintento_plataforma: float = 0.0
+var esperando_aterrizaje_plataforma: bool = false
+var direccion_patrulla_plataforma: float = 1.0
+var patron_patrulla_plataforma: int = 0
 
 
 func _ready() -> void:
 	reproducir_animacion("quieto")
 	jugador = get_tree().get_first_node_in_group("jugador") as Node2D
+	altura_base_plataformas = global_position.y
+	mascara_plataformas_anterior = get_collision_mask_value(CAPA_PLATAFORMAS)
 	if distancia_activacion > 0.0:
 		estado = Estado.ESPERA
 	actualizar_barra_vida()
@@ -122,10 +156,13 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if estado != Estado.MUERTO:
 		espera_ataque = maxf(espera_ataque - delta, 0.0)
+		tiempo_plataforma_superior = maxf(tiempo_plataforma_superior - delta, 0.0)
+		espera_reintento_plataforma = maxf(espera_reintento_plataforma - delta, 0.0)
 		tiempo_vulnerable = maxf(tiempo_vulnerable - delta, 0.0)
 		tiempo_reaccion_brazo = maxf(tiempo_reaccion_brazo - delta, 0.0)
 		if estrategia_defensiva_activa:
 			tiempo_estrategia_defensiva = maxf(tiempo_estrategia_defensiva - delta, 0.0)
+			espera_cambio_plataforma_defensivo = maxf(espera_cambio_plataforma_defensivo - delta, 0.0)
 		if tiempo_reaccion_brazo <= 0.0:
 			$AnimatedSprite2D.modulate = Color.WHITE
 	iniciar_ataque_cercano_durante_recuperacion()
@@ -186,14 +223,33 @@ func _physics_process(delta: float) -> void:
 					estado = Estado.PERSEGUIR
 		Estado.MUERTO:
 			return
+	actualizar_colision_plataformas(delta)
 	if not is_on_floor():
 		velocity.y += get_gravity().y * delta
 	$AnimatedSprite2D.flip_h = direccion < 0.0
 	actualizar_zona_brazo()
 	actualizar_animacion()
 	move_and_slide()
+	registrar_aterrizaje_plataforma()
 	if estado == Estado.EMBESTIR or estado == Estado.DESPLAZARSE_RAPIDO:
 		revisar_colision_dash()
+
+
+func actualizar_colision_plataformas(delta: float) -> void:
+	if atravesando_plataformas_hacia_abajo:
+		tiempo_descenso_plataformas += delta
+		if global_position.y >= destino_descenso_plataformas or tiempo_descenso_plataformas >= DURACION_MAXIMA_DESCENSO_PLATAFORMAS:
+			set_collision_mask_value(CAPA_PLATAFORMAS, mascara_plataformas_anterior)
+			atravesando_plataformas_hacia_abajo = false
+		return
+	if velocity.y < 0.0:
+		if not atravesando_plataformas_hacia_arriba:
+			mascara_plataformas_anterior = get_collision_mask_value(CAPA_PLATAFORMAS)
+			set_collision_mask_value(CAPA_PLATAFORMAS, false)
+			atravesando_plataformas_hacia_arriba = true
+	elif atravesando_plataformas_hacia_arriba:
+		set_collision_mask_value(CAPA_PLATAFORMAS, mascara_plataformas_anterior)
+		atravesando_plataformas_hacia_arriba = false
 
 
 func revisar_activacion() -> void:
@@ -207,23 +263,84 @@ func perseguir_jugador() -> void:
 	var diferencia: Vector2 = jugador.global_position - global_position
 	if diferencia.x != 0.0:
 		direccion = signf(diferencia.x)
+	ajustar_altura_jugador(diferencia)
 	if absf(diferencia.y) <= ALTURA_ATAQUE and jugador_en_alcance():
 		if espera_ataque <= 0.0:
 			iniciar_ataque_segun_distancia(absf(diferencia.x))
-		else:
-			iniciar_ataque_cuerpo_a_cuerpo()
 		detenerse()
 		return
 	if estrategia_defensiva_pendiente:
 		iniciar_estrategia_defensiva()
 		return
-	if espera_ataque <= 0.0 and absf(diferencia.y) <= ALTURA_ATAQUE and iniciar_ataque_segun_distancia(absf(diferencia.x)):
+	if espera_ataque <= 0.0 and iniciar_ataque_segun_distancia(absf(diferencia.x)):
 		detenerse()
 		return
-	elif absf(diferencia.x) > distancia_minima:
+	var objetivo_horizontal: float = jugador.global_position.x
+	if esta_en_plataforma_superior() and tiempo_plataforma_superior > 0.0:
+		objetivo_horizontal += direccion_patrulla_plataforma * DISTANCIA_PATRULLA_PLATAFORMA
+	var diferencia_horizontal: float = objetivo_horizontal - global_position.x
+	if absf(diferencia_horizontal) > distancia_minima:
+		direccion = signf(diferencia_horizontal)
 		velocity.x = direccion * velocidad
 	else:
 		detenerse()
+
+
+func ajustar_altura_jugador(diferencia: Vector2) -> void:
+	if atravesando_plataformas_hacia_abajo or not is_on_floor():
+		return
+	if diferencia.y <= -DIFERENCIA_VERTICAL_PLATAFORMA:
+		iniciar_salto_entre_plataformas(-diferencia.y)
+		return
+	if esta_en_plataforma_superior():
+		if tiempo_plataforma_superior > 0.0:
+			return
+		if diferencia.y >= DIFERENCIA_VERTICAL_PLATAFORMA:
+			iniciar_descenso_entre_plataformas()
+		else:
+			iniciar_salto_entre_plataformas(ALTURA_MAXIMA_SALTO)
+	elif espera_reintento_plataforma <= 0.0:
+		iniciar_salto_entre_plataformas(ALTURA_MAXIMA_SALTO)
+
+
+func esta_en_plataforma_superior() -> bool:
+	return is_on_floor() and global_position.y <= altura_base_plataformas - DIFERENCIA_VERTICAL_PLATAFORMA
+
+
+func registrar_aterrizaje_plataforma() -> void:
+	if not esperando_aterrizaje_plataforma or not is_on_floor():
+		return
+	esperando_aterrizaje_plataforma = false
+	if esta_en_plataforma_superior():
+		tiempo_plataforma_superior = DURACION_PLATAFORMA_SUPERIOR
+		espera_reintento_plataforma = 0.0
+		patron_patrulla_plataforma += 1
+		direccion_patrulla_plataforma = 1.0 if patron_patrulla_plataforma % 2 == 0 else -1.0
+	else:
+		tiempo_plataforma_superior = 0.0
+		espera_reintento_plataforma = ESPERA_REINTENTO_PLATAFORMA
+
+
+func iniciar_salto_entre_plataformas(diferencia_altura: float) -> void:
+	var gravedad: float = maxf(get_gravity().y, 1.0)
+	var altura_salto: float = clampf(diferencia_altura + 48.0, ALTURA_MINIMA_SALTO, ALTURA_MAXIMA_SALTO)
+	velocity.y = -sqrt(2.0 * gravedad * altura_salto)
+	esperando_aterrizaje_plataforma = true
+	espera_reintento_plataforma = 0.0
+
+
+func iniciar_descenso_entre_plataformas(distancia: float = 0.0) -> void:
+	atravesando_plataformas_hacia_abajo = true
+	esperando_aterrizaje_plataforma = true
+	tiempo_plataforma_superior = 0.0
+	tiempo_descenso_plataformas = 0.0
+	if distancia > 0.0:
+		destino_descenso_plataformas = global_position.y + distancia
+	else:
+		destino_descenso_plataformas = maxf(jugador.global_position.y - 40.0, global_position.y + 72.0)
+	mascara_plataformas_anterior = get_collision_mask_value(CAPA_PLATAFORMAS)
+	set_collision_mask_value(CAPA_PLATAFORMAS, false)
+	velocity.y = VELOCIDAD_DESCENSO_PLATAFORMAS
 
 
 func iniciar_ataque_cercano_durante_recuperacion() -> void:
@@ -238,6 +355,8 @@ func iniciar_estrategia_defensiva() -> void:
 	estrategia_defensiva_pendiente = false
 	estrategia_defensiva_activa = true
 	tiempo_estrategia_defensiva = maxf(duracion_defensiva, 0.0)
+	espera_cambio_plataforma_defensivo = 0.0
+	direccion_vertical_defensiva = 0.0
 	distancia_retrocedida = 0.0
 	posicion_anterior_retroceso_x = global_position.x
 	estado = Estado.DEFENDERSE
@@ -249,6 +368,7 @@ func procesar_defensa() -> void:
 		terminar_estrategia_defensiva()
 		return
 	var diferencia: Vector2 = jugador.global_position - global_position
+	var distancia_jugador: float = global_position.distance_to(jugador.global_position)
 	var direccion_hacia_jugador: float = signf(diferencia.x)
 	if direccion_hacia_jugador == 0.0:
 		direccion_hacia_jugador = direccion
@@ -257,21 +377,53 @@ func procesar_defensa() -> void:
 	posicion_anterior_retroceso_x = global_position.x
 	var retroceso_maximo_alcanzado: bool = distancia_retrocedida >= distancia_maxima_retroceso
 	var pared_bloquea_retroceso: bool = is_on_wall() and get_wall_normal().x * direccion_retroceso < 0.0
-	if absf(diferencia.x) < distancia_defensiva and not retroceso_maximo_alcanzado and not pared_bloquea_retroceso:
+	var cambio_plataforma_forzado: bool = distancia_jugador < distancia_defensiva and (retroceso_maximo_alcanzado or pared_bloquea_retroceso)
+	if is_on_floor() and (espera_cambio_plataforma_defensivo <= 0.0 or cambio_plataforma_forzado):
+		cambiar_plataforma_defensiva(diferencia)
+	if distancia_jugador >= distancia_defensiva:
+		inmune_hasta_alejarse = false
+		distancia_retrocedida = 0.0
+		posicion_anterior_retroceso_x = global_position.x
+	retroceso_maximo_alcanzado = distancia_retrocedida >= distancia_maxima_retroceso
+	if distancia_jugador < distancia_defensiva and not retroceso_maximo_alcanzado and not pared_bloquea_retroceso:
 		direccion = direccion_retroceso
 		velocity.x = direccion_retroceso * velocidad_retroceso
 		return
-	inmune_hasta_alejarse = false
 	detenerse()
 	direccion = direccion_hacia_jugador
 	if espera_ataque <= 0.0:
 		iniciar_ataque_distancia()
 
 
+func cambiar_plataforma_defensiva(diferencia: Vector2) -> void:
+	if not is_on_floor() or atravesando_plataformas_hacia_arriba or atravesando_plataformas_hacia_abajo:
+		return
+	var direccion_cambio: float
+	if direccion_vertical_defensiva != 0.0:
+		direccion_cambio = -direccion_vertical_defensiva
+	elif diferencia.y <= -DIFERENCIA_VERTICAL_PLATAFORMA:
+		direccion_cambio = 1.0
+	elif diferencia.y >= DIFERENCIA_VERTICAL_PLATAFORMA:
+		direccion_cambio = -1.0
+	else:
+		direccion_cambio = -1.0 if patron_movimiento_defensivo % 2 == 0 else 1.0
+	direccion_vertical_defensiva = direccion_cambio
+	patron_movimiento_defensivo += 1
+	espera_cambio_plataforma_defensivo = ESPERA_CAMBIO_PLATAFORMA_DEFENSIVO
+	distancia_retrocedida = 0.0
+	posicion_anterior_retroceso_x = global_position.x
+	if direccion_cambio < 0.0:
+		iniciar_salto_entre_plataformas(ALTURA_MAXIMA_SALTO)
+	else:
+		iniciar_descenso_entre_plataformas(DISTANCIA_DESCENSO_DEFENSIVO)
+
+
 func terminar_estrategia_defensiva() -> void:
 	estrategia_defensiva_activa = false
 	inmune_hasta_alejarse = false
 	tiempo_estrategia_defensiva = 0.0
+	espera_cambio_plataforma_defensivo = 0.0
+	direccion_vertical_defensiva = 0.0
 	estado = Estado.PERSEGUIR
 	detenerse()
 
@@ -285,17 +437,20 @@ func revisar_activacion_defensiva() -> void:
 
 
 func iniciar_ataque_segun_distancia(distancia_horizontal: float) -> bool:
+	var diferencia: Vector2 = jugador.global_position - global_position
 	if jugador_en_alcance():
 		if patron_ataques % 3 == 2:
 			iniciar_ataque_brazo()
 		else:
 			iniciar_ataque_cuerpo_a_cuerpo()
-	elif distancia_horizontal <= DISTANCIA_MAXIMA_EMBESTIDA and patron_ataques % 2 == 0:
+	elif absf(diferencia.y) <= ALTURA_EMBESTIDA and distancia_horizontal <= DISTANCIA_MAXIMA_EMBESTIDA and patron_ataques % 2 == 0:
 		iniciar_embestida()
-	elif distancia_horizontal <= DISTANCIA_MAXIMA_DESPLAZAMIENTO:
+	elif absf(diferencia.y) <= ALTURA_DESPLAZAMIENTO and distancia_horizontal <= DISTANCIA_MAXIMA_DESPLAZAMIENTO:
 		iniciar_desplazamiento_rapido()
-	else:
+	elif distancia_horizontal > DISTANCIA_MAXIMA_ATAQUE_DISTANCIA:
 		return false
+	else:
+		iniciar_ataque_distancia()
 	patron_ataques += 1
 	return true
 
@@ -412,7 +567,11 @@ func procesar_recuperacion_brazo(delta: float) -> void:
 
 func iniciar_ataque_distancia() -> void:
 	fijar_direccion_ataque()
-	proyectil_lanzado = false
+	patron_disparo_actual = patron_proyectiles % 4
+	patron_proyectiles += 1
+	cantidad_disparos_patron = CANTIDAD_DISPAROS_RAFAGA if patron_disparo_actual == 2 else 1
+	disparos_patron_emitidos = 0
+	objetivo_patron_distancia = jugador.global_position if is_instance_valid(jugador) else global_position + Vector2(direccion_ataque * 300.0, 0.0)
 	cambiar_fase_ataque(Estado.PREPARAR_ATAQUE_DISTANCIA)
 
 
@@ -425,12 +584,12 @@ func procesar_preparacion_ataque_distancia(delta: float) -> void:
 
 func procesar_ataque_distancia(delta: float) -> void:
 	detenerse()
-	if not proyectil_lanzado:
-		fijar_direccion_ataque()
-		proyectil_lanzado = true
-		lanzar_proyectil_distancia()
 	tiempo_estado_ataque += delta
-	if tiempo_estado_ataque >= DURACION_EJECUCION_ATAQUE_DISTANCIA:
+	if disparos_patron_emitidos < cantidad_disparos_patron and tiempo_estado_ataque >= disparos_patron_emitidos * INTERVALO_RAFAGA_DISTANCIA:
+		lanzar_proyectil_distancia()
+		disparos_patron_emitidos += 1
+	var duracion_patron: float = DURACION_EJECUCION_ATAQUE_DISTANCIA + float(cantidad_disparos_patron - 1) * INTERVALO_RAFAGA_DISTANCIA
+	if disparos_patron_emitidos >= cantidad_disparos_patron and tiempo_estado_ataque >= duracion_patron:
 		cambiar_fase_ataque(Estado.RECUPERAR_ATAQUE_DISTANCIA)
 
 
@@ -448,12 +607,34 @@ func procesar_recuperacion_ataque_distancia(delta: float) -> void:
 func lanzar_proyectil_distancia() -> void:
 	if not is_instance_valid(jugador):
 		return
-	var proyectil: Area2D = ESCENA_PROYECTIL_DISTANCIA.instantiate() as Area2D
-	proyectil.top_level = true
-	add_child(proyectil)
-	proyectil.global_position = global_position + Vector2(0.0, -56.0)
-	proyectiles_activos.append(proyectil)
-	proyectil.call("apuntar_a", jugador.global_position)
+	var objetivo_central: Vector2 = objetivo_patron_distancia
+	var direccion_objetivo: Vector2 = (objetivo_central - global_position).normalized()
+	if direccion_objetivo == Vector2.ZERO:
+		direccion_objetivo = Vector2(direccion_ataque, 0.0)
+	var perpendicular: Vector2 = Vector2(-direccion_objetivo.y, direccion_objetivo.x)
+	var objetivos: Array[Vector2] = []
+	match patron_disparo_actual:
+		0:
+			objetivos.append(objetivo_central)
+		1:
+			objetivos.append(objetivo_central - perpendicular * 150.0)
+			objetivos.append(objetivo_central)
+			objetivos.append(objetivo_central + perpendicular * 150.0)
+		2:
+			objetivos.append(objetivo_central)
+		_:
+			objetivos.append(objetivo_central - perpendicular * 260.0)
+			objetivos.append(objetivo_central - perpendicular * 130.0)
+			objetivos.append(objetivo_central)
+			objetivos.append(objetivo_central + perpendicular * 130.0)
+			objetivos.append(objetivo_central + perpendicular * 260.0)
+	for objetivo in objetivos:
+		var proyectil: Area2D = ESCENA_PROYECTIL_DISTANCIA.instantiate() as Area2D
+		proyectil.top_level = true
+		add_child(proyectil)
+		proyectil.global_position = global_position + Vector2(direccion_ataque * 28.0, -56.0)
+		proyectiles_activos.append(proyectil)
+		proyectil.call("apuntar_a", objetivo)
 
 
 func detener_proyectiles() -> void:
@@ -506,7 +687,7 @@ func aplicar_golpe_jugador(cantidad: int) -> void:
 	if golpe_aplicado or not is_instance_valid(jugador) or not jugador.has_method("recibir_golpe"):
 		return
 	golpe_aplicado = true
-	if bool(jugador.get("invulnerable")) or int(jugador.get("vida")) <= 0:
+	if jugador.get("invulnerable") == true or int(jugador.get("vida")) <= 0:
 		return
 	jugador.call("recibir_golpe", cantidad)
 	if int(jugador.get("vida")) > 0:
@@ -576,7 +757,17 @@ func actualizar_animacion() -> void:
 			color_actual = Color(1.0, 0.78, 0.62)
 		Estado.PREPARAR_DESPLAZAMIENTO, Estado.DESPLAZARSE_RAPIDO:
 			color_actual = Color(0.72, 0.88, 1.0)
-		Estado.PREPARAR_ATAQUE_DISTANCIA, Estado.ATACAR_A_DISTANCIA:
+		Estado.PREPARAR_ATAQUE_DISTANCIA:
+			match patron_disparo_actual:
+				0:
+					color_actual = Color(0.82, 0.9, 1.0)
+				1:
+					color_actual = Color(0.72, 1.0, 0.86)
+				2:
+					color_actual = Color(0.92, 0.78, 1.0)
+				_:
+					color_actual = Color(1.0, 0.82, 0.58)
+		Estado.ATACAR_A_DISTANCIA:
 			color_actual = Color(0.82, 0.9, 1.0)
 		Estado.PREPARAR_BRAZO, Estado.ATACAR_BRAZO, Estado.RECUPERAR_BRAZO:
 			color_actual = Color(1.0, 0.72, 0.55)

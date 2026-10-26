@@ -1,9 +1,9 @@
 extends Area2D
 
-const VELOCIDAD: float = 260.0
+const VELOCIDAD: float = 320.0
 const DANIO: int = 10
 const DISTANCIA_EMPUJE: float = 22.0
-const DURACION_MAXIMA: float = 3.0
+const DURACION_MAXIMA: float = 5.0
 
 var direccion: Vector2 = Vector2.RIGHT
 var direccion_empuje_x: float = 1.0
@@ -29,11 +29,11 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_body_entered(cuerpo: Node2D) -> void:
-	if impacto_aplicado or bool(cuerpo.get("intangible_por_dash")):
+	if impacto_aplicado or cuerpo.get("intangible_por_dash") == true:
 		return
 	impacto_aplicado = true
 	if cuerpo.is_in_group("jugador") and cuerpo.has_method("recibir_golpe"):
-		if not bool(cuerpo.get("invulnerable")) and int(cuerpo.get("vida")) > 0:
+		if cuerpo.get("invulnerable") != true and int(cuerpo.get("vida")) > 0:
 			cuerpo.call("recibir_golpe", DANIO)
 			if int(cuerpo.get("vida")) > 0 and cuerpo is CharacterBody2D:
 				var cuerpo_fisico: CharacterBody2D = cuerpo as CharacterBody2D
