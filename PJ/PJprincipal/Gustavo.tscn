@@ -9,7 +9,6 @@ size = Vector2(48, 78)
 size = Vector2(80, 109)
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1202967882 groups=["jugador"]]
-collision_layer = 1
 collision_mask = 14
 script = ExtResource("1_rwi5a")
 
@@ -23,7 +22,6 @@ position = Vector2(-0.5, 0.4999981)
 shape = SubResource("RectangleShape2D_w6tk4")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=2114695616]
-collision_layer = 1
 collision_mask = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=844606985]
@@ -33,28 +31,35 @@ debug_color = Color(0.91536766, 8.20148e-05, 0.71483475, 0.41960785)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2062437399]
 
-[node name="HUD" type="VBoxContainer" parent="Camera2D"]
+[node name="HUD" type="VBoxContainer" parent="Camera2D" unique_id=975174084]
 offset_left = -560.0
 offset_top = -310.0
 offset_right = -300.0
 offset_bottom = -230.0
 theme_override_constants/separation = 4
 
-[node name="Vida" type="ProgressBar" parent="Camera2D/HUD"]
+[node name="Vida" type="ProgressBar" parent="Camera2D/HUD" unique_id=1539740352]
 custom_minimum_size = Vector2(240, 22)
 layout_mode = 2
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="VidaTexto" type="Label" parent="Camera2D/HUD"]
+[node name="VidaTexto" type="Label" parent="Camera2D/HUD" unique_id=1104363930]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "VIDA 100 / 100"
 
-[node name="Dash" type="Label" parent="Camera2D/HUD"]
+[node name="Dash" type="Label" parent="Camera2D/HUD" unique_id=361079810]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "DASH: LISTO"
+
+[node name="Pintura" type="Label" parent="Camera2D/HUD"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "PINTURA: BUSCA LA LATA"
+
+[node name="Timer" type="Timer" parent="." unique_id=1078454846]
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

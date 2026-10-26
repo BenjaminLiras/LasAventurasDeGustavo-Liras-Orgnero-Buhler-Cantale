@@ -2,10 +2,13 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+const JUMP_VELOCITY = -550.0
+const JUMP_VELOCITY_DOBLE = -400.0
+const TIEMPO_RECARGA_DASH = 0.6
 const ataqueSimpleEscena = preload("res://PJ/ataqueSimple/ataqueBase.tscn")
 const SPRITE_SHEET = preload("res://assets/asstesgustavo_sin_fondo.png")
-const DASH_DURATION = 0.3
+const DASH_DURATION = 0.45
+const DASH_SPEED = 787.5
 const UMBRAL_STICK = 0.2
 const FRAME_WIDTH = 112
 const FRAME_HEIGHT = 160
@@ -16,6 +19,8 @@ const VENTANA_COMBO = 0.1
 const COOLDOWN_ATAQUE_SIMPLE = 0.2
 const DANIO_ATAQUE_COMBO = 3
 const ESCALA_ATAQUE_COMBO = 1.5
+const GOTA_PINTURA = preload("res://PJ/ataquePintura/GotaPintura.tscn")
+const RECARGA_PINTURA = 0.6
 
 const FRAMES_IDLE = [Rect2i(218, 110, 96, 160), Rect2i(314, 110, 96, 160), Rect2i(410, 110, 96, 160), Rect2i(506, 110, 96, 160), Rect2i(602, 110, 96, 160)]
 const FRAMES_RUN = [Rect2i(758, 110, 120, 160), Rect2i(878, 110, 100, 160), Rect2i(978, 110, 98, 160), Rect2i(1076, 110, 100, 160), Rect2i(1176, 110, 84, 160), Rect2i(1256, 110, 90, 160), Rect2i(1346, 110, 90, 160), Rect2i(1436, 110, 100, 160)]
@@ -24,12 +29,12 @@ const FRAMES_ATTACK = [Rect2i(620, 350, 96, 150), Rect2i(736, 350, 96, 150), Rec
 var vidaMaxima: int = 100
 var duracion_invulnerabilidad: float = 0.5
 
-var DASH_DIRECTION : Vector2
+var DASH_DIRECTION : float
 var direction: Vector2 = Vector2(0,0)
 var ultimaDireccionDeApuntado: Vector2 = Vector2.RIGHT
 var dashActivo: bool = false
 var dashEnCooldown: bool = false
-var dash_salio_del_suelo: bool = false
+var recarga_dash_restante := 0.0
 var vida: int
 var invulnerable_por_golpe := false
 var intangible_por_dash := false
@@ -44,10 +49,13 @@ var muerto := false
 var cayendo_a_traves_de_plataforma: bool = false
 var objetivo_y_caida: float = 0.0
 var tiempo_caida: float = 0.0
+var doble_salto = true
 var capa_plataforma_estaba_activada: bool = false
 var atravesando_plataforma_al_subir: bool = false
 var mascara_enemigos_antes_del_dash := false
 var mascara_area_enemigos_antes_del_dash := false
+var cooldown_pintura := 0.0
+var ultima_direccion_horizontal := 1.0
 
 func _ready() -> void:
 	vida = vidaMaxima
@@ -65,30 +73,38 @@ func _physics_process(delta: float) -> void:
 		return
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
+	else:
+		doble_salto = true
 	if Input.is_action_just_pressed("ui_down") and is_on_floor():
 		iniciar_caida_de_plataforma()
-	elif Input.is_action_just_pressed("ui_accept"):
-		if is_on_floor():
-			velocity.y = JUMP_VELOCITY
-			Sonido.reproducir("salto")
-
-	
+	elif Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		Sonido.reproducir("salto")
+	elif Input.is_action_just_pressed("ui_accept") and doble_salto:
+		doble_salto = false
+		velocity.y = JUMP_VELOCITY_DOBLE
+		Sonido.reproducir("salto")
+	# Soltar el botón corta la subida del salto normal y del doble salto.
+	if Input.is_action_just_released("ui_accept") and velocity.y < 0.0:
+		velocity.y = 0.0
 	direction = obtenerDireccionDeMovimiento()
-	# Actualiza continuamente el apuntado y conserva la última dirección al soltar el stick.
 	obtenerDireccionDeApuntado()
-
+	if absf(ultimaDireccionDeApuntado.x) > UMBRAL_STICK:
+		ultima_direccion_horizontal = signf(ultimaDireccionDeApuntado.x)
+	cooldown_pintura = maxf(cooldown_pintura - delta, 0.0)
 	cooldown_ataque_simple = maxf(cooldown_ataque_simple - delta, 0.0)
 	tiempo_desde_dash += delta
+	recarga_dash_restante = maxf(recarga_dash_restante - delta, 0.0)
 	if Input.is_action_just_pressed("dash"):
 		dash()
-		
+	if Input.is_action_just_pressed("ataquePintura"):
+		ataque_pintura()
 	if Input.is_action_just_pressed("ataqueSimple"):
 		var es_combo := tiempo_desde_dash <= VENTANA_COMBO
 		if es_combo:
 			tiempo_desde_dash = INF
 		ataqueSimple(es_combo)
-	if !dashEnCooldown:
+	if not dashActivo:
 		if direction:
 			velocity.x = direction.x * SPEED
 		else:
@@ -100,14 +116,13 @@ func _physics_process(delta: float) -> void:
 		elif atravesando_plataforma_al_subir:
 			set_collision_mask_value(CAPA_COLISION_PLATAFORMA, true)
 			atravesando_plataforma_al_subir = false
-
+	if dashActivo and Global.pintura_desbloqueada:
+		velocity = Vector2(DASH_DIRECTION * DASH_SPEED, 0.0)
 	move_and_slide()
-	if dashEnCooldown:
-		if not is_on_floor():
-			dash_salio_del_suelo = true
-		elif dash_salio_del_suelo:
-			dashEnCooldown = false
-			dash_salio_del_suelo = false
+	# En el suelo se recarga al terminar; en el aire espera al aterrizaje.
+	if dashEnCooldown and not dashActivo and is_on_floor():
+		dashEnCooldown = false
+		recarga_dash_restante = TIEMPO_RECARGA_DASH
 	if cayendo_a_traves_de_plataforma:
 		tiempo_caida += delta
 		if global_position.y >= objetivo_y_caida or tiempo_caida >= TIEMPO_MAXIMO_CAIDA_PLATAFORMA:
@@ -132,19 +147,40 @@ func iniciar_caida_de_plataforma() -> void:
 
 
 func dash() -> void:
-	if dashActivo or dashEnCooldown:
+	if dashActivo or dashEnCooldown or recarga_dash_restante > 0.0:
 		return	
 	dashActivo = true
 	dashEnCooldown = true
 	Sonido.reproducir("dash")
-	dash_salio_del_suelo = not is_on_floor()
-	DASH_DIRECTION = obtenerDireccionDeApuntado()
-	velocity = DASH_DIRECTION * 700.0
+	DASH_DIRECTION = obtenerDireccionDeApuntado().x
+	if Global.pintura_desbloqueada:
+		DASH_DIRECTION = ultima_direccion_horizontal
+		velocity.y = 0.0
+	velocity.x = DASH_DIRECTION * DASH_SPEED
 	tiempo_desde_dash = 0.0
 	cambiar_intangibilidad_dash(true)
 	await get_tree().create_timer(DASH_DURATION).timeout
 	dashActivo = false
 	cambiar_intangibilidad_dash(false)
+
+func obtener_pintura() -> void:
+	Global.pintura_desbloqueada = true
+	cooldown_pintura = 0.0
+	actualizar_vida_ui()
+
+
+func ataque_pintura() -> void:
+	if not Global.pintura_desbloqueada or cooldown_pintura > 0.0 or dashActivo:
+		return
+	cooldown_pintura = RECARGA_PINTURA
+	var gota := GOTA_PINTURA.instantiate()
+	gota.direccion = ultima_direccion_horizontal
+	gota.lanzador = self
+	get_tree().current_scene.add_child(gota)
+	gota.global_position = global_position + Vector2(0.0, -8.0)
+	$AnimatedSprite2D.flip_h = ultima_direccion_horizontal < 0.0
+	$AnimatedSprite2D.play("ataque")
+	Sonido.reproducir("ataque")
 
 func ataqueSimple(combo: bool = false) -> void:
 	if cooldown_ataque_simple > 0.0:
@@ -168,7 +204,6 @@ func cambiar_intangibilidad_dash(activa: bool) -> void:
 		mascara_enemigos_antes_del_dash = get_collision_mask_value(CAPA_COLISION_ENEMIGOS)
 		mascara_area_enemigos_antes_del_dash = $Area2D.get_collision_mask_value(CAPA_COLISION_ENEMIGOS)
 	intangible_por_dash = activa
-	# Las mascaras de los enemigos incluyen al jugador: sin la excepcion empujan al jugador durante el dash.
 	for enemigo in get_tree().get_nodes_in_group("enemigo"):
 		if activa:
 			enemigo.add_collision_exception_with(self)
@@ -210,7 +245,7 @@ func morir() -> void:
 	velocity = Vector2.ZERO
 	vida = vidaMaxima
 	dashEnCooldown = false
-	var tiempo_recarga_dash = 0.0
+	recarga_dash_restante = 0.0
 	invulnerable = true
 	muerto = false
 	$AnimatedSprite2D.modulate = Color.WHITE
@@ -239,6 +274,14 @@ func actualizar_vida_ui() -> void:
 	var barra: ProgressBar = get_node_or_null("Camera2D/HUD/Vida")
 	var texto_vida: Label = get_node_or_null("Camera2D/HUD/VidaTexto")
 	var texto_dash: Label = get_node_or_null("Camera2D/HUD/Dash")
+	var texto_pintura: Label = get_node_or_null("Camera2D/HUD/Pintura")
+	if texto_pintura != null:
+		if not Global.pintura_desbloqueada:
+			texto_pintura.text = "PINTURA: BUSCA LA LATA"
+		elif cooldown_pintura > 0.0:
+			texto_pintura.text = "PINTURA: RECARGANDO"
+		else:
+			texto_pintura.text = "PINTURA: LISTA [L / P / B] | DASH HORIZONTAL"
 	if barra != null:
 		barra.max_value = vidaMaxima
 		barra.value = vida
@@ -247,7 +290,7 @@ func actualizar_vida_ui() -> void:
 	if texto_dash != null:
 		if dashActivo:
 			texto_dash.text = "DASH: EN USO"
-		elif dashEnCooldown:
+		elif dashEnCooldown or recarga_dash_restante > 0.0:
 			texto_dash.text = "DASH: RECARGANDO"
 		else:
 			texto_dash.text = "DASH: LISTO"
