@@ -18,6 +18,7 @@ func _ready() -> void:
 
 func _on_play_button_pressed() -> void:
 	Global.pintura_desbloqueada = false
+	Global.escalada_desbloqueada = false
 	get_tree().change_scene_to_file(GAME_SCENE)
 
 

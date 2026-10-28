@@ -72,10 +72,12 @@ D / Flecha derecha  -  Moverse a la derecha
 W / Enter  -  Saltar al presionar; mantener para subir más
 Soltar salto  -  Cortar la subida (también en doble salto)
 S / Flecha abajo  -  Bajar de una plataforma
-Espacio / Gatillo derecho  -  Dash
+Espacio / Gatillo derecho  -  Dash hacia el último movimiento
 O  -  Atacar hacia el mouse
 L / P / B del mando  -  Disparar pintura (requiere la lata)
 Lata de pintura  -  Desbloquea disparo y dash horizontal
+Equipo de escalada  -  Mantener hacia la pared y saltar
+Dash contra pared  -  Quedar colgado; Abajo para soltarse
 ESC  -  Pausa"
 horizontal_alignment = 1
 vertical_alignment = 1

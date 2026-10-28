@@ -5,6 +5,7 @@ var dash: bool = false
 var direccion: Vector2 = Vector2.ZERO
 var velocidad: Vector2 = Vector2.ZERO
 var pintura_desbloqueada := false
+var escalada_desbloqueada := false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.

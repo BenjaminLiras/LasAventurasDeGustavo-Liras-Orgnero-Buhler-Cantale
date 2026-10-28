@@ -21,6 +21,9 @@ const DANIO_ATAQUE_COMBO = 3
 const ESCALA_ATAQUE_COMBO = 1.5
 const GOTA_PINTURA = preload("res://PJ/ataquePintura/GotaPintura.tscn")
 const RECARGA_PINTURA = 0.6
+const VELOCIDAD_DESLIZAMIENTO_PARED = 80.0
+const IMPULSO_SALTO_PARED = 330.0
+const TIEMPO_SEPARACION_PARED = 0.14
 
 const FRAMES_IDLE = [Rect2i(218, 110, 96, 160), Rect2i(314, 110, 96, 160), Rect2i(410, 110, 96, 160), Rect2i(506, 110, 96, 160), Rect2i(602, 110, 96, 160)]
 const FRAMES_RUN = [Rect2i(758, 110, 120, 160), Rect2i(878, 110, 100, 160), Rect2i(978, 110, 98, 160), Rect2i(1076, 110, 100, 160), Rect2i(1176, 110, 84, 160), Rect2i(1256, 110, 90, 160), Rect2i(1346, 110, 90, 160), Rect2i(1436, 110, 100, 160)]
@@ -56,6 +59,14 @@ var mascara_enemigos_antes_del_dash := false
 var mascara_area_enemigos_antes_del_dash := false
 var cooldown_pintura := 0.0
 var ultima_direccion_horizontal := 1.0
+var ultima_direccion_movimiento := 1.0
+var agarrado_pared := false
+var normal_pared := 0.0
+var separacion_pared_restante := 0.0
+var direccion_salto_pared := 0.0
+var animacion_salto_pared_restante := 0.0
+var agarre_tras_dash := false
+var tiempo_dash_restante := 0.0
 
 func _ready() -> void:
 	vida = vidaMaxima
@@ -71,15 +82,31 @@ func _process(_delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	if muerto:
 		return
+	if dashActivo:
+		tiempo_dash_restante = maxf(tiempo_dash_restante - delta, 0.0)
+		if tiempo_dash_restante == 0.0:
+			finalizar_dash()
+	direction = obtenerDireccionDeMovimiento()
+	if absf(direction.x) > UMBRAL_STICK:
+		ultima_direccion_movimiento = signf(direction.x)
+	animacion_salto_pared_restante = maxf(animacion_salto_pared_restante - delta, 0.0)
+	separacion_pared_restante = maxf(separacion_pared_restante - delta, 0.0)
+	actualizar_agarre_pared()
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	else:
 		doble_salto = true
+	if agarrado_pared and agarre_tras_dash:
+		velocity.y = 0.0
+	elif agarrado_pared and velocity.y > 0.0:
+		velocity.y = minf(velocity.y, VELOCIDAD_DESLIZAMIENTO_PARED)
 	if Input.is_action_just_pressed("ui_down") and is_on_floor():
 		iniciar_caida_de_plataforma()
 	elif Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		Sonido.reproducir("salto")
+	elif Input.is_action_just_pressed("ui_accept") and agarrado_pared:
+		saltar_desde_pared()
 	elif Input.is_action_just_pressed("ui_accept") and doble_salto:
 		doble_salto = false
 		velocity.y = JUMP_VELOCITY_DOBLE
@@ -87,7 +114,6 @@ func _physics_process(delta: float) -> void:
 	# Soltar el botón corta la subida del salto normal y del doble salto.
 	if Input.is_action_just_released("ui_accept") and velocity.y < 0.0:
 		velocity.y = 0.0
-	direction = obtenerDireccionDeMovimiento()
 	obtenerDireccionDeApuntado()
 	if absf(ultimaDireccionDeApuntado.x) > UMBRAL_STICK:
 		ultima_direccion_horizontal = signf(ultimaDireccionDeApuntado.x)
@@ -105,7 +131,9 @@ func _physics_process(delta: float) -> void:
 			tiempo_desde_dash = INF
 		ataqueSimple(es_combo)
 	if not dashActivo:
-		if direction:
+		if separacion_pared_restante > 0.0:
+			velocity.x = direccion_salto_pared * IMPULSO_SALTO_PARED
+		elif direction:
 			velocity.x = direction.x * SPEED
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
@@ -119,6 +147,8 @@ func _physics_process(delta: float) -> void:
 	if dashActivo and Global.pintura_desbloqueada:
 		velocity = Vector2(DASH_DIRECTION * DASH_SPEED, 0.0)
 	move_and_slide()
+	if dashActivo:
+		comprobar_choque_dash()
 	# En el suelo se recarga al terminar; en el aire espera al aterrizaje.
 	if dashEnCooldown and not dashActivo and is_on_floor():
 		dashEnCooldown = false
@@ -132,6 +162,57 @@ func _physics_process(delta: float) -> void:
 	Global.setVelocidad(velocity)
 	Global.setDireccion(direction)
 	Global.setDash(dashActivo)
+
+
+func actualizar_agarre_pared() -> void:
+	var normal_anterior := normal_pared
+	agarrado_pared = false
+	normal_pared = 0.0
+	if not Global.escalada_desbloqueada or is_on_floor() or dashActivo or separacion_pared_restante > 0.0:
+		agarre_tras_dash = false
+		return
+	if direction.y > UMBRAL_STICK:
+		agarre_tras_dash = false
+		return
+	for detector: RayCast2D in [$DetectorParedIzquierda, $DetectorParedDerecha]:
+		detector.force_raycast_update()
+		if not detector.is_colliding():
+			continue
+		var cuerpo := detector.get_collider()
+		if not (cuerpo is StaticBody2D or cuerpo is TileMapLayer):
+			continue
+		var normal := detector.get_collision_normal()
+		if absf(normal.x) < 0.95:
+			continue
+		var conservar_agarre := agarre_tras_dash and signf(normal.x) == normal_anterior and direction.x * normal.x < UMBRAL_STICK
+		if not conservar_agarre and direction.x * normal.x >= -UMBRAL_STICK:
+			continue
+		agarre_tras_dash = conservar_agarre
+		agarrado_pared = true
+		normal_pared = signf(normal.x)
+		doble_salto = true
+		dashEnCooldown = false
+		recarga_dash_restante = 0.0
+		return
+	agarre_tras_dash = false
+
+
+func saltar_desde_pared() -> void:
+	direccion_salto_pared = normal_pared
+	velocity = Vector2(direccion_salto_pared * IMPULSO_SALTO_PARED, JUMP_VELOCITY)
+	separacion_pared_restante = TIEMPO_SEPARACION_PARED
+	animacion_salto_pared_restante = 0.25
+	ultima_direccion_horizontal = direccion_salto_pared
+	ultima_direccion_movimiento = direccion_salto_pared
+	agarrado_pared = false
+	agarre_tras_dash = false
+	doble_salto = true
+	Sonido.reproducir("salto")
+
+
+func obtener_equipo_escalada() -> void:
+	Global.escalada_desbloqueada = true
+	actualizar_vida_ui()
 
 
 func iniciar_caida_de_plataforma() -> void:
@@ -152,16 +233,49 @@ func dash() -> void:
 	dashActivo = true
 	dashEnCooldown = true
 	Sonido.reproducir("dash")
-	DASH_DIRECTION = obtenerDireccionDeApuntado().x
+	DASH_DIRECTION = ultima_direccion_movimiento
 	if Global.pintura_desbloqueada:
-		DASH_DIRECTION = ultima_direccion_horizontal
 		velocity.y = 0.0
+	if agarrado_pared:
+		velocity.y = 0.0
+		agarrado_pared = false
+	agarre_tras_dash = false
 	velocity.x = DASH_DIRECTION * DASH_SPEED
 	tiempo_desde_dash = 0.0
 	cambiar_intangibilidad_dash(true)
-	await get_tree().create_timer(DASH_DURATION).timeout
+	tiempo_dash_restante = DASH_DURATION
+
+
+func finalizar_dash() -> void:
+	if not dashActivo:
+		return
 	dashActivo = false
+	tiempo_dash_restante = 0.0
 	cambiar_intangibilidad_dash(false)
+
+
+func comprobar_choque_dash() -> void:
+	for i in range(get_slide_collision_count()):
+		var choque := get_slide_collision(i)
+		var cuerpo := choque.get_collider()
+		var normal := choque.get_normal()
+		if not (cuerpo is StaticBody2D or cuerpo is TileMapLayer):
+			continue
+		if absf(normal.x) < 0.95 or normal.x * DASH_DIRECTION >= 0.0:
+			continue
+		finalizar_dash()
+		velocity.x = 0.0
+		if Global.escalada_desbloqueada and not is_on_floor():
+			agarrado_pared = true
+			agarre_tras_dash = true
+			normal_pared = signf(normal.x)
+			velocity.y = 0.0
+			separacion_pared_restante = 0.0
+			animacion_salto_pared_restante = 0.0
+			doble_salto = true
+			dashEnCooldown = false
+			recarga_dash_restante = 0.0
+		return
 
 func obtener_pintura() -> void:
 	Global.pintura_desbloqueada = true
@@ -234,6 +348,13 @@ func morir() -> void:
 	if muerto:
 		return
 	muerto = true
+	finalizar_dash()
+	agarre_tras_dash = false
+	agarrado_pared = false
+	separacion_pared_restante = 0.0
+	animacion_salto_pared_restante = 0.0
+	$MovimientoEspecial.hide()
+	$AnimatedSprite2D.show()
 	Sonido.reproducir("muerte")
 	velocity = Vector2.ZERO
 	dashActivo = false
@@ -275,6 +396,10 @@ func actualizar_vida_ui() -> void:
 	var texto_vida: Label = get_node_or_null("Camera2D/HUD/VidaTexto")
 	var texto_dash: Label = get_node_or_null("Camera2D/HUD/Dash")
 	var texto_pintura: Label = get_node_or_null("Camera2D/HUD/Pintura")
+	var texto_escalada: Label = get_node_or_null("Camera2D/HUD/Escalada")
+	if texto_escalada != null:
+		texto_escalada.visible = Global.escalada_desbloqueada
+		texto_escalada.text = "ESCALADA: AGARRADO | SALTO PARA IMPULSARTE" if agarrado_pared else "ESCALADA: LISTA | MANTENE HACIA LA PARED"
 	if texto_pintura != null:
 		if not Global.pintura_desbloqueada:
 			texto_pintura.text = "PINTURA: BUSCA LA LATA"
@@ -332,6 +457,18 @@ func obtenerDireccionDeMovimiento() -> Vector2:
 
 func actualizar_animacion() -> void:
 	var sprite: AnimatedSprite2D = $AnimatedSprite2D
+	if dashActivo:
+		mostrar_movimiento_especial("dash", DASH_DIRECTION, Vector2(-0.75, 14.0))
+		return
+	if agarrado_pared:
+		var animacion_pared := "deslizar" if velocity.y > 0.0 else "agarrar"
+		mostrar_movimiento_especial(animacion_pared, -normal_pared, Vector2(normal_pared * 12.0, -10.0))
+		return
+	if animacion_salto_pared_restante > 0.0 and not is_on_floor():
+		mostrar_movimiento_especial("saltar_pared", direccion_salto_pared, Vector2(-0.75, -2.0))
+		return
+	$MovimientoEspecial.hide()
+	sprite.show()
 	if sprite.animation == "ataque" and sprite.is_playing():
 		return
 	var animacion := "quieto"
@@ -342,6 +479,20 @@ func actualizar_animacion() -> void:
 	if sprite.animation != animacion:
 		sprite.play(animacion)
 	sprite.flip_h = ultimaDireccionDeApuntado.x < 0.0 if animacion == "quieto" else velocity.x < 0.0
+
+
+func mostrar_movimiento_especial(nombre: StringName, sentido: float, desplazamiento: Vector2) -> void:
+	var especial: AnimatedSprite2D = $MovimientoEspecial
+	if especial.animation != nombre or not especial.visible:
+		especial.play(nombre)
+		especial.set_frame_and_progress(0, 0.0)
+	especial.position = desplazamiento
+	especial.flip_h = sentido < 0.0
+	especial.modulate = $AnimatedSprite2D.modulate
+	if dashActivo:
+		especial.modulate.a = 0.8
+	especial.show()
+	$AnimatedSprite2D.hide()
 
 
 func crear_animaciones() -> SpriteFrames:
@@ -369,6 +520,6 @@ func agregar_animacion(frames: SpriteFrames, imagen_original: Image, nombre: Str
 		imagen_normalizada.blit_rect(imagen_cuadro, limites, destino)
 		frames.add_frame(nombre, ImageTexture.create_from_image(imagen_normalizada))
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	dashActivo = false
+	finalizar_dash()
 	if body.has_method("obtener_daño_contacto"):
 		recibir_golpe(int(body.call("obtener_daño_contacto")))

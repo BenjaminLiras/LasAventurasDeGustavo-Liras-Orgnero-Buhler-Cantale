@@ -1,0 +1,138 @@
+[gd_resource type="SpriteFrames" load_steps=18 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/gustavo_movimientos/escalada_dash.png" id="1_atlas"]
+
+[sub_resource type="AtlasTexture" id="Cuadro_0_0"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 0, 314, 330)
+
+[sub_resource type="AtlasTexture" id="Cuadro_0_1"]
+atlas = ExtResource("1_atlas")
+region = Rect2(314, 0, 313, 330)
+
+[sub_resource type="AtlasTexture" id="Cuadro_0_2"]
+atlas = ExtResource("1_atlas")
+region = Rect2(627, 0, 314, 330)
+
+[sub_resource type="AtlasTexture" id="Cuadro_0_3"]
+atlas = ExtResource("1_atlas")
+region = Rect2(941, 0, 313, 330)
+
+[sub_resource type="AtlasTexture" id="Cuadro_1_0"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 330, 314, 330)
+
+[sub_resource type="AtlasTexture" id="Cuadro_1_1"]
+atlas = ExtResource("1_atlas")
+region = Rect2(314, 330, 313, 330)
+
+[sub_resource type="AtlasTexture" id="Cuadro_1_2"]
+atlas = ExtResource("1_atlas")
+region = Rect2(627, 330, 314, 330)
+
+[sub_resource type="AtlasTexture" id="Cuadro_1_3"]
+atlas = ExtResource("1_atlas")
+region = Rect2(941, 330, 313, 330)
+
+[sub_resource type="AtlasTexture" id="Cuadro_2_0"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 660, 314, 320)
+
+[sub_resource type="AtlasTexture" id="Cuadro_2_1"]
+atlas = ExtResource("1_atlas")
+region = Rect2(314, 660, 313, 320)
+
+[sub_resource type="AtlasTexture" id="Cuadro_2_2"]
+atlas = ExtResource("1_atlas")
+region = Rect2(627, 660, 314, 320)
+
+[sub_resource type="AtlasTexture" id="Cuadro_2_3"]
+atlas = ExtResource("1_atlas")
+region = Rect2(941, 660, 313, 320)
+
+[sub_resource type="AtlasTexture" id="Cuadro_3_0"]
+atlas = ExtResource("1_atlas")
+region = Rect2(0, 980, 314, 274)
+
+[sub_resource type="AtlasTexture" id="Cuadro_3_1"]
+atlas = ExtResource("1_atlas")
+region = Rect2(314, 980, 313, 274)
+
+[sub_resource type="AtlasTexture" id="Cuadro_3_2"]
+atlas = ExtResource("1_atlas")
+region = Rect2(627, 980, 314, 274)
+
+[sub_resource type="AtlasTexture" id="Cuadro_3_3"]
+atlas = ExtResource("1_atlas")
+region = Rect2(941, 980, 313, 274)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Cuadro_0_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_0_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_0_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_0_3")
+}],
+"loop": true,
+"name": &"agarrar",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Cuadro_1_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_1_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_1_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_1_3")
+}],
+"loop": true,
+"name": &"deslizar",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Cuadro_2_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_2_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_2_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_2_3")
+}],
+"loop": false,
+"name": &"saltar_pared",
+"speed": 16
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Cuadro_3_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_3_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_3_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_3_3")
+}],
+"loop": false,
+"name": &"dash",
+"speed": 8.88888888888889
+}]

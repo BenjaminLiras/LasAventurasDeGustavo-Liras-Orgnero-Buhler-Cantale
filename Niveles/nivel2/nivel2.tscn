@@ -1,14 +1,21 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://c6w84gborwwai"]
 
-[ext_resource type="PackedScene" path="res://PJ/PJprincipal/Gustavo.tscn" id="1_gustavo"]
+[ext_resource type="PackedScene" uid="uid://bolxfxsdhue4p" path="res://PJ/PJprincipal/Gustavo.tscn" id="1_gustavo"]
 [ext_resource type="PackedScene" path="res://enemigosBase/pibeNavaja/pibeConNavaja.tscn" id="2_navajero"]
 [ext_resource type="PackedScene" path="res://enemigosBase/pajaroPicada/Pajaro.tscn" id="3_pajaro"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/checkpoint/Checkpoint.tscn" id="4_checkpoint"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/fragmentoVida/FragmentoVida.tscn" id="5_fragmento"]
-[ext_resource type="PackedScene" path="res://piezasEscenario/cartel/Cartel.tscn" id="6_cartel"]
 [ext_resource type="PackedScene" path="res://ui/PauseMenu.tscn" id="7_pause"]
-[ext_resource type="Script" path="res://Niveles/nivel1/nivel1.gd" id="8_level_script"]
-[ext_resource type="Theme" path="res://ui/menu_theme.tres" id="9_theme"]
+[ext_resource type="Script" uid="uid://u0letn138v02" path="res://Niveles/nivel1/nivel1.gd" id="8_level_script"]
+[ext_resource type="Theme" uid="uid://w5xhdmnjwdsn" path="res://ui/menu_theme.tres" id="9_theme"]
+[ext_resource type="Script" path="res://piezasEscenario/escalada/equipo_escalada.gd" id="10_escalada"]
+[ext_resource type="Texture2D" path="res://assets/escalada/equipo_escalada.svg" id="11_equipo_textura"]
+
+[sub_resource type="CircleShape2D" id="RecogidaEscalada"]
+radius = 28.0
+
+[sub_resource type="RectangleShape2D" id="ParedEscalada"]
+size = Vector2(48, 640)
 
 [sub_resource type="RectangleShape2D" id="GroundStart"]
 size = Vector2(850, 100)
@@ -22,11 +29,11 @@ size = Vector2(1700, 100)
 [sub_resource type="RectangleShape2D" id="FloatingPlatform"]
 size = Vector2(180, 16)
 
-[sub_resource type="RectangleShape2D" id="FallZone"]
-size = Vector2(4000, 1000)
-
 [sub_resource type="RectangleShape2D" id="ExitShape"]
 size = Vector2(100, 150)
+
+[sub_resource type="RectangleShape2D" id="FallZone"]
+size = Vector2(4000, 1000)
 
 [sub_resource type="StyleBoxFlat" id="FinalPanel"]
 content_margin_left = 32.0
@@ -44,199 +51,211 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[node name="Nivel2" type="Node2D"]
+[node name="Nivel2" type="Node2D" unique_id=1692729344]
 script = ExtResource("8_level_script")
 
-[node name="Fondo" type="CanvasLayer" parent="."]
+[node name="Fondo" type="CanvasLayer" parent="." unique_id=34182984]
 layer = -10
 
-[node name="Color" type="ColorRect" parent="Fondo"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.025, 0.07, 0.06, 1)
-
-[node name="LomasLejanas" type="Polygon2D" parent="."]
-z_index = -10
-color = Color(0.07, 0.17, 0.11, 1)
-polygon = PackedVector2Array(-1000, 310, -700, 175, -350, 295, 40, 130, 440, 300, 850, 155, 1220, 320, 1630, 155, 2040, 305, 2440, 140, 2850, 300, 3270, 160, 3750, 320, 4300, 175, 4300, 900, -1000, 900)
-
-[node name="LomasCercanas" type="Polygon2D" parent="."]
-z_index = -9
-color = Color(0.045, 0.12, 0.085, 1)
-polygon = PackedVector2Array(-1000, 370, -620, 260, -200, 365, 240, 225, 700, 375, 1160, 245, 1580, 365, 2010, 230, 2440, 375, 2860, 245, 3290, 370, 3750, 265, 4300, 390, 4300, 900, -1000, 900)
-
-[node name="CharacterBody2D" parent="." instance=ExtResource("1_gustavo")]
+[node name="CharacterBody2D" parent="." unique_id=1750265173 instance=ExtResource("1_gustavo")]
 position = Vector2(454, 361)
 collision_mask = 9
 
-[node name="SueloInicio" type="StaticBody2D" parent="."]
-position = Vector2(425, 450)
+[node name="EquipoEscalada" type="Area2D" parent="."]
+position = Vector2(550, 355)
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("10_escalada")
+
+[node name="Visual" type="Sprite2D" parent="EquipoEscalada"]
+modulate = Color(1, 0.75, 0.3, 1)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("11_equipo_textura")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EquipoEscalada"]
+shape = SubResource("RecogidaEscalada")
+
+[node name="Nombre" type="Label" parent="EquipoEscalada"]
+offset_left = -120.0
+offset_top = -64.0
+offset_right = 120.0
+offset_bottom = -36.0
+theme_override_colors/font_color = Color(1, 0.75, 0.3, 1)
+theme_override_font_sizes/font_size = 16
+text = "EQUIPO DE ESCALADA"
+horizontal_alignment = 1
+
+[node name="ParedPruebaEscalada" type="StaticBody2D" parent="."]
+position = Vector2(680, 80)
 collision_layer = 1
 collision_mask = 0
 
-[node name="Tierra" type="Polygon2D" parent="SueloInicio"]
+[node name="Visual" type="Polygon2D" parent="ParedPruebaEscalada"]
+color = Color(0.3, 0.32, 0.36, 1)
+polygon = PackedVector2Array(-24, -320, 24, -320, 24, 320, -24, 320)
+
+[node name="Marcas" type="Line2D" parent="ParedPruebaEscalada"]
+points = PackedVector2Array(-18, 280, -18, -280)
+width = 4.0
+default_color = Color(1, 0.75, 0.3, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ParedPruebaEscalada"]
+shape = SubResource("ParedEscalada")
+
+[node name="AyudaEscalada" type="Label" parent="."]
+position = Vector2(280, 170)
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+text = "RECOGE EL EQUIPO\nMantené hacia la pared para deslizarte.\nPresioná salto para trepar.\nLa pared recupera dash y doble salto."
+
+[node name="SueloInicio" type="StaticBody2D" parent="." unique_id=126357538]
+position = Vector2(425, 450)
+collision_mask = 0
+
+[node name="Tierra" type="Polygon2D" parent="SueloInicio" unique_id=1221569963]
 color = Color(0.18, 0.24, 0.15, 1)
 polygon = PackedVector2Array(-425, -50, 425, -50, 425, 50, -425, 50)
 
-[node name="Musgo" type="Polygon2D" parent="SueloInicio"]
+[node name="Musgo" type="Polygon2D" parent="SueloInicio" unique_id=1881303602]
 color = Color(0.31, 0.49, 0.24, 1)
 polygon = PackedVector2Array(-425, -50, 425, -50, 425, -38, -425, -38)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloInicio"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloInicio" unique_id=1219846648]
 shape = SubResource("GroundStart")
 
-[node name="SueloCentral" type="StaticBody2D" parent="."]
+[node name="SueloCentral" type="StaticBody2D" parent="." unique_id=969379491]
 position = Vector2(1375, 450)
-collision_layer = 1
 collision_mask = 0
 
-[node name="Tierra" type="Polygon2D" parent="SueloCentral"]
+[node name="Tierra" type="Polygon2D" parent="SueloCentral" unique_id=15035297]
 color = Color(0.18, 0.24, 0.15, 1)
 polygon = PackedVector2Array(-375, -50, 375, -50, 375, 50, -375, 50)
 
-[node name="Musgo" type="Polygon2D" parent="SueloCentral"]
+[node name="Musgo" type="Polygon2D" parent="SueloCentral" unique_id=1555244676]
 color = Color(0.31, 0.49, 0.24, 1)
 polygon = PackedVector2Array(-375, -50, 375, -50, 375, -38, -375, -38)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloCentral"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloCentral" unique_id=735570947]
 shape = SubResource("GroundMiddle")
 
-[node name="SueloFinal" type="StaticBody2D" parent="."]
+[node name="SueloFinal" type="StaticBody2D" parent="." unique_id=747734554]
 position = Vector2(2750, 450)
-collision_layer = 1
 collision_mask = 0
 
-[node name="Tierra" type="Polygon2D" parent="SueloFinal"]
+[node name="Tierra" type="Polygon2D" parent="SueloFinal" unique_id=1983673847]
 color = Color(0.18, 0.24, 0.15, 1)
 polygon = PackedVector2Array(-850, -50, 850, -50, 850, 50, -850, 50)
 
-[node name="Musgo" type="Polygon2D" parent="SueloFinal"]
+[node name="Musgo" type="Polygon2D" parent="SueloFinal" unique_id=1085225473]
 color = Color(0.31, 0.49, 0.24, 1)
 polygon = PackedVector2Array(-850, -50, 850, -50, 850, -38, -850, -38)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloFinal"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SueloFinal" unique_id=1949419613]
 shape = SubResource("GroundEnd")
 
-[node name="Puente1" type="StaticBody2D" parent="."]
+[node name="Puente1" type="StaticBody2D" parent="." unique_id=951577648]
 position = Vector2(925, 350)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Visual" type="Polygon2D" parent="Puente1"]
+[node name="Visual" type="Polygon2D" parent="Puente1" unique_id=1853155800]
 color = Color(0.19, 0.34, 0.19, 1)
 polygon = PackedVector2Array(-90, -8, 90, -8, 90, 8, -90, 8)
 
-[node name="Musgo" type="Polygon2D" parent="Puente1"]
+[node name="Musgo" type="Polygon2D" parent="Puente1" unique_id=771761544]
 color = Color(0.35, 0.56, 0.27, 1)
 polygon = PackedVector2Array(-90, -8, 90, -8, 90, -3, -90, -3)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Puente1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Puente1" unique_id=165068728]
 shape = SubResource("FloatingPlatform")
 
-[node name="Puente2" type="StaticBody2D" parent="."]
+[node name="Puente2" type="StaticBody2D" parent="." unique_id=2051850692]
 position = Vector2(1825, 350)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Visual" type="Polygon2D" parent="Puente2"]
+[node name="Visual" type="Polygon2D" parent="Puente2" unique_id=1721534060]
 color = Color(0.19, 0.34, 0.19, 1)
 polygon = PackedVector2Array(-90, -8, 90, -8, 90, 8, -90, 8)
 
-[node name="Musgo" type="Polygon2D" parent="Puente2"]
+[node name="Musgo" type="Polygon2D" parent="Puente2" unique_id=1926125020]
 color = Color(0.35, 0.56, 0.27, 1)
 polygon = PackedVector2Array(-90, -8, 90, -8, 90, -3, -90, -3)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Puente2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Puente2" unique_id=676191198]
 shape = SubResource("FloatingPlatform")
 
-[node name="Mirador" type="StaticBody2D" parent="."]
+[node name="Mirador" type="StaticBody2D" parent="." unique_id=260137860]
 position = Vector2(1375, 350)
 collision_layer = 8
 collision_mask = 0
 
-[node name="Visual" type="Polygon2D" parent="Mirador"]
+[node name="Visual" type="Polygon2D" parent="Mirador" unique_id=1792178397]
 color = Color(0.19, 0.34, 0.19, 1)
 polygon = PackedVector2Array(-90, -8, 90, -8, 90, 8, -90, 8)
 
-[node name="Musgo" type="Polygon2D" parent="Mirador"]
+[node name="Musgo" type="Polygon2D" parent="Mirador" unique_id=1924306662]
 color = Color(0.35, 0.56, 0.27, 1)
 polygon = PackedVector2Array(-90, -8, 90, -8, 90, -3, -90, -3)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Mirador"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mirador" unique_id=1620571827]
 shape = SubResource("FloatingPlatform")
 
-[node name="EnemigoNavajero" parent="." instance=ExtResource("2_navajero")]
+[node name="EnemigoNavajero" parent="." unique_id=1252634292 instance=ExtResource("2_navajero")]
 position = Vector2(740, 394)
 
-[node name="Pajaro" parent="." instance=ExtResource("3_pajaro")]
+[node name="Pajaro" parent="." unique_id=1828955034 instance=ExtResource("3_pajaro")]
 position = Vector2(1320, 235)
 
-[node name="EnemigoNavajero2" parent="." instance=ExtResource("2_navajero")]
+[node name="EnemigoNavajero2" parent="." unique_id=686494361 instance=ExtResource("2_navajero")]
 position = Vector2(1650, 394)
 vida = 4
 
-[node name="Checkpoint" parent="." instance=ExtResource("4_checkpoint")]
+[node name="Checkpoint" parent="." unique_id=1120283378 instance=ExtResource("4_checkpoint")]
 position = Vector2(1980, 400)
 
-[node name="FragmentoVida" parent="." instance=ExtResource("5_fragmento")]
+[node name="FragmentoVida" parent="." unique_id=461917943 instance=ExtResource("5_fragmento")]
 position = Vector2(1375, 300)
 
-[node name="EnemigoNavajero3" parent="." instance=ExtResource("2_navajero")]
+[node name="EnemigoNavajero3" parent="." unique_id=754335126 instance=ExtResource("2_navajero")]
 position = Vector2(2450, 394)
 vida = 4
 multiplicador_velocidad = 1.15
 
-[node name="Checkpoint2" parent="." instance=ExtResource("4_checkpoint")]
+[node name="Checkpoint2" parent="." unique_id=1163457986 instance=ExtResource("4_checkpoint")]
 position = Vector2(2850, 400)
 
-[node name="PajaroFinal" parent="." instance=ExtResource("3_pajaro")]
+[node name="PajaroFinal" parent="." unique_id=674602624 instance=ExtResource("3_pajaro")]
 position = Vector2(3100, 235)
 
-[node name="CartelBosque" parent="." instance=ExtResource("6_cartel")]
-position = Vector2(610, 400)
-texto = "EL SENDERO SE CORTA\nSALTA Y USA EL DASH"
-
-[node name="CartelCheckpoint" parent="." instance=ExtResource("6_cartel")]
-position = Vector2(2070, 400)
-texto = "PUNTO DE CONTROL\nCADA CAIDA TE DEVUELVE A ESTE PUNTO"
-
-[node name="CartelSalida" parent="." instance=ExtResource("6_cartel")]
-position = Vector2(3190, 400)
-texto = "EL ARCO MARCA EL FINAL\nDEL RECORRIDO"
-
-[node name="Salida" type="Area2D" parent="."]
+[node name="Salida" type="Area2D" parent="." unique_id=1855186684]
 position = Vector2(3470, 361)
 collision_layer = 0
-collision_mask = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Salida"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Salida" unique_id=1024792690]
 shape = SubResource("ExitShape")
 
-[node name="ArcoSalida" type="Node2D" parent="."]
+[node name="ArcoSalida" type="Node2D" parent="." unique_id=667278828]
 position = Vector2(3470, 361)
 
-[node name="Visual" type="Polygon2D" parent="ArcoSalida"]
+[node name="Visual" type="Polygon2D" parent="ArcoSalida" unique_id=920881186]
 color = Color(0.91, 0.54, 0.23, 0.45)
 polygon = PackedVector2Array(-12, -75, 12, -75, 12, 75, -12, 75)
 
-[node name="ZonaCaida" type="Area2D" parent="."]
+[node name="ZonaCaida" type="Area2D" parent="." unique_id=20594076]
 position = Vector2(1800, 1100)
 collision_layer = 0
-collision_mask = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaCaida"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaCaida" unique_id=1880484821]
 shape = SubResource("FallZone")
 
-[node name="PauseMenu" parent="." instance=ExtResource("7_pause")]
+[node name="PauseMenu" parent="." unique_id=315503668 instance=ExtResource("7_pause")]
 
-[node name="Resultados" type="CanvasLayer" parent="."]
+[node name="Resultados" type="CanvasLayer" parent="." unique_id=2072623113]
 process_mode = 3
 layer = 20
 
-[node name="Aviso" type="Label" parent="Resultados"]
+[node name="Aviso" type="Label" parent="Resultados" unique_id=2008080116]
 visible = false
 anchors_preset = 5
 anchor_left = 0.5
@@ -249,7 +268,7 @@ theme = ExtResource("9_theme")
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 
-[node name="PantallaFinal" type="ColorRect" parent="Resultados"]
+[node name="PantallaFinal" type="ColorRect" parent="Resultados" unique_id=1185838832]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -258,7 +277,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.02, 0.05, 0.04, 0.82)
 
-[node name="CenterContainer" type="CenterContainer" parent="Resultados/PantallaFinal"]
+[node name="CenterContainer" type="CenterContainer" parent="Resultados/PantallaFinal" unique_id=1661029053]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -266,32 +285,32 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Resultados/PantallaFinal/CenterContainer"]
+[node name="Panel" type="PanelContainer" parent="Resultados/PantallaFinal/CenterContainer" unique_id=1748586910]
 layout_mode = 2
 theme = ExtResource("9_theme")
 theme_override_styles/panel = SubResource("FinalPanel")
 
-[node name="Contenido" type="VBoxContainer" parent="Resultados/PantallaFinal/CenterContainer/Panel"]
+[node name="Contenido" type="VBoxContainer" parent="Resultados/PantallaFinal/CenterContainer/Panel" unique_id=1398581714]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="Titulo" type="Label" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido"]
+[node name="Titulo" type="Label" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido" unique_id=70803902]
 layout_mode = 2
 theme_override_font_sizes/font_size = 42
 text = "NIVEL COMPLETADO"
 horizontal_alignment = 1
 
-[node name="Siguiente" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido"]
+[node name="Siguiente" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido" unique_id=252140772]
 custom_minimum_size = Vector2(320, 54)
 layout_mode = 2
 text = "SIGUIENTE NIVEL"
 
-[node name="Reintentar" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido"]
+[node name="Reintentar" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido" unique_id=494009608]
 custom_minimum_size = Vector2(320, 54)
 layout_mode = 2
 text = "JUGAR DE NUEVO"
 
-[node name="Menu" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido"]
+[node name="Menu" type="Button" parent="Resultados/PantallaFinal/CenterContainer/Panel/Contenido" unique_id=1777200970]
 custom_minimum_size = Vector2(320, 54)
 layout_mode = 2
 text = "VOLVER AL MENÚ"

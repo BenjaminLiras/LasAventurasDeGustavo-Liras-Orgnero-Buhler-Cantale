@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bolxfxsdhue4p"]
 
 [ext_resource type="Script" uid="uid://cely8r5gxpr7f" path="res://PJ/PJprincipal/gustavo.gd" id="1_rwi5a"]
+[ext_resource type="SpriteFrames" path="res://assets/gustavo_movimientos/movimientos.tres" id="2_movimientos"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6tk4"]
 size = Vector2(48, 78)
@@ -20,6 +21,14 @@ scale = Vector2(0.6, 0.6)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1117269634]
 position = Vector2(-0.5, 0.4999981)
 shape = SubResource("RectangleShape2D_w6tk4")
+
+[node name="MovimientoEspecial" type="AnimatedSprite2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(-0.75, -10)
+scale = Vector2(0.38, 0.38)
+sprite_frames = ExtResource("2_movimientos")
+animation = &"agarrar"
 
 [node name="Area2D" type="Area2D" parent="." unique_id=2114695616]
 collision_mask = 10
@@ -61,5 +70,20 @@ theme_override_font_sizes/font_size = 16
 text = "PINTURA: BUSCA LA LATA"
 
 [node name="Timer" type="Timer" parent="." unique_id=1078454846]
+
+[node name="DetectorParedIzquierda" type="RayCast2D" parent="."]
+target_position = Vector2(-29, 0)
+collision_mask = 13
+
+[node name="DetectorParedDerecha" type="RayCast2D" parent="."]
+target_position = Vector2(29, 0)
+collision_mask = 13
+
+[node name="Escalada" type="Label" parent="Camera2D/HUD"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.3, 1)
+theme_override_font_sizes/font_size = 16
+text = "ESCALADA: LISTA"
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
