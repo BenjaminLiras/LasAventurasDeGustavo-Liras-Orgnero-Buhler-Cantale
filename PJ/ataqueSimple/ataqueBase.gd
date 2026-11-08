@@ -1,35 +1,52 @@
 extends Area2D
 
-const FRAMES_PUNETAZO: Array[Texture2D] = [
-	preload("res://assets/PunchEffect/punch_00.png"),
-	preload("res://assets/PunchEffect/punch_01.png"),
-	preload("res://assets/PunchEffect/punch_02.png"),
-	preload("res://assets/PunchEffect/punch_03.png"),
-	preload("res://assets/PunchEffect/punch_04.png")
-]
+const DURACION := 0.22
+const INICIO_IMPACTO := 0.035
+const FIN_IMPACTO := 0.18
+
 @export var daño: int = 1
+var lanzador: CharacterBody2D
+var direccion_golpe := Vector2.RIGHT
 var objetivos_golpeados: Dictionary = {}
+var tiempo := 0.0
+var activo := false
+var retroceso_aplicado := false
 
 
 func _ready() -> void:
-	var cuadros := SpriteFrames.new()
-	cuadros.clear_all()
-	cuadros.add_animation("golpe")
-	cuadros.set_animation_speed("golpe", 25.0)
-	cuadros.set_animation_loop("golpe", false)
-	for imagen in FRAMES_PUNETAZO:
-		cuadros.add_frame("golpe", imagen)
-	$AnimatedSprite2D.sprite_frames = cuadros
-	$AnimatedSprite2D.play("golpe")
-	await get_tree().create_timer(0.2).timeout
-	queue_free()
+	_actualizar_visual()
+
+
+func _physics_process(delta: float) -> void:
+	tiempo += delta
+	if tiempo >= DURACION:
+		queue_free()
+		return
+	var siguiente_activo := tiempo >= INICIO_IMPACTO and tiempo < FIN_IMPACTO
+	if siguiente_activo != activo:
+		activo = siguiente_activo
+		$Colision.set_deferred("disabled", not activo)
+	_actualizar_visual()
+
+
+func _actualizar_visual() -> void:
+	var progreso := clampf(tiempo / FIN_IMPACTO, 0.0, 1.0)
+	$Bate.rotation = lerpf(-1.15, 1.15, smoothstep(0.0, 1.0, progreso))
+	$Arco.visible = activo
+	$Arco.modulate.a = sin(progreso * PI) * 0.85
+	modulate.a = clampf((DURACION - tiempo) / (DURACION - FIN_IMPACTO), 0.0, 1.0)
 
 
 func _on_body_entered(body: Node2D) -> void:
-	var id_objetivo := body.get_instance_id()
-	if objetivos_golpeados.has(id_objetivo):
+	if not activo or body == lanzador:
 		return
-	if body.has_method("recibir_golpe"):
-		objetivos_golpeados[id_objetivo] = true
-		body.call("recibir_golpe", daño)
-		Sonido.reproducir("impacto")
+	var id_objetivo := body.get_instance_id()
+	if objetivos_golpeados.has(id_objetivo) or not body.has_method("recibir_golpe"):
+		return
+	objetivos_golpeados[id_objetivo] = true
+	body.call("recibir_golpe", daño)
+	Sonido.reproducir("impacto")
+	# Un solo retroceso por barrido, aunque alcance varios enemigos.
+	if not retroceso_aplicado and is_instance_valid(lanzador) and lanzador.has_method("aplicar_retroceso_batazo"):
+		retroceso_aplicado = true
+		lanzador.call("aplicar_retroceso_batazo", direccion_golpe)

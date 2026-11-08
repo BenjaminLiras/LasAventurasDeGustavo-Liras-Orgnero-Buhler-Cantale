@@ -69,7 +69,7 @@ func _on_fragmento_vida_body_entered(body: Node2D, fragmento: Area2D) -> void:
 	jugador.call("obtener_fragmento_vida")
 	fragmento.queue_free()
 	Sonido.reproducir("fragmento")
-	mostrar_aviso("FRAGMENTO DE VIDA: +20")
+	mostrar_aviso("FRAGMENTO DE VIDA: +1 CORAZON")
 
 
 func _on_zona_caida_body_entered(body: Node2D) -> void:

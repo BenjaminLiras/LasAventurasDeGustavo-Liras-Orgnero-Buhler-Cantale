@@ -16,7 +16,10 @@ const CAPA_COLISION_PLATAFORMA = 4
 const TIEMPO_MAXIMO_CAIDA_PLATAFORMA = 0.75
 const CAPA_COLISION_ENEMIGOS = 2
 const VENTANA_COMBO = 0.1
-const COOLDOWN_ATAQUE_SIMPLE = 0.2
+const COOLDOWN_ATAQUE_SIMPLE = 0.25
+const DURACION_RETROCESO_BATAZO = 0.12
+const FUERZA_RETROCESO_BATAZO = 220.0
+const FUERZA_REBOTE_BATAZO = 320.0
 const DANIO_ATAQUE_COMBO = 3
 const ESCALA_ATAQUE_COMBO = 1.5
 const GOTA_PINTURA = preload("res://PJ/ataquePintura/GotaPintura.tscn")
@@ -24,12 +27,14 @@ const RECARGA_PINTURA = 0.6
 const VELOCIDAD_DESLIZAMIENTO_PARED = 80.0
 const IMPULSO_SALTO_PARED = 330.0
 const TIEMPO_SEPARACION_PARED = 0.14
+const CORAZONES_INICIALES = 5
+const PUNTOS_DANIO_POR_CORAZON = 20.0
 
 const FRAMES_IDLE = [Rect2i(218, 110, 96, 160), Rect2i(314, 110, 96, 160), Rect2i(410, 110, 96, 160), Rect2i(506, 110, 96, 160), Rect2i(602, 110, 96, 160)]
 const FRAMES_RUN = [Rect2i(758, 110, 120, 160), Rect2i(878, 110, 100, 160), Rect2i(978, 110, 98, 160), Rect2i(1076, 110, 100, 160), Rect2i(1176, 110, 84, 160), Rect2i(1256, 110, 90, 160), Rect2i(1346, 110, 90, 160), Rect2i(1436, 110, 100, 160)]
 const FRAMES_JUMP = [Rect2i(32, 400, 96, 100), Rect2i(117, 355, 96, 120), Rect2i(227, 325, 96, 135), Rect2i(437, 365, 96, 135)]
 const FRAMES_ATTACK = [Rect2i(620, 350, 96, 150), Rect2i(736, 350, 96, 150), Rect2i(852, 350, 96, 150), Rect2i(966, 350, 104, 150), Rect2i(1085, 350, 102, 150), Rect2i(1207, 350, 96, 150), Rect2i(1324, 350, 96, 150), Rect2i(1410, 350, 100, 150)]
-var vidaMaxima: int = 100
+var vidaMaxima: int = CORAZONES_INICIALES
 var duracion_invulnerabilidad: float = 0.5
 
 var DASH_DIRECTION : float
@@ -67,6 +72,8 @@ var direccion_salto_pared := 0.0
 var animacion_salto_pared_restante := 0.0
 var agarre_tras_dash := false
 var tiempo_dash_restante := 0.0
+var retroceso_batazo_restante := 0.0
+var velocidad_retroceso_batazo_x := 0.0
 
 func _ready() -> void:
 	vida = vidaMaxima
@@ -87,6 +94,7 @@ func _physics_process(delta: float) -> void:
 		if tiempo_dash_restante == 0.0:
 			finalizar_dash()
 	direction = obtenerDireccionDeMovimiento()
+	retroceso_batazo_restante = maxf(retroceso_batazo_restante - delta, 0.0)
 	if absf(direction.x) > UMBRAL_STICK:
 		ultima_direccion_movimiento = signf(direction.x)
 	animacion_salto_pared_restante = maxf(animacion_salto_pared_restante - delta, 0.0)
@@ -131,7 +139,9 @@ func _physics_process(delta: float) -> void:
 			tiempo_desde_dash = INF
 		ataqueSimple(es_combo)
 	if not dashActivo:
-		if separacion_pared_restante > 0.0:
+		if retroceso_batazo_restante > 0.0:
+			velocity.x = velocidad_retroceso_batazo_x
+		elif separacion_pared_restante > 0.0:
 			velocity.x = direccion_salto_pared * IMPULSO_SALTO_PARED
 		elif direction:
 			velocity.x = direction.x * SPEED
@@ -168,7 +178,7 @@ func actualizar_agarre_pared() -> void:
 	var normal_anterior := normal_pared
 	agarrado_pared = false
 	normal_pared = 0.0
-	if not Global.escalada_desbloqueada or is_on_floor() or dashActivo or separacion_pared_restante > 0.0:
+	if not Global.escalada_desbloqueada or is_on_floor() or dashActivo or separacion_pared_restante > 0.0 or retroceso_batazo_restante > 0.0:
 		agarre_tras_dash = false
 		return
 	if direction.y > UMBRAL_STICK:
@@ -288,11 +298,11 @@ func ataque_pintura() -> void:
 		return
 	cooldown_pintura = RECARGA_PINTURA
 	var gota := GOTA_PINTURA.instantiate()
-	gota.direccion = ultima_direccion_horizontal
+	gota.direccion = ultima_direccion_movimiento
 	gota.lanzador = self
 	get_tree().current_scene.add_child(gota)
 	gota.global_position = global_position + Vector2(0.0, -8.0)
-	$AnimatedSprite2D.flip_h = ultima_direccion_horizontal < 0.0
+	$AnimatedSprite2D.flip_h = ultima_direccion_movimiento < 0.0
 	$AnimatedSprite2D.play("ataque")
 	Sonido.reproducir("ataque")
 
@@ -300,17 +310,36 @@ func ataqueSimple(combo: bool = false) -> void:
 	if cooldown_ataque_simple > 0.0:
 		return
 	cooldown_ataque_simple = COOLDOWN_ATAQUE_SIMPLE
-	Sonido.reproducir("combo" if combo else "ataque")
+	Sonido.reproducir("combo" if combo else "batazo")
 	var ataqueDireccion := obtenerDireccionDeApuntado()
 	$AnimatedSprite2D.play("ataque")
+	$AnimatedSprite2D.set_frame_and_progress(0, 0.0)
 	$AnimatedSprite2D.flip_h = ataqueDireccion.x < 0.0
 	var ataqueSimple := ataqueSimpleEscena.instantiate() as Area2D
+	ataqueSimple.set("lanzador", self)
+	ataqueSimple.set("direccion_golpe", ataqueDireccion)
 	if combo:
 		ataqueSimple.set("daño", DANIO_ATAQUE_COMBO)
 		ataqueSimple.scale = Vector2.ONE * ESCALA_ATAQUE_COMBO
 	add_child(ataqueSimple)
-	ataqueSimple.position = ataqueDireccion * 20.0
+	ataqueSimple.position = Vector2.ZERO
 	ataqueSimple.global_rotation = ataqueDireccion.angle()
+
+
+func aplicar_retroceso_batazo(direccion_golpe: Vector2) -> void:
+	if muerto:
+		return
+	finalizar_dash()
+	var opuesta := -direccion_golpe.normalized()
+	velocidad_retroceso_batazo_x = opuesta.x * FUERZA_RETROCESO_BATAZO
+	velocity.x = velocidad_retroceso_batazo_x
+	if absf(opuesta.y) > 0.1:
+		velocity.y = opuesta.y * FUERZA_REBOTE_BATAZO
+	retroceso_batazo_restante = DURACION_RETROCESO_BATAZO
+	agarrado_pared = false
+	agarre_tras_dash = false
+	separacion_pared_restante = 0.0
+	animacion_salto_pared_restante = 0.0
 
 
 func cambiar_intangibilidad_dash(activa: bool) -> void:
@@ -331,7 +360,8 @@ func cambiar_intangibilidad_dash(activa: bool) -> void:
 func recibir_golpe(cantidad: int = 1) -> void:
 	if cantidad <= 0 or invulnerable or vida <= 0:
 		return
-	vida = maxi(vida - cantidad, 0)
+	var corazones_perdidos := ceili(float(cantidad) / PUNTOS_DANIO_POR_CORAZON)
+	vida = maxi(vida - corazones_perdidos, 0)
 	actualizar_vida_ui()
 	if vida == 0:
 		morir()
@@ -348,6 +378,7 @@ func morir() -> void:
 	if muerto:
 		return
 	muerto = true
+	retroceso_batazo_restante = 0.0
 	finalizar_dash()
 	agarre_tras_dash = false
 	agarrado_pared = false
@@ -386,39 +417,13 @@ func animar_impacto() -> void:
 
 
 func obtener_fragmento_vida() -> void:
-	vidaMaxima += 20
+	vidaMaxima += 1
 	vida = vidaMaxima
 	actualizar_vida_ui()
 
 
 func actualizar_vida_ui() -> void:
-	var barra: ProgressBar = get_node_or_null("Camera2D/HUD/Vida")
-	var texto_vida: Label = get_node_or_null("Camera2D/HUD/VidaTexto")
-	var texto_dash: Label = get_node_or_null("Camera2D/HUD/Dash")
-	var texto_pintura: Label = get_node_or_null("Camera2D/HUD/Pintura")
-	var texto_escalada: Label = get_node_or_null("Camera2D/HUD/Escalada")
-	if texto_escalada != null:
-		texto_escalada.visible = Global.escalada_desbloqueada
-		texto_escalada.text = "ESCALADA: AGARRADO | SALTO PARA IMPULSARTE" if agarrado_pared else "ESCALADA: LISTA | MANTENE HACIA LA PARED"
-	if texto_pintura != null:
-		if not Global.pintura_desbloqueada:
-			texto_pintura.text = "PINTURA: BUSCA LA LATA"
-		elif cooldown_pintura > 0.0:
-			texto_pintura.text = "PINTURA: RECARGANDO"
-		else:
-			texto_pintura.text = "PINTURA: LISTA [L / P / B] | DASH HORIZONTAL"
-	if barra != null:
-		barra.max_value = vidaMaxima
-		barra.value = vida
-	if texto_vida != null:
-		texto_vida.text = "VIDA %d / %d" % [vida, vidaMaxima]
-	if texto_dash != null:
-		if dashActivo:
-			texto_dash.text = "DASH: EN USO"
-		elif dashEnCooldown or recarga_dash_restante > 0.0:
-			texto_dash.text = "DASH: RECARGANDO"
-		else:
-			texto_dash.text = "DASH: LISTO"
+	$Camera2D/HUD/Corazones.actualizar(vida, vidaMaxima)
 
 
 func obtenerDireccionDeApuntado() -> Vector2:
@@ -502,7 +507,7 @@ func crear_animaciones() -> SpriteFrames:
 	agregar_animacion(frames, imagen_original, "quieto", FRAMES_IDLE, 7.0, true)
 	agregar_animacion(frames, imagen_original, "correr", FRAMES_RUN, 12.0, true)
 	agregar_animacion(frames, imagen_original, "salto", FRAMES_JUMP, 8.0, true)
-	agregar_animacion(frames, imagen_original, "ataque", FRAMES_ATTACK, 24.0, false)
+	agregar_animacion(frames, imagen_original, "ataque", FRAMES_ATTACK, 36.0, false)
 	return frames
 
 

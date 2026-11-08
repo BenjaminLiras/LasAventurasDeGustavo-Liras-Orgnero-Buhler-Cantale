@@ -6,7 +6,7 @@ Inspiración: [Uoma, las medusas pequeñas de Cañón Nublado](https://hollowkni
 
 - Avanza horizontalmente a 70 px/s, cambia de dirección al chocar con una pared y no persigue al jugador.
 - Oscila verticalmente con amplitud de 48 px (96 px de recorrido total), sin atravesar el escenario.
-- El contacto quita 10 de vida y respeta la invulnerabilidad del jugador.
+- El contacto quita un corazón (daño base 10) y respeta la invulnerabilidad del jugador.
 - Tiene 1 de vida: un golpe simple o una gota de pintura lo elimina.
 - Su muerte es inofensiva y no genera un proyectil de represalia.
 - Reaparece al cargar otra vez la escena, como los demás enemigos del nivel.

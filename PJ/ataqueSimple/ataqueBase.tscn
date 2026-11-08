@@ -1,23 +1,35 @@
 [gd_scene format=3 uid="uid://chk8br0ub8isg"]
 
 [ext_resource type="Script" uid="uid://nhlsudbafumk" path="res://PJ/ataqueSimple/ataqueBase.gd" id="1_ataque"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_mywey"]
-size = Vector2(32, 65)
+[ext_resource type="Texture2D" path="res://assets/bate/baseball-bat.svg" id="2_bate"]
 
 [node name="AtaqueBase" type="Area2D" unique_id=1383470958]
+z_index = 4
 collision_layer = 16
 collision_mask = 10
 script = ExtResource("1_ataque")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1138438826]
-position = Vector2(0, -0.5)
-scale = Vector2(2, 2)
-texture_filter = 1
+[node name="Bate" type="Node2D" parent="."]
+position = Vector2(16, 0)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=366362008]
-position = Vector2(0, -0.49999905)
-shape = SubResource("RectangleShape2D_mywey")
-debug_color = Color(0.87850225, 0.3411954, 0, 0.41960785)
+[node name="Sprite" type="Sprite2D" parent="Bate"]
+position = Vector2(32, 0)
+rotation = 0.7853982
+scale = Vector2(0.12, 0.12)
+modulate = Color(0.85, 0.59, 0.3, 1)
+texture_filter = 1
+texture = ExtResource("2_bate")
+
+[node name="Arco" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(24, -65, 51, -53, 72, -30, 80, 0, 72, 30, 51, 53, 24, 65)
+width = 6.0
+default_color = Color(1, 0.91, 0.68, 1)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="Colision" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(10, 0, 20, -64, 55, -52, 78, -26, 84, 0, 78, 26, 55, 52, 20, 64)
+disabled = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

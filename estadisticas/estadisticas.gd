@@ -74,14 +74,29 @@ func _lineas_jugador() -> PackedStringArray:
 	var invulnerable := " (invulnerable)" if jugador.get("invulnerable") else ""
 	var capa_plataformas := "activa" if jugador.get_collision_mask_value(CAPA_PLATAFORMAS) else "desactivada"
 	var atravesando_plataforma = jugador.get("cayendo_a_traves_de_plataforma") or jugador.get("atravesando_plataforma_al_subir")
+	var pintura := "no obtenida"
+	if Global.pintura_desbloqueada:
+		var recarga := float(jugador.get("cooldown_pintura"))
+		pintura = "recargando (%.1f s)" % recarga if recarga > 0.0 else "lista [L / P / B]"
+	var escalada := "no obtenida"
+	if Global.escalada_desbloqueada:
+		escalada = "agarrado a pared" if jugador.get("agarrado_pared") else "obtenida"
+	var recarga_dash := float(jugador.get("recarga_dash_restante"))
+	var dash := "listo"
+	if jugador.get("dashActivo"):
+		dash = "en uso"
+	elif jugador.get("dashEnCooldown") or recarga_dash > 0.0:
+		dash = "recargando (%.1f s)" % recarga_dash if recarga_dash > 0.0 else "esperando suelo o pared"
 	return PackedStringArray([
 		"Posición: %.1f, %.1f" % [posicion.x, posicion.y],
 		"Velocidad: %d, %d" % [velocidad.x, velocidad.y],
 		"Dirección: %.2f, %.2f" % [direccion.x, direccion.y],
 		"En suelo: %s" % _si_no(jugador.is_on_floor()),
-		"Dash activo: %s" % _si_no(Global.getDash()),
-		"Dash en recarga: %s" % _si_no(jugador.get("dashEnCooldown")),
-		"Vida: %s / %s%s" % [jugador.get("vida"), jugador.get("vidaMaxima"), invulnerable],
+		"Dash: %s" % dash,
+		"Dash horizontal: %s" % _si_no(Global.pintura_desbloqueada),
+		"Pintura: %s" % pintura,
+		"Equipo de escalada: %s" % escalada,
+		"Corazones: %s / %s%s" % [jugador.get("vida"), jugador.get("vidaMaxima"), invulnerable],
 		"Capa plataformas: %s" % capa_plataformas,
 		"Atravesando plataforma: %s" % _si_no(atravesando_plataforma),
 		"Reaparición: %d, %d" % [reaparicion.x, reaparicion.y],

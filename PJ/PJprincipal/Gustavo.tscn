@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cely8r5gxpr7f" path="res://PJ/PJprincipal/gustavo.gd" id="1_rwi5a"]
 [ext_resource type="SpriteFrames" path="res://assets/gustavo_movimientos/movimientos.tres" id="2_movimientos"]
+[ext_resource type="Script" path="res://ui/vida_corazones.gd" id="3_corazones"]
+[ext_resource type="Texture2D" path="res://assets/ui/corazon_lleno.svg" id="4_corazon"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6tk4"]
 size = Vector2(48, 78)
@@ -47,27 +49,57 @@ offset_right = -300.0
 offset_bottom = -230.0
 theme_override_constants/separation = 4
 
-[node name="Vida" type="ProgressBar" parent="Camera2D/HUD" unique_id=1539740352]
-custom_minimum_size = Vector2(240, 22)
+[node name="Corazones" type="HBoxContainer" parent="Camera2D/HUD"]
+custom_minimum_size = Vector2(184, 32)
 layout_mode = 2
-value = 100.0
-show_percentage = false
+mouse_filter = 2
+theme_override_constants/separation = 6
+script = ExtResource("3_corazones")
 
-[node name="VidaTexto" type="Label" parent="Camera2D/HUD" unique_id=1104363930]
+[node name="Corazon1" type="TextureRect" parent="Camera2D/HUD/Corazones"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "VIDA 100 / 100"
+mouse_filter = 2
+texture_filter = 1
+texture = ExtResource("4_corazon")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Dash" type="Label" parent="Camera2D/HUD" unique_id=361079810]
+[node name="Corazon2" type="TextureRect" parent="Camera2D/HUD/Corazones"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "DASH: LISTO"
+mouse_filter = 2
+texture_filter = 1
+texture = ExtResource("4_corazon")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Pintura" type="Label" parent="Camera2D/HUD"]
+[node name="Corazon3" type="TextureRect" parent="Camera2D/HUD/Corazones"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 16
-text = "PINTURA: BUSCA LA LATA"
+mouse_filter = 2
+texture_filter = 1
+texture = ExtResource("4_corazon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Corazon4" type="TextureRect" parent="Camera2D/HUD/Corazones"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+mouse_filter = 2
+texture_filter = 1
+texture = ExtResource("4_corazon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Corazon5" type="TextureRect" parent="Camera2D/HUD/Corazones"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+mouse_filter = 2
+texture_filter = 1
+texture = ExtResource("4_corazon")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Timer" type="Timer" parent="." unique_id=1078454846]
 
@@ -78,12 +110,5 @@ collision_mask = 13
 [node name="DetectorParedDerecha" type="RayCast2D" parent="."]
 target_position = Vector2(29, 0)
 collision_mask = 13
-
-[node name="Escalada" type="Label" parent="Camera2D/HUD"]
-visible = false
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.75, 0.3, 1)
-theme_override_font_sizes/font_size = 16
-text = "ESCALADA: LISTA"
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
