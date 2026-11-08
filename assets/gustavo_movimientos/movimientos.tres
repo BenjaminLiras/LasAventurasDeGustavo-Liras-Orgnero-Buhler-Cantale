@@ -81,7 +81,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Cuadro_0_3")
 }],
-"loop": 1,
+"loop": true,
 "name": &"agarrar",
 "speed": 6.0
 }, {
@@ -98,7 +98,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Cuadro_3_3")
 }],
-"loop": 0,
+"loop": false,
 "name": &"dash",
 "speed": 8.88888888888889
 }, {
@@ -115,7 +115,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Cuadro_1_3")
 }],
-"loop": 1,
+"loop": true,
 "name": &"deslizar",
 "speed": 10.0
 }, {
@@ -132,7 +132,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Cuadro_2_3")
 }],
-"loop": 0,
+"loop": false,
 "name": &"saltar_pared",
 "speed": 16.0
 }]

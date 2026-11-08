@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d24m22mtsmkes"
-path="res://.godot/imported/Tileset de hojas cian sobre transparencia.png-ff624f662c1014c4366a7b023972cdae.ctex"
+uid="uid://b684oukpsaahi"
+path="res://.godot/imported/Plataformas Rojas.png-50fe67b45174a3940087607699ed28d8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Mossy Tileset/Tileset de hojas cian sobre transparencia.png"
-dest_files=["res://.godot/imported/Tileset de hojas cian sobre transparencia.png-ff624f662c1014c4366a7b023972cdae.ctex"]
+source_file="res://assets/Plataformas/Plataformas Rojas.png"
+dest_files=["res://.godot/imported/Plataformas Rojas.png-50fe67b45174a3940087607699ed28d8.ctex"]
 
 [params]
 
