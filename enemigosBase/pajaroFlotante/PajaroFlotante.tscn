@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://enemigosBase/pajaroFlotante/pajaro_flotante.gd" id="1_ave"]
+[ext_resource type="SpriteFrames" path="res://assets/pajaro_flotante/volar.tres" id="2_cuadros"]
+
+[sub_resource type="CircleShape2D" id="Cuerpo"]
+radius = 14.0
+
+[sub_resource type="CircleShape2D" id="Contacto"]
+radius = 18.0
+
+[node name="PajaroFlotante" type="CharacterBody2D" groups=["enemigo"]]
+z_index = 1
+collision_layer = 2
+collision_mask = 13
+motion_mode = 1
+script = ExtResource("1_ave")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(2, 2)
+sprite_frames = ExtResource("2_cuadros")
+animation = &"volar"
+autoplay = "volar"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Cuerpo")
+
+[node name="AreaDeContacto" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaDeContacto"]
+shape = SubResource("Contacto")

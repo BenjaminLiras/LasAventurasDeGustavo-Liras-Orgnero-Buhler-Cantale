@@ -1,0 +1,70 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://piezasEscenario/pinchosPareja/pinchos_pareja.gd" id="1_script"]
+[ext_resource type="Resource" path="res://piezasEscenario/pinchosPareja/pinchos_nivel2.tres" id="2_config"]
+[ext_resource type="Texture2D" path="res://assets/pinchos_pixel/spike-trap-32px_strip8.png" id="3_textura"]
+
+[sub_resource type="AtlasTexture" id="Textura_puntas"]
+atlas = ExtResource("3_textura")
+region = Rect2(225, 12, 30, 13)
+
+[sub_resource type="AtlasTexture" id="Textura_base"]
+atlas = ExtResource("3_textura")
+region = Rect2(1, 25, 30, 7)
+
+[node name="PinchosPareja" type="Node2D"]
+z_index = 2
+script = ExtResource("1_script")
+configuracion = ExtResource("2_config")
+
+[node name="GuiaCentro" type="Line2D" parent="."]
+width = 1.0
+default_color = Color(1, 0.4, 0.15, 0.4)
+
+[node name="Izquierdo" type="Node2D" parent="."]
+
+[node name="Base" type="Sprite2D" parent="Izquierdo"]
+texture_filter = 1
+texture = SubResource("Textura_base")
+
+[node name="Pincho" type="Sprite2D" parent="Izquierdo"]
+texture_filter = 1
+modulate = Color(0.78, 0.97, 1, 1)
+texture = SubResource("Textura_puntas")
+
+[node name="Peligro" type="Area2D" parent="Izquierdo"]
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+
+[node name="Colision" type="CollisionPolygon2D" parent="Izquierdo/Peligro"]
+
+[node name="Colision2" type="CollisionPolygon2D" parent="Izquierdo/Peligro"]
+
+[node name="Colision3" type="CollisionPolygon2D" parent="Izquierdo/Peligro"]
+
+[node name="Colision4" type="CollisionPolygon2D" parent="Izquierdo/Peligro"]
+
+[node name="Derecho" type="Node2D" parent="."]
+
+[node name="Base" type="Sprite2D" parent="Derecho"]
+texture_filter = 1
+texture = SubResource("Textura_base")
+
+[node name="Pincho" type="Sprite2D" parent="Derecho"]
+texture_filter = 1
+modulate = Color(0.78, 0.97, 1, 1)
+texture = SubResource("Textura_puntas")
+
+[node name="Peligro" type="Area2D" parent="Derecho"]
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+
+[node name="Colision" type="CollisionPolygon2D" parent="Derecho/Peligro"]
+
+[node name="Colision2" type="CollisionPolygon2D" parent="Derecho/Peligro"]
+
+[node name="Colision3" type="CollisionPolygon2D" parent="Derecho/Peligro"]
+
+[node name="Colision4" type="CollisionPolygon2D" parent="Derecho/Peligro"]

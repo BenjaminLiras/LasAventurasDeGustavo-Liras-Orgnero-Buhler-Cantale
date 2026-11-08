@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ConfiguracionPinchosRoca" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://piezasEscenario/pinchosRoca/configuracion_pinchos_roca.gd" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+cantidad = 6
+separacion = 40.0
+ancho = 40.0
+altura = 56.0
+orientacion = 0
+danio = 20
+intervalo_danio = 0.6

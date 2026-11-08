@@ -1,0 +1,67 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://cukkapq25si8f"]
+
+[ext_resource type="Texture2D" uid="uid://uo082pwvpgpn" path="res://assets/pajaro_flotante/bird-32px_strip8.png" id="1_ave"]
+
+[sub_resource type="AtlasTexture" id="Cuadro_0"]
+atlas = ExtResource("1_ave")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="Cuadro_1"]
+atlas = ExtResource("1_ave")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="Cuadro_2"]
+atlas = ExtResource("1_ave")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="Cuadro_3"]
+atlas = ExtResource("1_ave")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="Cuadro_4"]
+atlas = ExtResource("1_ave")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="Cuadro_5"]
+atlas = ExtResource("1_ave")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="Cuadro_6"]
+atlas = ExtResource("1_ave")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="Cuadro_7"]
+atlas = ExtResource("1_ave")
+region = Rect2(224, 0, 32, 32)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Cuadro_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("Cuadro_7")
+}],
+"loop": true,
+"name": &"volar",
+"speed": 12.0
+}]

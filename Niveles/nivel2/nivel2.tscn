@@ -11,6 +11,9 @@
 [ext_resource type="Script" uid="uid://dhqkrhq5glkto" path="res://piezasEscenario/escalada/equipo_escalada.gd" id="10_escalada"]
 [ext_resource type="Texture2D" uid="uid://d24m22mtsmkes" path="res://assets/Mossy Tileset/Tileset de hojas cian sobre transparencia.png" id="11_bs3wm"]
 [ext_resource type="Texture2D" uid="uid://c8gtbbvp2vlmn" path="res://assets/escalada/equipo_escalada.svg" id="11_equipo_textura"]
+[ext_resource type="PackedScene" path="res://piezasEscenario/pinchosPareja/PinchosPareja.tscn" id="12_pinchos_pareja"]
+[ext_resource type="PackedScene" path="res://enemigosBase/pajaroFlotante/PajaroFlotante.tscn" id="13_pajaro_flotante"]
+[ext_resource type="PackedScene" path="res://piezasEscenario/pinchosRoca/PinchosRoca.tscn" id="14_pinchos_roca"]
 
 [sub_resource type="CircleShape2D" id="RecogidaEscalada"]
 radius = 28.0
@@ -209,9 +212,27 @@ position = Vector2(740, 394)
 [node name="Pajaro" parent="." unique_id=1828955034 instance=ExtResource("3_pajaro")]
 position = Vector2(1320, 235)
 
+[node name="PinchosPareja" parent="." unique_id=815194585 instance=ExtResource("12_pinchos_pareja")]
+position = Vector2(5512, 714)
+
 [node name="EnemigoNavajero2" parent="." unique_id=686494361 instance=ExtResource("2_navajero")]
 position = Vector2(1650, 394)
 vida = 4
+
+[node name="PajaroFlotante1" parent="." unique_id=1294997295 instance=ExtResource("13_pajaro_flotante")]
+position = Vector2(1550, 485)
+
+[node name="PajaroFlotante2" parent="." unique_id=791704302 instance=ExtResource("13_pajaro_flotante")]
+position = Vector2(1900, 450)
+fase_inicial = 1.5
+mirar_izquierda = true
+
+[node name="PajaroFlotante3" parent="." unique_id=487597558 instance=ExtResource("13_pajaro_flotante")]
+position = Vector2(2260, 500)
+fase_inicial = 3.0
+
+[node name="PinchosRoca" parent="." unique_id=402130338 instance=ExtResource("14_pinchos_roca")]
+position = Vector2(2700, 576)
 
 [node name="Checkpoint" parent="." unique_id=1120283378 instance=ExtResource("4_checkpoint")]
 position = Vector2(1980, 400)

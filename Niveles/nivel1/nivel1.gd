@@ -32,7 +32,9 @@ func _ready() -> void:
 		var fragmento := nodo as Area2D
 		fragmento.body_entered.connect(_on_fragmento_vida_body_entered.bind(fragmento))
 	salida.body_entered.connect(_on_salida_body_entered)
-	$ZonaCaida.body_entered.connect(_on_zona_caida_body_entered)
+	var zona_caida := get_node_or_null("ZonaCaida") as Area2D
+	if zona_caida != null:
+		zona_caida.body_entered.connect(_on_zona_caida_body_entered)
 	boton_siguiente.visible = not siguiente_nivel.is_empty()
 	titulo_final.text = "NIVEL COMPLETADO" if boton_siguiente.visible else "FIN DE LA DEMO"
 	boton_siguiente.pressed.connect(_on_siguiente_pressed)

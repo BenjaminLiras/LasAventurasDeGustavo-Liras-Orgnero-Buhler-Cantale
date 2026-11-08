@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ConfiguracionPinchosPareja" format=3 uid="uid://dbf1ot3bdjp1m"]
+
+[ext_resource type="Script" uid="uid://cyipkfewiae71" path="res://piezasEscenario/pinchosPareja/configuracion_pinchos.gd" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+separacion = 1012.0
+altura_pincho = 100.0
+longitud_retraida = 30.0
+tiempo_abierto = 0.45
+tiempo_aviso = 0.3
+tiempo_extension = 0.3
+tiempo_cerrado = 0.35
+tiempo_retraccion = 0.3
+retraso_inicial = 0.0

@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://piezasEscenario/pinchosRoca/pinchos_roca.gd" id="1_script"]
+[ext_resource type="Resource" path="res://piezasEscenario/pinchosRoca/pinchos_roca_nivel2.tres" id="2_config"]
+
+[node name="PinchosRoca" type="Area2D"]
+z_index = 2
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+script = ExtResource("1_script")
+configuracion = ExtResource("2_config")
+
+[node name="Visuales" type="Node2D" parent="."]
