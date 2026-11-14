@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3]
+[ext_resource type="Script" path="res://enemigosBase/nivel3/jabali_musgoso.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/enemigos_nivel3/jabali.png" id="2"]
+[sub_resource type="RectangleShape2D" id="Forma"]
+size = Vector2(52, 38)
+[node name="JabaliMusgoso" type="CharacterBody2D" groups=["enemigo", "jabalies_musgosos"]]
+z_index = 1
+collision_layer = 2
+collision_mask = 13
+script = ExtResource("1")
+vida = 2
+monedas = 5
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(0, -10)
+scale = Vector2(2.5, 2.5)
+texture_filter = 1
+texture = ExtResource("2")
+[node name="Musgo" type="Polygon2D" parent="."]
+position = Vector2(0, -8)
+color = Color(0.55, 0.22, 0.13, 1)
+polygon = PackedVector2Array(-34, 13, -34, -2, -29, -4, -32, -12, -22, -10, -21, -20, -13, -15, -6, -24, 1, -18, 9, -25, 16, -18, 26, -22, 26, -11, 34, -12, 30, -2, 36, 4, 30, 13)
+[node name="Hojas" type="Line2D" parent="Musgo"]
+points = PackedVector2Array(-28, 4, -20, -6, -13, 0, -5, -10, 3, -4, 10, -12, 18, -5, 28, 3)
+width = 5.0
+default_color = Color(0.88, 0.43, 0.22, 1)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Forma")
+[node name="Contacto" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contacto"]
+shape = SubResource("Forma")

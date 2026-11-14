@@ -4259,6 +4259,7 @@ sources/0 = SubResource("TileSetAtlasSource_xwa23")
 
 [node name="Nivel2" type="Node2D" unique_id=1692729344]
 script = ExtResource("8_level_script")
+siguiente_nivel = "res://Niveles/nivel3/nivel3.tscn"
 
 [node name="CharacterBody2D" parent="." unique_id=1750265173 instance=ExtResource("1_gustavo")]
 position = Vector2(454, 361)

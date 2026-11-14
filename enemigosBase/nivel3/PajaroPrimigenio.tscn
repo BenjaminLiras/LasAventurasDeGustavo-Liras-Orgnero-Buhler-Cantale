@@ -1,0 +1,44 @@
+[gd_scene load_steps=10 format=3]
+[ext_resource type="Script" path="res://enemigosBase/nivel3/pajaro_primigenio.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/enemigos_nivel3/pajaro.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/enemigos_nivel3/huevo.svg" id="3"]
+[sub_resource type="AtlasTexture" id="F0"]
+atlas = ExtResource("2")
+region = Rect2(0, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="F1"]
+atlas = ExtResource("2")
+region = Rect2(64, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="F2"]
+atlas = ExtResource("2")
+region = Rect2(128, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="F3"]
+atlas = ExtResource("2")
+region = Rect2(192, 0, 64, 64)
+[sub_resource type="SpriteFrames" id="Animaciones"]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("F0")}, {"duration": 1.0, "texture": SubResource("F1")}, {"duration": 1.0, "texture": SubResource("F2")}, {"duration": 1.0, "texture": SubResource("F3")}], "loop": true, "name": &"volar", "speed": 8.0}]
+[sub_resource type="CircleShape2D" id="Forma"]
+radius = 22.0
+[node name="PajaroPrimigenio" type="CharacterBody2D" groups=["enemigo", "pajaros_primigenios"]]
+z_index = 1
+collision_layer = 2
+collision_mask = 13
+motion_mode = 1
+script = ExtResource("1")
+[node name="Visual" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("Animaciones")
+animation = &"volar"
+autoplay = "volar"
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Forma")
+[node name="Preparacion" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -40)
+texture_filter = 1
+texture = ExtResource("3")
+[node name="Contacto" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contacto"]
+shape = SubResource("Forma")
