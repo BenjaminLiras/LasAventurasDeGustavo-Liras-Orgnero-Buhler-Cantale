@@ -129,6 +129,9 @@ func obtener_daño_contacto() -> int:
 
 
 func morir() -> void:
+	if estado == Estado.MUERTO:
+		return
+	Global.soltar_monedas(self, Global.BALANCE.monedas_picada)
 	cambiar_estado(Estado.MUERTO)
 	collision_layer = 0
 	$AreaDeContacto.collision_mask = 0

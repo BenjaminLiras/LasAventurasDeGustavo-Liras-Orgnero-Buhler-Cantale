@@ -894,6 +894,7 @@ func aplicar_danio(cantidad: int, golpe_en_brazo: bool) -> void:
 	actualizar_barra_vida()
 	if vida == 0:
 		estado = Estado.MUERTO
+		Global.soltar_monedas(self, Global.BALANCE.monedas_jefe)
 		tiempo_vulnerable = 0.0
 		estrategia_defensiva_activa = false
 		estrategia_defensiva_pendiente = false

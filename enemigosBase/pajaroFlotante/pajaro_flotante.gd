@@ -71,6 +71,7 @@ func recibir_golpe(cantidad: int = 1) -> void:
 	if vida > 0:
 		return
 	muerto = true
+	Global.soltar_monedas(self, Global.BALANCE.monedas_flotante)
 	set_deferred("collision_layer", 0)
 	$CollisionShape2D.set_deferred("disabled", true)
 	$AreaDeContacto.set_deferred("monitoring", false)

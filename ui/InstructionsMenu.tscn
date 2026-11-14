@@ -45,10 +45,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -200.0
-offset_right = 300.0
-offset_bottom = 200.0
+offset_left = -400.0
+offset_top = -285.0
+offset_right = 400.0
+offset_bottom = 285.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("PanelStyle")
@@ -63,10 +63,18 @@ theme_override_font_sizes/font_size = 40
 text = "INSTRUCCIONES"
 horizontal_alignment = 1
 
-[node name="ControlsLabel" type="Label" parent="Panel/Content"]
+[node name="ControlsScroll" type="ScrollContainer" parent="Panel/Content"]
+custom_minimum_size = Vector2(720, 330)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/line_spacing = 10
+horizontal_scroll_mode = 0
+
+[node name="ControlsLabel" type="Label" parent="Panel/Content/ControlsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+theme_override_constants/line_spacing = 4
+autowrap_mode = 3
 text = "A / Flecha izquierda  -  Moverse a la izquierda
 D / Flecha derecha  -  Moverse a la derecha
 W / Enter  -  Saltar al presionar; mantener para subir más
@@ -75,9 +83,11 @@ S / Flecha abajo  -  Bajar de una plataforma
 Espacio / Gatillo derecho  -  Dash hacia el último movimiento
 O / R3 del mando  -  Batazo hacia el apuntado
 Impactar con el bate  -  Retroceso contrario al golpe
-L / P / B del mando  -  Pintura hacia el último movimiento
-Vida  -  Cinco corazones; fragmentos agregan uno
-Lata de pintura  -  Desbloquea disparo y dash horizontal
+L / P / B del mando  -  Lanzar lata en parábola; recogerla para reutilizar
+Vida  -  Cinco corazones iniciales; cada cuatro fragmentos agregan uno
+Lata de pintura  -  Desbloquea arrojadizo y dash horizontal
+E / Select cerca del puesto  -  Comprar espíritus con monedas de enemigos
+4 fragmentos  -  Un corazón extra; puntos de control restauran vida
 Equipo de escalada  -  Mantener hacia la pared y saltar
 Dash contra pared  -  Quedar colgado; Abajo para soltarse
 ESC  -  Pausa"

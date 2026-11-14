@@ -76,7 +76,10 @@ var retroceso_batazo_restante := 0.0
 var velocidad_retroceso_batazo_x := 0.0
 
 func _ready() -> void:
+	vidaMaxima = Global.vida_maxima()
 	vida = vidaMaxima
+	Global.lata_disponible = true
+	Global.mejoras_cambiadas.connect(actualizar_mejoras)
 	$AnimatedSprite2D.sprite_frames = crear_animaciones()
 	$AnimatedSprite2D.play("quieto")
 	actualizar_vida_ui()
@@ -289,13 +292,15 @@ func comprobar_choque_dash() -> void:
 
 func obtener_pintura() -> void:
 	Global.pintura_desbloqueada = true
+	Global.lata_disponible = true
 	cooldown_pintura = 0.0
 	actualizar_vida_ui()
 
 
 func ataque_pintura() -> void:
-	if not Global.pintura_desbloqueada or cooldown_pintura > 0.0 or dashActivo:
+	if not Global.pintura_desbloqueada or not Global.lata_disponible or cooldown_pintura > 0.0 or dashActivo or muerto:
 		return
+	Global.lata_disponible = false
 	cooldown_pintura = RECARGA_PINTURA
 	var gota := GOTA_PINTURA.instantiate()
 	gota.direccion = ultima_direccion_movimiento
@@ -321,6 +326,8 @@ func ataqueSimple(combo: bool = false) -> void:
 	if combo:
 		ataqueSimple.set("daño", DANIO_ATAQUE_COMBO)
 		ataqueSimple.scale = Vector2.ONE * ESCALA_ATAQUE_COMBO
+	if Global.amuleto_alcance:
+		ataqueSimple.scale *= Global.BALANCE.multiplicador_alcance
 	add_child(ataqueSimple)
 	ataqueSimple.position = Vector2.ZERO
 	ataqueSimple.global_rotation = ataqueDireccion.angle()
@@ -394,6 +401,9 @@ func morir() -> void:
 	if not is_inside_tree():
 		return
 	global_position = Global.punto_reaparicion
+	for lata in get_tree().get_nodes_in_group("latas_lanzadas"):
+		lata.queue_free()
+	Global.lata_disponible = true
 	velocity = Vector2.ZERO
 	vida = vidaMaxima
 	dashEnCooldown = false
@@ -417,13 +427,28 @@ func animar_impacto() -> void:
 
 
 func obtener_fragmento_vida() -> void:
-	vidaMaxima += 1
-	vida = vidaMaxima
+	if Global.corazones_base >= Global.BALANCE.maximo_corazones_base:
+		vida = mini(vida + 1, vidaMaxima)
+		return
+	Global.fragmentos_vida += 1
+	if Global.fragmentos_vida >= maxi(Global.BALANCE.fragmentos_por_corazon, 1):
+		Global.fragmentos_vida = 0
+		Global.corazones_base += 1
+		actualizar_mejoras()
+		vida = vidaMaxima
+	actualizar_vida_ui()
+
+
+func actualizar_mejoras() -> void:
+	var nueva_vida := Global.vida_maxima()
+	vida = mini(vida + maxi(nueva_vida - vidaMaxima, 0), nueva_vida)
+	vidaMaxima = nueva_vida
 	actualizar_vida_ui()
 
 
 func actualizar_vida_ui() -> void:
 	$Camera2D/HUD/Corazones.actualizar(vida, vidaMaxima)
+	$Camera2D/HUD/Economia.text = "Monedas: %d   ·   Fragmentos: %d / %d" % [Global.monedas, Global.fragmentos_vida, Global.BALANCE.fragmentos_por_corazon]
 
 
 func obtenerDireccionDeApuntado() -> Vector2:

@@ -30,6 +30,10 @@ func _ready() -> void:
 		checkpoint.body_entered.connect(_on_checkpoint_body_entered.bind(checkpoint))
 	for nodo in get_tree().get_nodes_in_group("fragmentos_vida"):
 		var fragmento := nodo as Area2D
+		var clave := scene_file_path + ":" + str(get_path_to(fragmento))
+		if Global.fragmentos_recogidos.has(clave):
+			fragmento.queue_free()
+			continue
 		fragmento.body_entered.connect(_on_fragmento_vida_body_entered.bind(fragmento))
 	salida.body_entered.connect(_on_salida_body_entered)
 	var zona_caida := get_node_or_null("ZonaCaida") as Area2D
@@ -56,20 +60,29 @@ func _exit_tree() -> void:
 
 func _on_checkpoint_body_entered(body: Node2D, checkpoint: Area2D) -> void:
 	var punto := checkpoint.global_position + DESPLAZAMIENTO_REAPARICION
-	if body != jugador or Global.punto_reaparicion == punto:
+	if body != jugador or jugador.get("muerto"):
+		return
+	if Global.punto_reaparicion == punto and jugador.get("vida") >= jugador.get("vidaMaxima"):
 		return
 	Global.punto_reaparicion = punto
+	jugador.set("vida", jugador.get("vidaMaxima"))
+	jugador.call("actualizar_vida_ui")
 	Sonido.reproducir("checkpoint")
-	mostrar_aviso("PUNTO DE CONTROL")
+	mostrar_aviso("PUNTO DE CONTROL: VIDA RESTAURADA")
 
 
 func _on_fragmento_vida_body_entered(body: Node2D, fragmento: Area2D) -> void:
-	if body != jugador:
+	if body != jugador or jugador.get("muerto") or fragmento.is_queued_for_deletion():
 		return
+	Global.fragmentos_recogidos[scene_file_path + ":" + str(get_path_to(fragmento))] = true
+	var vida_anterior: int = jugador.get("vidaMaxima")
 	jugador.call("obtener_fragmento_vida")
 	fragmento.queue_free()
 	Sonido.reproducir("fragmento")
-	mostrar_aviso("FRAGMENTO DE VIDA: +1 CORAZON")
+	if jugador.get("vidaMaxima") > vida_anterior:
+		mostrar_aviso("CORAZON COMPLETO: +1 VIDA PERMANENTE")
+	else:
+		mostrar_aviso("FRAGMENTO DE VIDA: %d / %d" % [Global.fragmentos_vida, Global.BALANCE.fragmentos_por_corazon])
 
 
 func _on_zona_caida_body_entered(body: Node2D) -> void:

@@ -21,5 +21,5 @@ func _recoger(body: Node2D) -> void:
 	Sonido.reproducir("fragmento")
 	var nivel := get_tree().current_scene
 	if nivel.has_method("mostrar_aviso"):
-		nivel.call("mostrar_aviso", "PINTURA OBTENIDA: L / P / B PARA DISPARAR | DASH IZQUIERDA / DERECHA")
+		nivel.call("mostrar_aviso", "L / P / B: LANZAR LATA EN PARÁBOLA. RECOGELA PARA VOLVER A TIRARLA | DASH HORIZONTAL")
 	queue_free()

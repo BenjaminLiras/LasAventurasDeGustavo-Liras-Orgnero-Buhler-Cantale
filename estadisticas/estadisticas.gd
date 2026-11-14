@@ -78,6 +78,8 @@ func _lineas_jugador() -> PackedStringArray:
 	if Global.pintura_desbloqueada:
 		var recarga := float(jugador.get("cooldown_pintura"))
 		pintura = "recargando (%.1f s)" % recarga if recarga > 0.0 else "lista [L / P / B]"
+		if not Global.lata_disponible:
+			pintura = "lata lanzada: recoger para volver a tirar"
 	var escalada := "no obtenida"
 	if Global.escalada_desbloqueada:
 		escalada = "agarrado a pared" if jugador.get("agarrado_pared") else "obtenida"

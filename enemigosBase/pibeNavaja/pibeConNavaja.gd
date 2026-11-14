@@ -124,6 +124,7 @@ func recibir_golpe(cantidad: int = 1) -> void:
 		return
 	vida = maxi(vida - cantidad, 0)
 	if vida == 0:
+		Global.soltar_monedas(self, Global.BALANCE.monedas_navajero)
 		queue_free()
 
 
