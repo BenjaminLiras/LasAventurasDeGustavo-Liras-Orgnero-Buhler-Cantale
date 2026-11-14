@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://bnjilct0le7lg"]
+
+[ext_resource type="Texture2D" uid="uid://bec4q7mh8da1k" path="res://assets/Mossy Tileset/Mossy - BackgroundDecoration.png" id="1_moss"]
+
+[sub_resource type="Gradient" id="Gradient_moss"]
+offsets = PackedFloat32Array(0, 0.43, 0.76, 1)
+colors = PackedColorArray(0.027, 0.067, 0.061, 1, 0.17, 0.29, 0.22, 1, 0.085, 0.16, 0.13, 1, 0.023, 0.05, 0.047, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture_moss"]
+gradient = SubResource("Gradient_moss")
+width = 4
+height = 512
+fill_to = Vector2(0, 1)
+
+[node name="FondoParallax" type="Node2D" unique_id=1320926559]
+
+[node name="FondoPrincipal" type="CanvasLayer" parent="." unique_id=1359366534]
+layer = -100
+
+[node name="TextureRect" type="TextureRect" parent="FondoPrincipal" unique_id=1351345021]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture_moss")
+expand_mode = 1
+
+[node name="Paralax" type="Parallax2D" parent="." unique_id=1057957753]
+z_index = -90
+scroll_scale = Vector2(0.18, 0.16)
+repeat_size = Vector2(1800, 0)
+repeat_times = 3
+
+[node name="Pasto1" type="Sprite2D" parent="Paralax" unique_id=923437903]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(99.45001, -10.349976)
+scale = Vector2(0.27, 0.27)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(1180, 20, 1070, 2390)
+region_filter_clip_enabled = true
+
+[node name="Pasto2" type="Sprite2D" parent="Paralax" unique_id=36086737]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(504.45, 428.05005)
+scale = Vector2(0.43, 0.43)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(2370, 1390, 1726, 950)
+region_filter_clip_enabled = true
+
+[node name="Pasto3" type="Sprite2D" parent="Paralax" unique_id=865392093]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(994.45, 362.56)
+scale = Vector2(0.33, 0.33)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(2370, 2340, 1726, 1756)
+region_filter_clip_enabled = true
+
+[node name="Pasto4" type="Sprite2D" parent="Paralax" unique_id=679591387]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(1504.45, 407.55005)
+scale = Vector2(0.39, 0.39)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(2650, 100, 1140, 1050)
+region_filter_clip_enabled = true

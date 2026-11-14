@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://bolxfxsdhue4p" path="res://PJ/PJprincipal/Gustavo.tscn" id="1_clll0"]
 [ext_resource type="Texture2D" uid="uid://cfd3jdsjelabm" path="res://assets/Mossy Tileset/Mossy - TileSet.png" id="2_clll0"]
 [ext_resource type="Texture2D" uid="uid://bvyrpeemwslii" path="res://assets/Plataformas/Hoja de Plataformas Boscosas.png" id="7_bm00u"]
-[ext_resource type="Texture2D" uid="uid://ccdsp07lbxj65" path="res://assets/Mossy Tileset/Mossy - Decorations&Hazards.png" id="22_ldkg1"]
 [ext_resource type="PackedScene" path="res://enemigosBase/pajaroPicada/Pajaro.tscn" id="23_pajaro"]
 [ext_resource type="PackedScene" path="res://ui/PauseMenu.tscn" id="24_pause"]
 [ext_resource type="PackedScene" path="res://enemigosBase/pibeNavaja/pibeConNavaja.tscn" id="25_enemigo_navajero"]
@@ -14,80 +13,8 @@
 [ext_resource type="PackedScene" uid="uid://dq32qfr4g3md6" path="res://jefes/jefeUno/Main/jefeUno.tscn" id="31_jefe"]
 [ext_resource type="Script" uid="uid://di7nj3ffvcvym" path="res://piezasEscenario/pintura/lata_pintura.gd" id="32_pintura"]
 [ext_resource type="Texture2D" uid="uid://bra8easlevxf3" path="res://assets/pintura/lata.svg" id="33_lata_textura"]
-
 [ext_resource type="PackedScene" path="res://economia/Tienda.tscn" id="99_tienda"]
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p31r2"]
-texture = ExtResource("22_ldkg1")
-texture_region_size = Vector2i(512, 512)
-1:0/0 = 0
-2:0/0 = 0
-3:0/0 = 0
-4:0/0 = 0
-5:0/0 = 0
-6:0/0 = 0
-0:1/0 = 0
-0:0/0 = 0
-7:0/0 = 0
-7:1/0 = 0
-7:2/0 = 0
-7:3/0 = 0
-7:4/0 = 0
-7:5/0 = 0
-7:6/0 = 0
-7:7/0 = 0
-6:7/0 = 0
-5:7/0 = 0
-4:7/0 = 0
-3:7/0 = 0
-2:7/0 = 0
-1:7/0 = 0
-0:7/0 = 0
-0:6/0 = 0
-0:5/0 = 0
-0:4/0 = 0
-0:3/0 = 0
-0:2/0 = 0
-1:2/0 = 0
-1:1/0 = 0
-2:1/0 = 0
-3:1/0 = 0
-4:1/0 = 0
-5:1/0 = 0
-6:1/0 = 0
-6:2/0 = 0
-6:3/0 = 0
-5:3/0 = 0
-4:3/0 = 0
-3:3/0 = 0
-2:3/0 = 0
-1:3/0 = 0
-3:2/0 = 0
-4:2/0 = 0
-5:2/0 = 0
-2:2/0 = 0
-6:4/0 = 0
-5:4/0 = 0
-4:4/0 = 0
-3:4/0 = 0
-2:5/0 = 0
-1:5/0 = 0
-1:6/0 = 0
-2:6/0 = 0
-3:6/0 = 0
-4:6/0 = 0
-5:6/0 = 0
-6:5/0 = 0
-6:6/0 = 0
-3:5/0 = 0
-4:5/0 = 0
-5:5/0 = 0
-1:4/0 = 0
-2:4/0 = 0
-
-[sub_resource type="TileSet" id="TileSet_ooyum"]
-tile_size = Vector2i(512, 512)
-sources/0 = SubResource("TileSetAtlasSource_p31r2")
+[ext_resource type="PackedScene" uid="uid://bnjilct0le7lg" path="res://Niveles/nivel1/fondo_parallax.tscn" id="100_parallax"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wbfmo"]
 texture = ExtResource("2_clll0")
@@ -3580,11 +3507,7 @@ corner_radius_bottom_left = 4
 script = ExtResource("26_nivel1")
 siguiente_nivel = "res://Niveles/nivel2/nivel2.tscn"
 
-[node name="Bg" type="TileMapLayer" parent="." unique_id=557761124]
-modulate = Color(1, 1, 1, 0.5529412)
-scale = Vector2(0.30096138, 0.30096138)
-tile_map_data = PackedByteArray("AABsAAUAAAADAAEAAAADAAIAAAADAAAAAAADAAMAAAADAAEAAAAEAAIAAAAEAAAAAAAEAAMAAAAEAAEAAAAFAAIAAAAAAAAAAAAFAAMAAAAAAAEAAAAGAAIAAAABAAAAAAAGAAMAAAABAAEAAAAJAAIAAAAGAAAAAAAJAAMAAAAGAAEAAAAKAAIAAAAHAAAAAAAKAAMAAAAHAAEAAAAKAP7/AAAGAAEAADAKAP//AAAGAAAAADAJAP7/AAAHAAEAADAJAP//AAAHAAAAADAGAP7/AAABAAEAADAGAP//AAABAAAAADAFAP7/AAACAAEAADAFAP//AAACAAAAADABAP7/AAAGAAEAADABAP//AAAGAAAAADAAAP7/AAAHAAEAADAAAP//AAAHAAAAADAHAAMAAAACAAEAAAAHAP7/AAAAAAEAADAHAP//AAAAAAAAADA=")
-tile_set = SubResource("TileSet_ooyum")
+[node name="FondoParallax" parent="." unique_id=2124550713 instance=ExtResource("100_parallax")]
 
 [node name="CharacterBody2D" parent="." unique_id=1202967882 instance=ExtResource("1_clll0")]
 position = Vector2(454, 361)
@@ -3880,14 +3803,14 @@ custom_minimum_size = Vector2(320, 54)
 layout_mode = 2
 text = "VOLVER AL MENÚ"
 
-[node name="TiendaEspiritus" parent="." instance=ExtResource("99_tienda")]
+[node name="TiendaEspiritus" parent="." unique_id=37286805 instance=ExtResource("99_tienda")]
 position = Vector2(500, 482)
 
-[node name="FragmentoVida3" parent="." instance=ExtResource("29_fragmento")]
+[node name="FragmentoVida3" parent="." unique_id=180527497 instance=ExtResource("29_fragmento")]
 position = Vector2(1000, 440)
 
-[node name="FragmentoVida4" parent="." instance=ExtResource("29_fragmento")]
+[node name="FragmentoVida4" parent="." unique_id=1764478152 instance=ExtResource("29_fragmento")]
 position = Vector2(5000, 440)
 
-[node name="TiendaCheckpoint" parent="." instance=ExtResource("99_tienda")]
+[node name="TiendaCheckpoint" parent="." unique_id=149417250 instance=ExtResource("99_tienda")]
 position = Vector2(5100, 482)

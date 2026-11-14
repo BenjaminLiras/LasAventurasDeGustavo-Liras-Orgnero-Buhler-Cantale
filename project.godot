@@ -12,7 +12,7 @@ config_version=5
 
 config/name="LasAventurasDeGustavo"
 run/main_scene="res://ui/MainMenu.tscn"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -23,8 +23,6 @@ Estadisticas="*res://estadisticas/Estadisticas.tscn"
 
 [display]
 
-window/size/viewport_width=1152
-window/size/viewport_height=648
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
@@ -138,5 +136,4 @@ ataquePintura={
 
 [rendering]
 
-renderer/rendering_method.web="gl_compatibility"
 rendering_device/driver.windows="d3d12"
