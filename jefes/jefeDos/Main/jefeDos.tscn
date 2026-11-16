@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://jefes/jefeDos/Main/jefeDos.gd" id="1_jefe"]
 [ext_resource type="Texture2D" path="res://assets/jefe/tiago/tiago_reposo.png" id="2_tiago"]
@@ -11,6 +11,54 @@ animations = [{
 }],
 "loop": true,
 "name": &"quieto",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_tiago")
+}],
+"loop": true,
+"name": &"correr",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_tiago")
+}],
+"loop": true,
+"name": &"saltar",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_tiago")
+}],
+"loop": true,
+"name": &"preparar_ataque",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_tiago")
+}],
+"loop": true,
+"name": &"atacar",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_tiago")
+}],
+"loop": true,
+"name": &"herido",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_tiago")
+}],
+"loop": true,
+"name": &"morir",
 "speed": 1.0
 }]
 
@@ -37,6 +85,9 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.4, 0.9, 0.8, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_zona_ataque"]
+size = Vector2(68, 18)
 
 [node name="Tiago" type="CharacterBody2D" groups=["enemigo"]]
 collision_layer = 2
@@ -68,3 +119,27 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_vida")
 max_value = 24.0
 value = 24.0
 show_percentage = false
+
+[node name="ZonaAtaque" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaAtaque"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_zona_ataque")
+disabled = true
+
+[node name="IndicadorCaida" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(-30, 0, -15, -10, 0, 0, 15, -10, 30, 0)
+width = 4.0
+default_color = Color(1, 0.72, 0.2, 0.95)
+antialiased = false
+
+[node name="DetectorSuelo" type="RayCast2D" parent="."]
+enabled = true
+collision_mask = 13
+exclude_parent = true
+target_position = Vector2(0, 155)
+
+[connection signal="body_entered" from="ZonaAtaque" to="." method="_on_zona_ataque_body_entered"]
