@@ -142,4 +142,18 @@ collision_mask = 13
 exclude_parent = true
 target_position = Vector2(0, 155)
 
+[node name="DetectorParedIzquierda" type="RayCast2D" parent="."]
+position = Vector2(-10, -48)
+enabled = true
+collision_mask = 13
+exclude_parent = true
+target_position = Vector2(-58, 0)
+
+[node name="DetectorParedDerecha" type="RayCast2D" parent="."]
+position = Vector2(10, -48)
+enabled = true
+collision_mask = 13
+exclude_parent = true
+target_position = Vector2(58, 0)
+
 [connection signal="body_entered" from="ZonaAtaque" to="." method="_on_zona_ataque_body_entered"]
