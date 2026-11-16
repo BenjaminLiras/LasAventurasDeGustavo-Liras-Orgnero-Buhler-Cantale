@@ -1,20 +1,6 @@
-[gd_resource type="Resource" load_steps=2 format=3]
+[gd_resource type="Resource" format=3 uid="uid://bn2qgjuxv6red"]
 
-[ext_resource type="Script" path="res://economia/balance.gd" id="1"]
+[ext_resource type="Script" uid="uid://diljhrj0rnuro" path="res://economia/balance.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
-precio_alcance = 20
-multiplicador_alcance = 1.25
-precio_vitalidad = 35
-corazones_amuletos = 2
-fragmentos_por_corazon = 4
-maximo_corazones_base = 9
-monedas_flotante = 2
-monedas_navajero = 4
-monedas_picada = 4
-monedas_jefe = 25
-danio_lata = 2
-velocidad_lata = 460.0
-impulso_lata = 340.0
-gravedad_lata = 900.0
