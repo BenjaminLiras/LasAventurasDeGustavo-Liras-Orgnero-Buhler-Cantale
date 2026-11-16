@@ -29,14 +29,12 @@ const IMPULSO_SALTO_PARED = 330.0
 const TIEMPO_SEPARACION_PARED = 0.14
 const CORAZONES_INICIALES = 5
 const PUNTOS_DANIO_POR_CORAZON = 20.0
-
 const FRAMES_IDLE = [Rect2i(218, 110, 96, 160), Rect2i(314, 110, 96, 160), Rect2i(410, 110, 96, 160), Rect2i(506, 110, 96, 160), Rect2i(602, 110, 96, 160)]
 const FRAMES_RUN = [Rect2i(758, 110, 120, 160), Rect2i(878, 110, 100, 160), Rect2i(978, 110, 98, 160), Rect2i(1076, 110, 100, 160), Rect2i(1176, 110, 84, 160), Rect2i(1256, 110, 90, 160), Rect2i(1346, 110, 90, 160), Rect2i(1436, 110, 100, 160)]
 const FRAMES_JUMP = [Rect2i(32, 400, 96, 100), Rect2i(117, 355, 96, 120), Rect2i(227, 325, 96, 135), Rect2i(437, 365, 96, 135)]
 const FRAMES_ATTACK = [Rect2i(620, 350, 96, 150), Rect2i(736, 350, 96, 150), Rect2i(852, 350, 96, 150), Rect2i(966, 350, 104, 150), Rect2i(1085, 350, 102, 150), Rect2i(1207, 350, 96, 150), Rect2i(1324, 350, 96, 150), Rect2i(1410, 350, 100, 150)]
 var vidaMaxima: int = CORAZONES_INICIALES
 var duracion_invulnerabilidad: float = 0.5
-
 var DASH_DIRECTION : float
 var direction: Vector2 = Vector2(0,0)
 var ultimaDireccionDeApuntado: Vector2 = Vector2.RIGHT
@@ -125,7 +123,7 @@ func _physics_process(delta: float) -> void:
 	# Soltar el botón corta la subida del salto normal y del doble salto.
 	if Input.is_action_just_released("ui_accept") and velocity.y < 0.0:
 		velocity.y = 0.0
-	obtenerDireccionDeApuntado()
+	obtenerDireccionDeMovimiento()
 	if absf(ultimaDireccionDeApuntado.x) > UMBRAL_STICK:
 		ultima_direccion_horizontal = signf(ultimaDireccionDeApuntado.x)
 	cooldown_pintura = maxf(cooldown_pintura - delta, 0.0)
@@ -316,7 +314,7 @@ func ataqueSimple(combo: bool = false) -> void:
 		return
 	cooldown_ataque_simple = COOLDOWN_ATAQUE_SIMPLE
 	Sonido.reproducir("combo" if combo else "batazo")
-	var ataqueDireccion := obtenerDireccionDeApuntado()
+	var ataqueDireccion := obtenerDireccionDeMovimiento()
 	$AnimatedSprite2D.play("ataque")
 	$AnimatedSprite2D.set_frame_and_progress(0, 0.0)
 	$AnimatedSprite2D.flip_h = ataqueDireccion.x < 0.0
@@ -444,37 +442,16 @@ func actualizar_mejoras() -> void:
 	vida = mini(vida + maxi(nueva_vida - vidaMaxima, 0), nueva_vida)
 	vidaMaxima = nueva_vida
 	actualizar_vida_ui()
-
-
+	
 func actualizar_vida_ui() -> void:
 	$Camera2D/HUD/Corazones.actualizar(vida, vidaMaxima)
 	$Camera2D/HUD/Economia.text = "Monedas: %d   ·   Fragmentos: %d / %d" % [Global.monedas, Global.fragmentos_vida, Global.BALANCE.fragmentos_por_corazon]
-
-
-func obtenerDireccionDeApuntado() -> Vector2:
-	var mandos := Input.get_connected_joypads()
-	if not mandos.is_empty():
-		var mando := mandos[0]
-		var direccionStick := Vector2(
-			Input.get_joy_axis(mando, JOY_AXIS_RIGHT_X),
-			Input.get_joy_axis(mando, JOY_AXIS_RIGHT_Y)
-		)
-		if direccionStick.length() >= UMBRAL_STICK:
-			ultimaDireccionDeApuntado = direccionStick.normalized()
-		return ultimaDireccionDeApuntado
-
-	var direccionRaton := (get_global_mouse_position() - global_position).normalized()
-	if direccionRaton != Vector2.ZERO:
-		ultimaDireccionDeApuntado = direccionRaton
-	return ultimaDireccionDeApuntado
-
 
 func obtenerDireccionDeMovimiento() -> Vector2:
 	var direccionTeclado := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var mandos := Input.get_connected_joypads()
 	if mandos.is_empty():
 		return direccionTeclado
-
 	var mando := mandos[0]
 	var stickIzquierdo := Vector2(
 		Input.get_joy_axis(mando, JOY_AXIS_LEFT_X),

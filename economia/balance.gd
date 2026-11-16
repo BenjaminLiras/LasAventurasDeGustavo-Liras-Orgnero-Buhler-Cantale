@@ -14,7 +14,7 @@ extends Resource
 @export var monedas_picada: int = 4
 @export var monedas_jefe: int = 25
 @export_group("Lata arrojadiza")
-@export var danio_lata: int = 2
+@export var danio_lata: int = 4
 @export var velocidad_lata: float = 460.0
 @export var impulso_lata: float = 340.0
 @export var gravedad_lata: float = 900.0

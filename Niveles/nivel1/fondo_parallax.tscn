@@ -16,6 +16,7 @@ fill_to = Vector2(0, 1)
 
 [node name="FondoPrincipal" type="CanvasLayer" parent="." unique_id=1359366534]
 layer = -100
+visible = false
 
 [node name="TextureRect" type="TextureRect" parent="FondoPrincipal" unique_id=1351345021]
 anchors_preset = 15
@@ -35,20 +36,59 @@ repeat_times = 3
 
 [node name="Pasto1" type="Sprite2D" parent="Paralax" unique_id=923437903]
 modulate = Color(0.52, 0.79, 0.72, 0.36)
-position = Vector2(99.45001, -10.349976)
+position = Vector2(686, 70)
 scale = Vector2(0.27, 0.27)
 texture = ExtResource("1_moss")
 region_enabled = true
 region_rect = Rect2(1180, 20, 1070, 2390)
 region_filter_clip_enabled = true
 
+[node name="Pasto5" type="Sprite2D" parent="Paralax" unique_id=1402246180]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(305.63998, 877.19995)
+rotation = -3.1415925
+scale = Vector2(0.42267776, 0.42267776)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(2370, 1390, 1726, 950)
+region_filter_clip_enabled = true
+
 [node name="Pasto2" type="Sprite2D" parent="Paralax" unique_id=36086737]
 modulate = Color(0.52, 0.79, 0.72, 0.36)
-position = Vector2(504.45, 428.05005)
+position = Vector2(292.08997, 489.25)
 scale = Vector2(0.43, 0.43)
 texture = ExtResource("1_moss")
 region_enabled = true
 region_rect = Rect2(2370, 1390, 1726, 950)
+region_filter_clip_enabled = true
+
+[node name="Pasto10" type="Sprite2D" parent="Paralax" unique_id=219270641]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(294.0493, -604.1419)
+scale = Vector2(0.2937936, 0.36283207)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(2370, 2340, 1726, 1756)
+region_filter_clip_enabled = true
+
+[node name="Pasto9" type="Sprite2D" parent="Paralax" unique_id=1701562488]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(294, -5.0000076)
+rotation = -3.1415925
+scale = Vector2(-0.2939554, 0.32742387)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(2370, 2340, 1726, 1756)
+region_filter_clip_enabled = true
+
+[node name="Pasto6" type="Sprite2D" parent="Paralax" unique_id=189070144]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(966, 956)
+rotation = -3.1415925
+scale = Vector2(0.32684672, 0.35374767)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(2370, 2340, 1726, 1756)
 region_filter_clip_enabled = true
 
 [node name="Pasto3" type="Sprite2D" parent="Paralax" unique_id=865392093]
@@ -60,9 +100,19 @@ region_enabled = true
 region_rect = Rect2(2370, 2340, 1726, 1756)
 region_filter_clip_enabled = true
 
+[node name="Pasto7" type="Sprite2D" parent="Paralax" unique_id=742244347]
+modulate = Color(0.52, 0.79, 0.72, 0.36)
+position = Vector2(1441, 800.84)
+rotation = 3.1415927
+scale = Vector2(0.39102843, 0.3910284)
+texture = ExtResource("1_moss")
+region_enabled = true
+region_rect = Rect2(2650, 100, 1140, 1050)
+region_filter_clip_enabled = true
+
 [node name="Pasto4" type="Sprite2D" parent="Paralax" unique_id=679591387]
 modulate = Color(0.52, 0.79, 0.72, 0.36)
-position = Vector2(1504.45, 407.55005)
+position = Vector2(1505, 407.99997)
 scale = Vector2(0.39, 0.39)
 texture = ExtResource("1_moss")
 region_enabled = true
