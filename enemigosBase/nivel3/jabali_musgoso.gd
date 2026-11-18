@@ -36,6 +36,7 @@ func _physics_process(delta: float) -> void:
 			if recarga <= 0.0 and is_on_floor() and puede_ver_jugador(alcance_deteccion) and absf(jugador.global_position.y - global_position.y) < 65.0:
 				direccion = -1.0 if jugador.global_position.x < global_position.x else 1.0
 				estado = Estado.AVISO
+				cambiar_hitbox(true)
 				tiempo_estado = 0.0
 				$Visual.show()
 				$Musgo.scale = Vector2.ONE
@@ -77,12 +78,21 @@ func ocultarse() -> void:
 	tiempo_estado = 0.0
 	recarga = tiempo_oculto
 	velocity.x = 0.0
+	cambiar_hitbox(false)
 	$Visual.hide()
 	$Visual.texture = NORMAL
 	$Visual.position.y = -10.0
 	$Musgo.show()
 	$Musgo.scale = Vector2(0.7, 0.55)
 	$Musgo.position = Vector2(0.0, -8.0)
+
+
+func cambiar_hitbox(activa: bool) -> void:
+	# Conserva la forma del cuerpo para apoyarse en el suelo, pero deja de
+	# pertenecer a la capa de enemigos: ni el bate ni la lata pueden tocarlo.
+	set_deferred("collision_layer", 2 if activa else 0)
+	$Contacto.set_deferred("monitoring", activa)
+	$Contacto/CollisionShape2D.set_deferred("disabled", not activa)
 
 
 func obtener_daño_contacto() -> int:

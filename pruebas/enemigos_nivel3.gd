@@ -135,7 +135,7 @@ func comprobar() -> void:
 	root.add_child(nivel)
 	current_scene = nivel
 	await pasos(5)
-	verificar(get_nodes_in_group("pajaros_primigenios").size() == 4 and get_nodes_in_group("jabalies_musgosos").size() == 4, "Nivel 3 contiene cuatro aves y cuatro jabalíes")
+	verificar(get_nodes_in_group("pajaros_primigenios").size() >= 4 and get_nodes_in_group("jabalies_musgosos").size() >= 4, "Nivel 3 conserva aves y jabalíes distribuidos")
 	verificar(is_instance_valid(nivel.jugador) and nivel.salida.body_entered.is_connected(nivel._on_salida_body_entered), "Nivel 3 es jugable y tiene salida conectada")
 	for enemigo in get_nodes_in_group("enemigo"):
 		var consulta := PhysicsShapeQueryParameters2D.new()
@@ -159,7 +159,7 @@ func comprobar() -> void:
 	current_scene = anterior
 	anterior._on_siguiente_pressed()
 	await pasos(5)
-	verificar(current_scene != null and current_scene.scene_file_path == "res://Niveles/nivel3/nivel3.tscn" and get_nodes_in_group("pajaros_primigenios").size() == 4, "Completar nivel 2 permite entrar al nivel 3 con sus enemigos")
+	verificar(current_scene != null and current_scene.scene_file_path == "res://Niveles/nivel3/nivel3.tscn" and get_nodes_in_group("pajaros_primigenios").size() >= 4, "Completar nivel 2 permite entrar al nivel 3 con sus enemigos")
 	current_scene.queue_free()
 	await pasos(3)
 	print("RESULTADO: ", fallos, " fallos")

@@ -99,7 +99,7 @@ func comprobar() -> void:
 	mundo.add_child(blanco)
 	blanco.position = Vector2(200, 35)
 	await pasos(85)
-	verificar(blanco.vida == 3, "Lata hace dos de daño una sola vez")
+	verificar(blanco.vida == 5 - g.BALANCE.danio_lata, "Lata aplica el daño configurado una sola vez")
 	verificar(is_instance_valid(lata) and lata.recuperable and lata.position.y < 201, "Lata queda como item al impactar y descansa sobre el suelo")
 	jugador.position = lata.position + Vector2(-20, 0)
 	await pasos(10)

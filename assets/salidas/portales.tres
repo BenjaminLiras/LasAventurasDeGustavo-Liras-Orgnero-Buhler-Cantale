@@ -1,0 +1,70 @@
+[gd_resource type="SpriteFrames" load_steps=18 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/salidas/portales.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="azul0"]
+atlas = ExtResource("1")
+region = Rect2(0, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="azul1"]
+atlas = ExtResource("1")
+region = Rect2(32, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="azul2"]
+atlas = ExtResource("1")
+region = Rect2(64, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="azul3"]
+atlas = ExtResource("1")
+region = Rect2(96, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="rojo0"]
+atlas = ExtResource("1")
+region = Rect2(0, 48, 32, 48)
+
+[sub_resource type="AtlasTexture" id="rojo1"]
+atlas = ExtResource("1")
+region = Rect2(32, 48, 32, 48)
+
+[sub_resource type="AtlasTexture" id="rojo2"]
+atlas = ExtResource("1")
+region = Rect2(64, 48, 32, 48)
+
+[sub_resource type="AtlasTexture" id="rojo3"]
+atlas = ExtResource("1")
+region = Rect2(96, 48, 32, 48)
+
+[sub_resource type="AtlasTexture" id="oro0"]
+atlas = ExtResource("1")
+region = Rect2(0, 96, 32, 48)
+
+[sub_resource type="AtlasTexture" id="oro1"]
+atlas = ExtResource("1")
+region = Rect2(32, 96, 32, 48)
+
+[sub_resource type="AtlasTexture" id="oro2"]
+atlas = ExtResource("1")
+region = Rect2(64, 96, 32, 48)
+
+[sub_resource type="AtlasTexture" id="oro3"]
+atlas = ExtResource("1")
+region = Rect2(96, 96, 32, 48)
+
+[sub_resource type="AtlasTexture" id="gris0"]
+atlas = ExtResource("1")
+region = Rect2(0, 144, 32, 48)
+
+[sub_resource type="AtlasTexture" id="gris1"]
+atlas = ExtResource("1")
+region = Rect2(32, 144, 32, 48)
+
+[sub_resource type="AtlasTexture" id="gris2"]
+atlas = ExtResource("1")
+region = Rect2(64, 144, 32, 48)
+
+[sub_resource type="AtlasTexture" id="gris3"]
+atlas = ExtResource("1")
+region = Rect2(96, 144, 32, 48)
+
+[resource]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("azul0")}, {"duration": 1.0, "texture": SubResource("azul1")}, {"duration": 1.0, "texture": SubResource("azul2")}, {"duration": 1.0, "texture": SubResource("azul3")}], "loop": true, "name": &"azul", "speed": 7.0}, {"frames": [{"duration": 1.0, "texture": SubResource("rojo0")}, {"duration": 1.0, "texture": SubResource("rojo1")}, {"duration": 1.0, "texture": SubResource("rojo2")}, {"duration": 1.0, "texture": SubResource("rojo3")}], "loop": true, "name": &"rojo", "speed": 7.0}, {"frames": [{"duration": 1.0, "texture": SubResource("oro0")}, {"duration": 1.0, "texture": SubResource("oro1")}, {"duration": 1.0, "texture": SubResource("oro2")}, {"duration": 1.0, "texture": SubResource("oro3")}], "loop": true, "name": &"oro", "speed": 7.0}, {"frames": [{"duration": 1.0, "texture": SubResource("gris0")}, {"duration": 1.0, "texture": SubResource("gris1")}, {"duration": 1.0, "texture": SubResource("gris2")}, {"duration": 1.0, "texture": SubResource("gris3")}], "loop": true, "name": &"gris", "speed": 7.0}]

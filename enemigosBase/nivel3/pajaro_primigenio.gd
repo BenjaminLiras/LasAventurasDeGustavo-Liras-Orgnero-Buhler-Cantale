@@ -1,6 +1,7 @@
 extends "res://enemigosBase/nivel3/enemigo_nivel3.gd"
 
 const HUEVO = preload("res://enemigosBase/nivel3/Huevo.tscn")
+@export var ritmo: Resource = preload("res://enemigosBase/nivel3/ritmo_disparos.tres")
 @export_range(100.0, 1000.0, 10.0) var alcance_deteccion := 620.0
 @export_range(120.0, 400.0, 10.0) var distancia_preferida := 240.0
 @export_range(20.0, 220.0, 5.0) var velocidad_vuelo := 110.0
@@ -14,6 +15,8 @@ var tiempo := 0.0
 var recarga := 1.2
 var preparando := false
 var aviso_restante := 0.0
+var tiempo_observando := 0.0
+var desde_ultimo_disparo := 100.0
 
 
 func _ready() -> void:
@@ -26,8 +29,10 @@ func _physics_process(delta: float) -> void:
 	if muerto:
 		return
 	tiempo += delta
+	desde_ultimo_disparo += delta
 	recarga = maxf(recarga - delta, 0.0)
-	var visible_jugador := puede_ver_jugador(alcance_deteccion)
+	var visible_jugador := puede_ver_jugador(alcance_deteccion) and dentro_del_territorio()
+	tiempo_observando = tiempo_observando + delta if visible_jugador else 0.0
 	if preparando:
 		velocity = velocity.move_toward(Vector2.ZERO, 600.0 * delta)
 		aviso_restante -= delta
@@ -44,7 +49,7 @@ func _physics_process(delta: float) -> void:
 			var lado := -1.0 if jugador.global_position.x > global_position.x else 1.0
 			objetivo = jugador.global_position + Vector2(lado * distancia_preferida, -120.0 + sin(tiempo * 3.0) * 12.0)
 			$Visual.flip_h = jugador.global_position.x < global_position.x
-			if recarga <= 0.0:
+			if recarga <= 0.0 and tiempo_observando >= ritmo.lectura_inicial and puede_iniciar_rafaga():
 				preparando = true
 				aviso_restante = tiempo_aviso
 		velocity = (objetivo - global_position).limit_length(velocidad_vuelo)
@@ -60,7 +65,7 @@ func cancelar_disparo() -> void:
 
 
 func disparar() -> void:
-	if muerto or not puede_ver_jugador(alcance_deteccion):
+	if muerto or not puede_ver_jugador(alcance_deteccion) or not dentro_del_territorio():
 		cancelar_disparo()
 		return
 	var apuntado := global_position.direction_to(jugador.global_position)
@@ -72,7 +77,23 @@ func disparar() -> void:
 		# Fuera del árbol de física: no crear cuerpos durante una consulta.
 		_agregar_huevo.call_deferred(huevo, salida)
 	Sonido.reproducir("ataque", -7.0)
+	desde_ultimo_disparo = 0.0
 	cancelar_disparo()
+
+
+func dentro_del_territorio() -> bool:
+	return is_instance_valid(jugador) and jugador.global_position.distance_to(origen) <= ritmo.radio_persecucion
+
+
+func puede_iniciar_rafaga() -> bool:
+	# Solo una preparación a la vez y una pausa entre abanicos cercanos.
+	# Aves lejanas no bloquean este encuentro.
+	for otra in get_tree().get_nodes_in_group("pajaros_primigenios"):
+		if otra == self or otra.muerto or otra.global_position.distance_to(global_position) > alcance_deteccion * 2.0:
+			continue
+		if otra.preparando or otra.desde_ultimo_disparo < ritmo.pausa_entre_rafagas:
+			return false
+	return true
 
 
 func _agregar_huevo(huevo: CharacterBody2D, salida: Vector2) -> void:

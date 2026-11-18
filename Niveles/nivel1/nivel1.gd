@@ -7,10 +7,11 @@ const PUNTO_REAPARICION_JEFE := Vector2(6520.0, 420.0)
 const ALTURA_CAIDA_PUERTA := 800.0
 
 @export_file("*.tscn") var siguiente_nivel: String = ""
+@export var ruta_jefe: NodePath = ^"Benjamin"
 
 @onready var jugador: CharacterBody2D = $CharacterBody2D
 @onready var salida: Area2D = $Salida
-@onready var arco_salida: Node2D = $ArcoSalida
+@onready var arco_salida: Node2D = $Salida/Visual
 @onready var zona_jefe: Area2D = get_node_or_null("ZonaJefe")
 @onready var puerta_jefe: StaticBody2D = get_node_or_null("PuertaJefe")
 @onready var panel_final: ColorRect = $Resultados/PantallaFinal
@@ -44,9 +45,10 @@ func _ready() -> void:
 	boton_siguiente.pressed.connect(_on_siguiente_pressed)
 	boton_reintentar.pressed.connect(_on_reintentar_pressed)
 	$Resultados/PantallaFinal/CenterContainer/Panel/Contenido/Menu.pressed.connect(_on_menu_pressed)
-	var jefe := get_node_or_null("Benjamin")
+	var jefe := get_node_or_null(ruta_jefe)
 	if jefe != null:
 		salida_bloqueada = true
+		salida.call("establecer_bloqueada", true)
 		arco_salida.modulate = COLOR_SALIDA_BLOQUEADA
 		jefe.connect("derrotado", _on_jefe_derrotado)
 		if zona_jefe != null and puerta_jefe != null:
@@ -92,6 +94,7 @@ func _on_zona_caida_body_entered(body: Node2D) -> void:
 
 func _on_jefe_derrotado() -> void:
 	salida_bloqueada = false
+	salida.call("establecer_bloqueada", false)
 	if arena_cerrada:
 		abrir_puerta_jefe()
 	Sonido.reproducir("victoria")

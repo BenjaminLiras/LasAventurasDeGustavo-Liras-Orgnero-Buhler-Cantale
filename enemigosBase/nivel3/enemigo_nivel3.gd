@@ -33,7 +33,7 @@ func puede_ver_jugador(alcance: float) -> bool:
 
 func procesar_contacto(delta: float) -> void:
 	espera_contacto = maxf(espera_contacto - delta, 0.0)
-	if espera_contacto > 0.0 or obtener_daño_contacto() == 0:
+	if espera_contacto > 0.0 or obtener_daño_contacto() == 0 or not $Contacto.monitoring:
 		return
 	for cuerpo in $Contacto.get_overlapping_bodies():
 		if cuerpo.is_in_group("jugador") and cuerpo.has_method("recibir_golpe"):

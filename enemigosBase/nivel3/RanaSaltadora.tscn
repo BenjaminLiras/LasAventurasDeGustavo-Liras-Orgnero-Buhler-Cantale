@@ -1,0 +1,53 @@
+[gd_scene load_steps=13 format=3]
+[ext_resource type="Script" path="res://enemigosBase/nivel3/rana_saltadora.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/saltador/rana.png" id="2"]
+[sub_resource type="AtlasTexture" id="Salto0"]
+atlas = ExtResource("2")
+region = Rect2(0, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="Salto1"]
+atlas = ExtResource("2")
+region = Rect2(64, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="Salto2"]
+atlas = ExtResource("2")
+region = Rect2(128, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="Salto3"]
+atlas = ExtResource("2")
+region = Rect2(192, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="Quieto0"]
+atlas = ExtResource("2")
+region = Rect2(0, 64, 64, 64)
+[sub_resource type="AtlasTexture" id="Quieto1"]
+atlas = ExtResource("2")
+region = Rect2(64, 64, 64, 64)
+[sub_resource type="AtlasTexture" id="Quieto2"]
+atlas = ExtResource("2")
+region = Rect2(128, 64, 64, 64)
+[sub_resource type="AtlasTexture" id="Quieto3"]
+atlas = ExtResource("2")
+region = Rect2(192, 64, 64, 64)
+[sub_resource type="SpriteFrames" id="Animaciones"]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Quieto0")}, {"duration": 1.0, "texture": SubResource("Quieto1")}, {"duration": 1.0, "texture": SubResource("Quieto2")}, {"duration": 1.0, "texture": SubResource("Quieto3")}], "loop": true, "name": &"quieto", "speed": 4.0}, {"frames": [{"duration": 1.0, "texture": SubResource("Salto0")}, {"duration": 1.0, "texture": SubResource("Salto1")}, {"duration": 1.0, "texture": SubResource("Salto2")}, {"duration": 1.0, "texture": SubResource("Salto3")}], "loop": false, "name": &"saltar", "speed": 8.0}]
+[sub_resource type="CapsuleShape2D" id="Forma"]
+radius = 19.0
+height = 38.0
+[node name="RanaSaltadora" type="CharacterBody2D" groups=["enemigo", "saltadores"]]
+z_index = 1
+collision_layer = 2
+collision_mask = 13
+script = ExtResource("1")
+vida = 3
+monedas = 5
+[node name="Visual" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -8)
+texture_filter = 1
+sprite_frames = SubResource("Animaciones")
+animation = &"quieto"
+autoplay = "quieto"
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Forma")
+[node name="Contacto" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contacto"]
+shape = SubResource("Forma")

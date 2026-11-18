@@ -12,7 +12,7 @@ const DASH_SPEED = 787.5
 const UMBRAL_STICK = 0.2
 const FRAME_WIDTH = 112
 const FRAME_HEIGHT = 160
-const CAPA_COLISION_PLATAFORMA = 4
+const CAPA_COLISION_PLATAFORMA = 3
 const TIEMPO_MAXIMO_CAIDA_PLATAFORMA = 0.75
 const CAPA_COLISION_ENEMIGOS = 2
 const VENTANA_COMBO = 0.1
@@ -44,6 +44,7 @@ var recarga_dash_restante := 0.0
 var vida: int
 var invulnerable_por_golpe := false
 var intangible_por_dash := false
+var excepciones_agregadas_por_dash: Array[WeakRef] = []
 var tiempo_desde_dash: float = INF
 var cooldown_ataque_simple := 0.0
 var invulnerable: bool:
@@ -348,15 +349,24 @@ func aplicar_retroceso_batazo(direccion_golpe: Vector2) -> void:
 
 
 func cambiar_intangibilidad_dash(activa: bool) -> void:
+	if activa == intangible_por_dash:
+		return
 	if activa:
 		mascara_enemigos_antes_del_dash = get_collision_mask_value(CAPA_COLISION_ENEMIGOS)
 		mascara_area_enemigos_antes_del_dash = $Area2D.get_collision_mask_value(CAPA_COLISION_ENEMIGOS)
+		for enemigo in get_tree().get_nodes_in_group("enemigo"):
+			if enemigo is PhysicsBody2D and not enemigo.get_collision_exceptions().has(self):
+				enemigo.add_collision_exception_with(self)
+				excepciones_agregadas_por_dash.append(weakref(enemigo))
+	else:
+		# El camuflado y otros enemigos ya ignoran físicamente al jugador.
+		# El dash solo retira las excepciones que él mismo agregó.
+		for referencia in excepciones_agregadas_por_dash:
+			var enemigo = referencia.get_ref()
+			if is_instance_valid(enemigo):
+				enemigo.remove_collision_exception_with(self)
+		excepciones_agregadas_por_dash.clear()
 	intangible_por_dash = activa
-	for enemigo in get_tree().get_nodes_in_group("enemigo"):
-		if activa:
-			enemigo.add_collision_exception_with(self)
-		else:
-			enemigo.remove_collision_exception_with(self)
 	set_collision_mask_value(CAPA_COLISION_ENEMIGOS, false if activa else mascara_enemigos_antes_del_dash)
 	$Area2D.set_collision_mask_value(CAPA_COLISION_ENEMIGOS, false if activa else mascara_area_enemigos_antes_del_dash)
 	$AnimatedSprite2D.modulate.a = 0.45 if activa else 1.0

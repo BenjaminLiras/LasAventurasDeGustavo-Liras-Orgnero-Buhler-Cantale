@@ -8,6 +8,8 @@ Tras un aviso de 0,55 s, dispara tres huevos simultáneos. El central apunta a G
 
 Tiene cuatro puntos de vida y deja seis monedas. Un huevo quita un corazón usando la conversión de daño que ya tenía Gustavo. Al morir no completa disparos pendientes.
 
+El ritmo compartido se configura en `ritmo_disparos.tres`: lectura inicial de 0,8 s, separación de 0,9 s entre ráfagas cercanas y territorio de 640 px. Solo un ave cercana prepara un ataque a la vez. La primera del nivel usa huevos más lentos y aviso más largo para presentar el patrón. Los criterios y posiciones están documentados en `Niveles/CRITERIOS_DISTRIBUCION.md`.
+
 ## Jabalí musgoso
 
 Adaptación del [Musgoagresor](https://hollowknight.wiki/w/Moss_Charger) al bosque rojizo. Se oculta bajo hojas, emerge cuando Gustavo está cerca y a altura similar, avisa durante 0,45 s y embiste en la dirección elegida. No gira para perseguir durante la embestida.
@@ -18,7 +20,15 @@ Los tiempos, velocidades, distancias, daño, vida y monedas se ajustan desde el 
 
 ## Integración
 
-`PajaroPrimigenio.tscn`, `JabaliMusgoso.tscn` y `Huevo.tscn` son escenas independientes reutilizables. Hay cuatro instancias de cada enemigo en el nivel 3. El mapa original se conserva; se agregan Gustavo, puntos de control, cuatro fragmentos de vida, pausa, salida final y protección ante caídas. La salida del nivel 2 ahora ofrece pasar al nivel 3.
+`PajaroPrimigenio.tscn`, `JabaliMusgoso.tscn`, `RanaSaltadora.tscn` y `Huevo.tscn` son escenas independientes reutilizables. El nivel 3 tiene seis aves, seis jabalíes y cuatro ranas distribuidos por el descenso. El nivel 2 conserva navajeros, cuatro pájaros de picada y cuatro flotantes, con espacios alrededor de los puntos de control. No contiene jabalíes/arbustos del nivel 3.
+
+El jabalí escondido sale de la capa de enemigos y desactiva su área de contacto. Los ataques y la lata lo atraviesan, sin perder su colisión con el suelo. Al emerger recupera su hitbox.
+
+La rana adapta al Hopper / Saltamontes de Hollow Knight: salta en una dirección, cambia al chocar con una pared, descansa brevemente al aterrizar y daña por contacto. Se protege de saltar al vacío. Su sprite animado es CC0; créditos en `assets/saltador/CREDITOS.md`.
+
+Los tres niveles usan `piezasEscenario/salida/SalidaNivel.tscn`, una cueva con portal animado colocada sobre el suelo al final del recorrido. El primer nivel espera a Benjamín y el segundo a Tiago para habilitar la salida. Los puntos de control y los fragmentos acompañan el descenso. Se abrieron pasos pequeños en paredes que cortaban la ruta y se separaron las plataformas del suelo sólido para que S permita bajar correctamente.
+
+Se retiraron propiedades de tiles que estaban fuera de sus texturas y generaban miles de errores al cargar. Esa limpieza conserva los datos de celdas; las aberturas del recorrido son cambios separados y puntuales.
 
 Créditos y licencias de los sprites descargados: `res://assets/enemigos_nivel3/CREDITOS.md`.
 
@@ -26,4 +36,8 @@ Verificación con Godot 4.6.1:
 
 ```text
 godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pruebas/enemigos_nivel3.gd
+godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pruebas/distribucion_y_plataformas.gd
+godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pruebas/recorridos_niveles.gd
 ```
+
+El recorrido automático usa las acciones normales de movimiento y bajada, con invulnerabilidad para aislar la navegación de la dificultad del combate. Recorre ambos mapas sin teletransportar al personaje; no equivale a vencer a Tiago ni a una partida manual completa. La apertura por derrota del jefe se verifica aparte con su señal.
