@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://clek2bmaa5nex" path="res://assets/Plataformas/plataformas celestes.png" id="15_4xwdo"]
 [ext_resource type="PackedScene" path="res://jefes/jefeDos/Main/jefeDos.tscn" id="17_2x77c"]
 [ext_resource type="PackedScene" path="res://economia/Tienda.tscn" id="99_tienda"]
+[ext_resource type="PackedScene" path="res://Niveles/nivel2/fondo_parallax.tscn" id="100_parallax"]
 
 
 [ext_resource type="PackedScene" path="res://piezasEscenario/salida/SalidaNivel.tscn" id="98_salida"]
@@ -553,6 +554,8 @@ size = Vector2(90, 160)
 script = ExtResource("8_level_script")
 siguiente_nivel = "res://Niveles/nivel3/nivel3.tscn"
 ruta_jefe = NodePath("Tiago")
+
+[node name="FondoParallax" parent="." instance=ExtResource("100_parallax")]
 
 [node name="CharacterBody2D" parent="." unique_id=1750265173 instance=ExtResource("1_gustavo")]
 position = Vector2(328, 444)
