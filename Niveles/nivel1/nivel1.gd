@@ -23,6 +23,7 @@ const ALTURA_CAIDA_PUERTA := 800.0
 var salida_bloqueada := false
 var arena_cerrada := false
 var avisos_activos := 0
+var plantilla_jefe: PackedScene
 
 func _ready() -> void:
 	Global.punto_reaparicion = jugador.global_position
@@ -47,6 +48,11 @@ func _ready() -> void:
 	$Resultados/PantallaFinal/CenterContainer/Panel/Contenido/Menu.pressed.connect(_on_menu_pressed)
 	var jefe := get_node_or_null(ruta_jefe)
 	if jefe != null:
+		# Conserva la instancia original del nivel, con sus ajustes del inspector.
+		plantilla_jefe = PackedScene.new()
+		var resultado := plantilla_jefe.pack(jefe)
+		assert(resultado == OK, "No se pudo guardar el estado inicial del jefe")
+		jugador.reaparecio.connect(_on_jugador_reaparecio)
 		salida_bloqueada = true
 		salida.call("establecer_bloqueada", true)
 		arco_salida.modulate = COLOR_SALIDA_BLOQUEADA
@@ -58,6 +64,29 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	Sonido.detener_musica()
+
+
+func _on_jugador_reaparecio() -> void:
+	# La reaparición puede ocurrir durante un paso físico.
+	reiniciar_jefe.call_deferred()
+
+
+func reiniciar_jefe() -> void:
+	if not salida_bloqueada or plantilla_jefe == null:
+		return # Los jefes ya derrotados permanecen derrotados.
+	var anterior := get_node_or_null(ruta_jefe)
+	if anterior == null:
+		return
+	var padre := anterior.get_parent()
+	var indice := anterior.get_index()
+	var nombre := anterior.name
+	# También retira sus proyectiles, zonas de ataque y llamadas pendientes.
+	anterior.free()
+	var nuevo := plantilla_jefe.instantiate()
+	nuevo.name = nombre
+	padre.add_child(nuevo)
+	padre.move_child(nuevo, indice)
+	nuevo.connect("derrotado", _on_jefe_derrotado)
 
 
 func _on_checkpoint_body_entered(body: Node2D, checkpoint: Area2D) -> void:

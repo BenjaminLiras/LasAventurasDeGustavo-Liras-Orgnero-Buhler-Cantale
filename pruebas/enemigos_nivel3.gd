@@ -120,8 +120,9 @@ func comprobar() -> void:
 	otro.position = Vector2(970, 280)
 	await pasos(3)
 	otro.estado = otro.Estado.EMBESTIDA
+	otro.cambiar_hitbox(true)
 	otro.direccion = 1.0
-	await pasos(2)
+	await pasos(4)
 	verificar(otro.estado == otro.Estado.OCULTO and otro.armado and otro.velocity.x == 0, "Jabalí se detiene y se camufla antes del borde")
 	ave.preparando = true
 	ave.recibir_golpe(100)

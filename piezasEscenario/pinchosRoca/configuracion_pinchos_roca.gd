@@ -22,5 +22,3 @@ class_name ConfiguracionPinchosRoca
 	set(valor):
 		orientacion = clampi(valor, 0, 3)
 		emit_changed()
-@export_range(1, 100, 1) var danio := 20
-@export_range(0.05, 5.0, 0.05, "suffix:s") var intervalo_danio := 0.6

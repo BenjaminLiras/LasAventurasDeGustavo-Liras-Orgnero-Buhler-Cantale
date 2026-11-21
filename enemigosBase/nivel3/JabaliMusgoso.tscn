@@ -5,7 +5,7 @@
 size = Vector2(52, 38)
 [node name="JabaliMusgoso" type="CharacterBody2D" groups=["enemigo", "jabalies_musgosos"]]
 z_index = 1
-collision_layer = 2
+collision_layer = 0
 collision_mask = 13
 script = ExtResource("1")
 vida = 2
@@ -25,9 +25,12 @@ width = 5.0
 default_color = Color(0.88, 0.43, 0.22, 1)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("Forma")
+disabled = true
 [node name="Contacto" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 1
 monitorable = false
+monitoring = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Contacto"]
 shape = SubResource("Forma")
+disabled = true

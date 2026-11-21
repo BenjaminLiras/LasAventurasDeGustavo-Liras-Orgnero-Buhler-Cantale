@@ -8,9 +8,13 @@ godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pru
 godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pruebas/distribucion_y_plataformas.gd
 godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pruebas/recorridos_niveles.gd
 godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pruebas/ritmo_encuentros.gd
+godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pruebas/reinicio_jefes.gd
+godot --headless --audio-driver Dummy --fixed-fps 60 --path . --script res://pruebas/pinchos_roca.gd
 ```
 
 - Economía y lata: compras, mejoras, daño configurable, recuperación y persistencia.
+- Pinchos de roca: muerte inmediata con 20 corazones, también durante dash e invulnerabilidad. La ruta automática anterior del nivel 2 no esquiva estas rocas y necesita adaptarse antes de volver a usarse para validar el recorrido completo; la invulnerabilidad de esa prueba no evita la muerte por pinchos.
+- Reinicio de jefes: dos muertes reales contra cada jefe; restaura vida, barra, posición y fase, elimina proyectiles y conserva la apertura de salida tras derrotarlo.
 - Ritmo: dos aves con física real, lectura inicial, separación de ataques, regreso al territorio y márgenes alrededor de checkpoints.
 - Enemigos: abanico de huevos, paredes, dash, camuflaje, embestida, muerte y recompensas.
 - Distribución y plataformas: ausencia de hitbox al esconderse, recuperación al emerger, rana saltadora, salto desde abajo, bajada con S, ubicaciones libres y salidas apoyadas sobre el suelo. Verifica que Tiago bloquee la salida hasta emitir su señal de derrota.

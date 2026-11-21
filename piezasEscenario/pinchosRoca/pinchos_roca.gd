@@ -14,8 +14,6 @@ const ROCA = preload("res://assets/pinchos_roca/roca_puntiaguda.tres")
 		_solicitar_reconstruccion()
 
 var reconstruccion_pendiente := false
-var reloj := 0.0
-var proximos_golpes: Dictionary = {}
 
 
 func _ready() -> void:
@@ -41,7 +39,6 @@ func _reconstruir() -> void:
 		if hijo is CollisionPolygon2D:
 			remove_child(hijo)
 			hijo.queue_free()
-	proximos_golpes.clear()
 	var angulos := [0.0, PI, -PI * 0.5, PI * 0.5]
 	var angulo: float = angulos[configuracion.orientacion]
 	for i in range(configuracion.cantidad):
@@ -69,15 +66,11 @@ func _reconstruir() -> void:
 		add_child(forma)
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if Engine.is_editor_hint() or configuracion == null:
 		return
-	reloj += delta
 	for cuerpo in get_overlapping_bodies():
-		if not cuerpo.is_in_group("jugador") or not cuerpo.has_method("recibir_golpe"):
+		if not cuerpo.is_in_group("jugador") or not cuerpo.has_method("morir"):
 			continue
-		var id: int = cuerpo.get_instance_id()
-		if reloj < float(proximos_golpes.get(id, 0.0)):
-			continue
-		proximos_golpes[id] = reloj + maxf(configuracion.intervalo_danio, 0.05)
-		cuerpo.call("recibir_golpe", configuracion.danio)
+		# Peligro letal: también durante el dash o la invulnerabilidad por golpe.
+		cuerpo.call("morir")

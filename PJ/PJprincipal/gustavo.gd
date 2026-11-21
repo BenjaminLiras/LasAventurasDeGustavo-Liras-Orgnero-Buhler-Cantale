@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+signal reaparecio
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -550.0
@@ -420,6 +421,7 @@ func morir() -> void:
 	muerto = false
 	$AnimatedSprite2D.modulate = Color.WHITE
 	actualizar_vida_ui()
+	reaparecio.emit()
 	await get_tree().create_timer(1.0).timeout
 	if is_inside_tree():
 		invulnerable = false
@@ -454,8 +456,8 @@ func actualizar_mejoras() -> void:
 	actualizar_vida_ui()
 	
 func actualizar_vida_ui() -> void:
-	$Camera2D/HUD/Corazones.actualizar(vida, vidaMaxima)
-	$Camera2D/HUD/Economia.text = "Monedas: %d   ·   Fragmentos: %d / %d" % [Global.monedas, Global.fragmentos_vida, Global.BALANCE.fragmentos_por_corazon]
+	$Camera2D/Interfaz/HUD/Corazones.actualizar(vida, vidaMaxima)
+	$Camera2D/Interfaz/HUD/Economia.text = "Monedas: %d   ·   Fragmentos: %d / %d" % [Global.monedas, Global.fragmentos_vida, Global.BALANCE.fragmentos_por_corazon]
 
 func obtenerDireccionDeMovimiento() -> Vector2:
 	var direccionTeclado := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")

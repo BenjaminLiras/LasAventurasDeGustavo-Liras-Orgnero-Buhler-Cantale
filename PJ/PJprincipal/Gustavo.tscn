@@ -42,26 +42,29 @@ debug_color = Color(0.91536766, 8.20148e-05, 0.71483475, 0.41960785)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2062437399]
 
-[node name="HUD" type="VBoxContainer" parent="Camera2D" unique_id=975174084]
-offset_left = -560.0
-offset_top = -310.0
-offset_right = -300.0
-offset_bottom = -230.0
+[node name="Interfaz" type="CanvasLayer" parent="Camera2D"]
+layer = 1
+
+[node name="HUD" type="VBoxContainer" parent="Camera2D/Interfaz" unique_id=975174084]
+offset_left = 16.0
+offset_top = 14.0
+offset_right = 276.0
+offset_bottom = 94.0
 theme_override_constants/separation = 4
 
-[node name="Economia" type="Label" parent="Camera2D/HUD" unique_id=471491801]
+[node name="Economia" type="Label" parent="Camera2D/Interfaz/HUD" unique_id=471491801]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Monedas: 0   ·   Fragmentos: 0 / 4"
 
-[node name="Corazones" type="HBoxContainer" parent="Camera2D/HUD" unique_id=1160352725]
+[node name="Corazones" type="HBoxContainer" parent="Camera2D/Interfaz/HUD" unique_id=1160352725]
 custom_minimum_size = Vector2(184, 32)
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
 script = ExtResource("3_corazones")
 
-[node name="Corazon1" type="TextureRect" parent="Camera2D/HUD/Corazones" unique_id=481735600]
+[node name="Corazon1" type="TextureRect" parent="Camera2D/Interfaz/HUD/Corazones" unique_id=481735600]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -70,7 +73,7 @@ texture = ExtResource("4_corazon")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Corazon2" type="TextureRect" parent="Camera2D/HUD/Corazones" unique_id=547380258]
+[node name="Corazon2" type="TextureRect" parent="Camera2D/Interfaz/HUD/Corazones" unique_id=547380258]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -79,7 +82,7 @@ texture = ExtResource("4_corazon")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Corazon3" type="TextureRect" parent="Camera2D/HUD/Corazones" unique_id=991947083]
+[node name="Corazon3" type="TextureRect" parent="Camera2D/Interfaz/HUD/Corazones" unique_id=991947083]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -88,7 +91,7 @@ texture = ExtResource("4_corazon")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Corazon4" type="TextureRect" parent="Camera2D/HUD/Corazones" unique_id=62816479]
+[node name="Corazon4" type="TextureRect" parent="Camera2D/Interfaz/HUD/Corazones" unique_id=62816479]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -97,7 +100,7 @@ texture = ExtResource("4_corazon")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Corazon5" type="TextureRect" parent="Camera2D/HUD/Corazones" unique_id=1955813646]
+[node name="Corazon5" type="TextureRect" parent="Camera2D/Interfaz/HUD/Corazones" unique_id=1955813646]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2

@@ -22,7 +22,7 @@ Los tiempos, velocidades, distancias, daño, vida y monedas se ajustan desde el 
 
 `PajaroPrimigenio.tscn`, `JabaliMusgoso.tscn`, `RanaSaltadora.tscn` y `Huevo.tscn` son escenas independientes reutilizables. El nivel 3 tiene seis aves, seis jabalíes y cuatro ranas distribuidos por el descenso. El nivel 2 conserva navajeros, cuatro pájaros de picada y cuatro flotantes, con espacios alrededor de los puntos de control. No contiene jabalíes/arbustos del nivel 3.
 
-El jabalí escondido sale de la capa de enemigos y desactiva su área de contacto. Los ataques y la lata lo atraviesan, sin perder su colisión con el suelo. Al emerger recupera su hitbox.
+El jabalí escondido y durante el aviso no tiene forma física activa ni área de contacto; un rayo lo mantiene apoyado en el escenario. Gustavo, el bate y la lata lo atraviesan sin daño, impacto ni retroceso. Recupera la hitbox al comenzar la embestida y vuelve a perderla al esconderse. La escena también arranca con las formas desactivadas para evitar colisiones durante su primer frame.
 
 La rana adapta al Hopper / Saltamontes de Hollow Knight: salta en una dirección, cambia al chocar con una pared, descansa brevemente al aterrizar y daña por contacto. Se protege de saltar al vacío. Su sprite animado es CC0; créditos en `assets/saltador/CREDITOS.md`.
 

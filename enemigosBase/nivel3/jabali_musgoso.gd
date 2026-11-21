@@ -14,6 +14,7 @@ var armado := true
 var direccion := -1.0
 var tiempo_estado := 0.0
 var recarga := 1.0
+var apoyado_oculto := false
 
 
 func _ready() -> void:
@@ -33,10 +34,9 @@ func _physics_process(delta: float) -> void:
 	match estado:
 		Estado.OCULTO:
 			$Musgo.position.y = -8.0 + sin(tiempo_estado * 4.0) * 1.5
-			if recarga <= 0.0 and is_on_floor() and puede_ver_jugador(alcance_deteccion) and absf(jugador.global_position.y - global_position.y) < 65.0:
+			if recarga <= 0.0 and apoyado_oculto and puede_ver_jugador(alcance_deteccion) and absf(jugador.global_position.y - global_position.y) < 65.0:
 				direccion = -1.0 if jugador.global_position.x < global_position.x else 1.0
 				estado = Estado.AVISO
-				cambiar_hitbox(true)
 				tiempo_estado = 0.0
 				$Visual.show()
 				$Musgo.scale = Vector2.ONE
@@ -44,6 +44,7 @@ func _physics_process(delta: float) -> void:
 			$Musgo.position.x = sin(tiempo_estado * 50.0) * 2.0
 			if tiempo_estado >= tiempo_aviso:
 				estado = Estado.EMBESTIDA
+				cambiar_hitbox(true)
 				tiempo_estado = 0.0
 				$Musgo.position.x = 0.0
 		Estado.EMBESTIDA, Estado.HUIDA:
@@ -55,7 +56,10 @@ func _physics_process(delta: float) -> void:
 				if tiempo_estado > (1.1 if estado == Estado.HUIDA else 1.2):
 					ocultarse()
 	$Visual.flip_h = direccion > 0.0
-	move_and_slide()
+	if es_intangible():
+		mover_oculto(delta)
+	else:
+		move_and_slide()
 	if is_on_wall() and estado in [Estado.EMBESTIDA, Estado.HUIDA]:
 		ocultarse()
 	procesar_contacto(delta)
@@ -88,11 +92,34 @@ func ocultarse() -> void:
 
 
 func cambiar_hitbox(activa: bool) -> void:
-	# Conserva la forma del cuerpo para apoyarse en el suelo, pero deja de
-	# pertenecer a la capa de enemigos: ni el bate ni la lata pueden tocarlo.
-	set_deferred("collision_layer", 2 if activa else 0)
+	# La capa cambia ya; las formas se actualizan al terminar la consulta física.
+	# Así un ataque del mismo frame tampoco encuentra un blanco oculto.
+	collision_layer = 2 if activa else 0
+	$CollisionShape2D.set_deferred("disabled", not activa)
 	$Contacto.set_deferred("monitoring", activa)
 	$Contacto/CollisionShape2D.set_deferred("disabled", not activa)
+
+
+func es_intangible() -> bool:
+	return estado in [Estado.OCULTO, Estado.AVISO]
+
+
+func mover_oculto(delta: float) -> void:
+	# Sin forma física no puede bloquear, recibir golpes ni sostener al jugador.
+	# Este rayo conserva únicamente su apoyo sobre el escenario.
+	var excluidos: Array[RID] = [get_rid()]
+	if is_instance_valid(jugador):
+		excluidos.append(jugador.get_rid())
+	var semialtura: float = $CollisionShape2D.shape.size.y * 0.5
+	var caida := maxf(velocity.y * delta, 0.0)
+	var consulta := PhysicsRayQueryParameters2D.create(global_position, global_position + Vector2(0, semialtura + caida + 0.1), 13, excluidos)
+	var apoyo := get_world_2d().direct_space_state.intersect_ray(consulta)
+	apoyado_oculto = not apoyo.is_empty()
+	if apoyado_oculto:
+		global_position.y = apoyo.position.y - semialtura
+		velocity.y = 0.0
+	else:
+		global_position.y += caida
 
 
 func obtener_daño_contacto() -> int:
@@ -100,7 +127,7 @@ func obtener_daño_contacto() -> int:
 
 
 func recibir_golpe(cantidad: int = 1) -> void:
-	if muerto or cantidad <= 0 or estado == Estado.OCULTO:
+	if muerto or cantidad <= 0 or es_intangible():
 		return
 	if armado:
 		# Como el Musgoagresor: el primer golpe retira la cobertura sin dañar al animal.
