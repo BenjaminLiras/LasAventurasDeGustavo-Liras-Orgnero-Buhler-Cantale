@@ -20,7 +20,7 @@
 [ext_resource type="Script" uid="uid://cyipkfewiae71" path="res://piezasEscenario/pinchosPareja/configuracion_pinchos.gd" id="21_22r17"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/salida/SalidaNivel.tscn" id="98_salida"]
 [ext_resource type="PackedScene" path="res://economia/Tienda.tscn" id="99_tienda"]
-[ext_resource type="PackedScene" path="res://Niveles/nivel2/fondo_parallax.tscn" id="100_parallax"]
+[ext_resource type="PackedScene" uid="uid://cgy2mui7i5unp" path="res://Niveles/nivel2/fondo_parallax.tscn" id="100_parallax"]
 
 [sub_resource type="CircleShape2D" id="RecogidaEscalada"]
 radius = 28.0
@@ -799,7 +799,7 @@ tile_map_data = PackedByteArray("AABUAAwAAAABAAEAAABVAAwAAAACAAEAAABWAAwAAAADAAE
 tile_set = SubResource("TileSet_2x77c")
 
 [node name="TiendaEspiritus" parent="." unique_id=92298505 instance=ExtResource("99_tienda")]
-position = Vector2(-278, 556)
+position = Vector2(-276, 610)
 
 [node name="FragmentoVida2" parent="." unique_id=295569947 instance=ExtResource("5_fragmento")]
 position = Vector2(7000, 1864)

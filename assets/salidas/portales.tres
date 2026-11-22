@@ -81,7 +81,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("azul3")
 }],
-"loop": true,
+"loop": 1,
 "name": &"azul",
 "speed": 7.0
 }, {
@@ -98,7 +98,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("gris3")
 }],
-"loop": true,
+"loop": 1,
 "name": &"gris",
 "speed": 7.0
 }, {
@@ -115,7 +115,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("oro3")
 }],
-"loop": true,
+"loop": 1,
 "name": &"oro",
 "speed": 7.0
 }, {
@@ -132,7 +132,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("rojo3")
 }],
-"loop": true,
+"loop": 1,
 "name": &"rojo",
 "speed": 7.0
 }]

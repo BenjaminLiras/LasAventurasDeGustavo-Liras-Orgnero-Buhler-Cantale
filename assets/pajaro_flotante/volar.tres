@@ -61,7 +61,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Cuadro_7")
 }],
-"loop": true,
+"loop": 1,
 "name": &"volar",
 "speed": 12.0
 }]
