@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://jefes/jefeTres/Main/jefeTres.gd" id="1_jefe"]
 [ext_resource type="Texture2D" path="res://assets/jefe/nico/nico.png" id="2_nico"]
@@ -38,6 +38,10 @@ border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
+
+[sub_resource type="Gradient" id="Gradient_tormenta"]
+offsets = PackedFloat32Array(0, 0.48, 1)
+colors = PackedColorArray(0.46, 0.22, 1, 0, 0.51, 0.37, 1, 0.45, 0.36, 0.96, 1, 0.72)
 
 [node name="Nico" type="CharacterBody2D" groups=["enemigo"]]
 collision_layer = 2
@@ -105,3 +109,57 @@ default_color = Color(1, 0.68, 0.25, 1)
 points = PackedVector2Array(-31, -7, -31, 0, 31, 0, 31, -7)
 width = 4.0
 default_color = Color(1, 0.68, 0.25, 1)
+
+[node name="EfectoExplosion" type="Node2D" parent="."]
+visible = false
+top_level = true
+z_index = 1
+
+[node name="Resplandor" type="Polygon2D" parent="EfectoExplosion"]
+antialiased = true
+
+[node name="Circulo" type="Line2D" parent="EfectoExplosion"]
+closed = true
+width = 0.014
+antialiased = true
+
+[node name="Onda" type="Line2D" parent="EfectoExplosion"]
+visible = false
+closed = true
+width = 0.035
+antialiased = true
+
+[node name="AvisoTormenta" type="Node2D" parent="."]
+visible = false
+position = Vector2(0, -73)
+z_index = 2
+
+[node name="LataIzquierda" type="Sprite2D" parent="AvisoTormenta"]
+modulate = Color(0.45, 0.94, 1, 1)
+position = Vector2(-35, -2)
+rotation = -0.42
+scale = Vector2(0.046, 0.046)
+texture = ExtResource("3_lata")
+
+[node name="LataCentral" type="Sprite2D" parent="AvisoTormenta"]
+modulate = Color(0.8, 0.65, 1, 1)
+position = Vector2(0, -10)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("3_lata")
+
+[node name="LataDerecha" type="Sprite2D" parent="AvisoTormenta"]
+modulate = Color(0.45, 0.94, 1, 1)
+position = Vector2(35, -2)
+rotation = 0.42
+scale = Vector2(0.046, 0.046)
+texture = ExtResource("3_lata")
+
+[node name="RastroTormenta" type="Line2D" parent="."]
+top_level = true
+z_index = 1
+width = 11.0
+gradient = SubResource("Gradient_tormenta")
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
