@@ -1,0 +1,82 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://jefes/jefeTres/Main/jefeTres.gd" id="1_jefe"]
+[ext_resource type="Texture2D" path="res://assets/jefe/nico/nico.png" id="2_nico"]
+[ext_resource type="Texture2D" path="res://assets/pintura/lata.svg" id="3_lata"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nico"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_nico")
+}],
+"loop": true,
+"name": &"quieto",
+"speed": 1.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nico"]
+radius = 17.0
+height = 86.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fondo_vida"]
+bg_color = Color(0.08, 0.07, 0.09, 0.96)
+border_color = Color(0.83, 0.75, 0.9, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vida"]
+bg_color = Color(0.59, 0.25, 0.8, 1)
+border_color = Color(0.85, 0.58, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[node name="Nico" type="CharacterBody2D" groups=["enemigo"]]
+collision_layer = 2
+collision_mask = 13
+script = ExtResource("1_jefe")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -46)
+sprite_frames = SubResource("SpriteFrames_nico")
+animation = &"quieto"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -43)
+shape = SubResource("CapsuleShape2D_nico")
+
+[node name="BarraVida" type="ProgressBar" parent="."]
+z_index = 5
+offset_left = -48.0
+offset_top = -114.0
+offset_right = 48.0
+offset_bottom = -102.0
+mouse_filter = 2
+focus_mode = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_fondo_vida")
+theme_override_styles/fill = SubResource("StyleBoxFlat_vida")
+max_value = 36.0
+value = 36.0
+show_percentage = false
+
+[node name="PuntoLanzamiento" type="Marker2D" parent="."]
+position = Vector2(20, -56)
+
+[node name="AvisoLata" type="Sprite2D" parent="PuntoLanzamiento"]
+visible = false
+z_index = 2
+modulate = Color(0.89, 0.63, 1, 1)
+scale = Vector2(0.052, 0.052)
+texture = ExtResource("3_lata")
+
+[node name="Proyectiles" type="Node2D" parent="."]
+top_level = true
