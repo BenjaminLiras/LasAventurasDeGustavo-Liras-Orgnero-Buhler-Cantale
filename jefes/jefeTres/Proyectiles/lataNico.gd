@@ -14,14 +14,11 @@ var impacto_aplicado: bool = false
 var jugador: Node2D
 
 
-func configurar(sentido: float, origen: Vector2, objetivo: Vector2, jugador_objetivo: Node2D) -> void:
-	direccion = sentido
+func configurar(velocidad_inicial: Vector2, jugador_objetivo: Node2D) -> void:
+	velocity = velocidad_inicial
+	if not is_zero_approx(velocity.x):
+		direccion = signf(velocity.x)
 	jugador = jugador_objetivo
-	var diferencia: Vector2 = objetivo - origen
-	var distancia: float = maxf(diferencia.x * direccion, 22.0)
-	var tiempo_vuelo: float = clampf(distancia / 530.0, 0.35, 0.65)
-	velocity.x = direccion * distancia / tiempo_vuelo
-	velocity.y = (diferencia.y - 0.5 * GRAVEDAD * tiempo_vuelo * tiempo_vuelo) / tiempo_vuelo
 
 
 func _physics_process(delta: float) -> void:

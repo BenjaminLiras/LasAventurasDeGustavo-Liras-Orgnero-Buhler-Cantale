@@ -80,3 +80,28 @@ texture = ExtResource("3_lata")
 
 [node name="Proyectiles" type="Node2D" parent="."]
 top_level = true
+
+[node name="DetectorSuelo" type="RayCast2D" parent="."]
+enabled = true
+collision_mask = 13
+exclude_parent = true
+
+[node name="MarcasLluvia" type="Node2D" parent="."]
+visible = false
+top_level = true
+z_index = 4
+
+[node name="ZonaIzquierda" type="Line2D" parent="MarcasLluvia"]
+points = PackedVector2Array(-31, -7, -31, 0, 31, 0, 31, -7)
+width = 4.0
+default_color = Color(1, 0.68, 0.25, 1)
+
+[node name="ZonaCentral" type="Line2D" parent="MarcasLluvia"]
+points = PackedVector2Array(-31, -7, -31, 0, 31, 0, 31, -7)
+width = 4.0
+default_color = Color(1, 0.68, 0.25, 1)
+
+[node name="ZonaDerecha" type="Line2D" parent="MarcasLluvia"]
+points = PackedVector2Array(-31, -7, -31, 0, 31, 0, 31, -7)
+width = 4.0
+default_color = Color(1, 0.68, 0.25, 1)
