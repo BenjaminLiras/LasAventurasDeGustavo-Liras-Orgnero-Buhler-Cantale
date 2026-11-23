@@ -7,8 +7,11 @@
 [ext_resource type="PackedScene" path="res://enemigosBase/nivel3/JabaliMusgoso.tscn" id="4_jabali"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/checkpoint/Checkpoint.tscn" id="5_checkpoint"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/fragmentoVida/FragmentoVida.tscn" id="6_fragmento"]
+[ext_resource type="PackedScene" path="res://enemigosBase/pibeNavaja/pibeConNavaja.tscn" id="7_p8l1v"]
 [ext_resource type="PackedScene" path="res://ui/PauseMenu.tscn" id="7_pause"]
+[ext_resource type="PackedScene" path="res://enemigosBase/pajaroFlotante/PajaroFlotante.tscn" id="8_3xv4b"]
 [ext_resource type="Script" uid="uid://u0letn138v02" path="res://Niveles/nivel1/nivel1.gd" id="8_level_script"]
+[ext_resource type="PackedScene" path="res://enemigosBase/pajaroPicada/Pajaro.tscn" id="9_3b2h0"]
 [ext_resource type="Theme" uid="uid://w5xhdmnjwdsn" path="res://ui/menu_theme.tres" id="9_theme"]
 [ext_resource type="PackedScene" path="res://enemigosBase/nivel3/RanaSaltadora.tscn" id="10_saltador"]
 [ext_resource type="PackedScene" path="res://jefes/jefeTres/Main/jefeTres.tscn" id="14_m10yf"]
@@ -16,6 +19,7 @@
 [ext_resource type="Script" uid="uid://dk2gotatery2f" path="res://piezasEscenario/pinchosRoca/configuracion_pinchos_roca.gd" id="16_datos_rocas"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/pinchosPareja/PinchosPareja.tscn" id="17_pareja"]
 [ext_resource type="Script" uid="uid://cyipkfewiae71" path="res://piezasEscenario/pinchosPareja/configuracion_pinchos.gd" id="18_datos_pareja"]
+[ext_resource type="PackedScene" path="res://economia/Tienda.tscn" id="22_r5m8d"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/salida/SalidaNivel.tscn" id="98_salida"]
 [ext_resource type="PackedScene" path="res://Niveles/nivel3/fondo_parallax.tscn" id="100_parallax"]
 
@@ -509,12 +513,58 @@ separacion = 38.0
 ancho = 36.0
 altura = 48.0
 
-[sub_resource type="Resource" id="Resource_trampa_media"]
+[sub_resource type="Resource" id="Resource_n5l7p"]
 script = ExtResource("18_datos_pareja")
-separacion = 200.0
-altura_pincho = 38.0
+separacion = 520.0
+altura_pincho = 127.0
+longitud_retraida = 27.0
 tiempo_abierto = 1.9
 retraso_inicial = 0.3
+
+[sub_resource type="Resource" id="Resource_r7aks"]
+script = ExtResource("18_datos_pareja")
+separacion = 386.0
+altura_pincho = 127.0
+longitud_retraida = 27.0
+tiempo_abierto = 1.9
+retraso_inicial = 0.3
+
+[sub_resource type="Resource" id="Resource_pdkfu"]
+script = ExtResource("18_datos_pareja")
+separacion = 386.0
+altura_pincho = 127.0
+longitud_retraida = 27.0
+tiempo_abierto = 1.9
+retraso_inicial = 0.3
+
+[sub_resource type="Resource" id="Resource_pwp7y"]
+script = ExtResource("18_datos_pareja")
+separacion = 556.0
+altura_pincho = 127.0
+longitud_retraida = 27.0
+tiempo_abierto = 1.9
+retraso_inicial = 0.3
+
+[sub_resource type="Resource" id="Resource_8emkt"]
+script = ExtResource("18_datos_pareja")
+separacion = 520.0
+altura_pincho = 127.0
+longitud_retraida = 27.0
+tiempo_abierto = 1.9
+retraso_inicial = 0.3
+
+[sub_resource type="Resource" id="Resource_oe4k0"]
+script = ExtResource("16_datos_rocas")
+cantidad = 24
+separacion = 43.0
+ancho = 74.0
+altura = 109.0
+
+[sub_resource type="Resource" id="Resource_ec2is"]
+script = ExtResource("16_datos_rocas")
+cantidad = 9
+ancho = 38.0
+altura = 54.0
 
 [sub_resource type="Resource" id="Resource_rocas_profundas"]
 script = ExtResource("16_datos_rocas")
@@ -522,12 +572,11 @@ cantidad = 4
 ancho = 38.0
 altura = 54.0
 
-[sub_resource type="Resource" id="Resource_trampa_profunda"]
-script = ExtResource("18_datos_pareja")
-separacion = 260.0
-altura_pincho = 44.0
-tiempo_abierto = 1.7
-retraso_inicial = 1.0
+[sub_resource type="Resource" id="Resource_nl60e"]
+script = ExtResource("16_datos_rocas")
+cantidad = 14
+ancho = 38.0
+altura = 54.0
 
 [node name="Nivel3" type="Node2D" unique_id=1858207980]
 script = ExtResource("8_level_script")
@@ -555,14 +604,41 @@ velocidad_huevo = 200.0
 [node name="PajaroPrimigenio2" parent="." unique_id=1788340442 instance=ExtResource("3_primigenio")]
 position = Vector2(3350, 2380)
 
+[node name="PajaroPrimigenio2" parent="PajaroPrimigenio2" unique_id=401586401 instance=ExtResource("3_primigenio")]
+position = Vector2(-1195, -1536)
+
 [node name="PajaroPrimigenio3" parent="." unique_id=849503097 instance=ExtResource("3_primigenio")]
 position = Vector2(4500, 5000)
+
+[node name="PajaroPrimigenio3" parent="PajaroPrimigenio3" unique_id=1803017638 instance=ExtResource("3_primigenio")]
+position = Vector2(-766, -450)
+
+[node name="EnemigoNavajero" parent="PajaroPrimigenio3" unique_id=2014975179 instance=ExtResource("7_p8l1v")]
+position = Vector2(-1211, 183)
+
+[node name="PajaroFlotante" parent="PajaroPrimigenio3" unique_id=2128833188 instance=ExtResource("8_3xv4b")]
+position = Vector2(-1845, -1007)
+
+[node name="PajaroFlotante2" parent="PajaroPrimigenio3" unique_id=1953215 instance=ExtResource("8_3xv4b")]
+position = Vector2(-187, -1167)
+
+[node name="Pajaro" parent="PajaroPrimigenio3" unique_id=1878618582 instance=ExtResource("9_3b2h0")]
+position = Vector2(292, -261)
+
+[node name="PajaroPrimigenio8" parent="." unique_id=449631420 instance=ExtResource("3_primigenio")]
+position = Vector2(4070, 6511)
+
+[node name="PajaroPrimigenio7" parent="." unique_id=1648584724 instance=ExtResource("3_primigenio")]
+position = Vector2(2921, 6641)
+
+[node name="PajaroPrimigenio7" parent="PajaroPrimigenio7" unique_id=860352901 instance=ExtResource("3_primigenio")]
+position = Vector2(3630, -4308)
 
 [node name="PajaroPrimigenio4" parent="." unique_id=220331936 instance=ExtResource("3_primigenio")]
 position = Vector2(3800, 6680)
 
 [node name="JabaliMusgoso1" parent="." unique_id=433490703 instance=ExtResource("4_jabali")]
-position = Vector2(1800, 1197)
+position = Vector2(4049, 622)
 tiempo_aviso = 0.65
 
 [node name="JabaliMusgoso2" parent="." unique_id=1074717787 instance=ExtResource("4_jabali")]
@@ -578,10 +654,7 @@ position = Vector2(4700, 6829)
 position = Vector2(480, 640)
 
 [node name="Checkpoint2" parent="." unique_id=107434727 instance=ExtResource("5_checkpoint")]
-position = Vector2(2100, 2560)
-
-[node name="Checkpoint3" parent="." unique_id=783302683 instance=ExtResource("5_checkpoint")]
-position = Vector2(2850, 5184)
+position = Vector2(337, 1917)
 
 [node name="Checkpoint4" parent="." unique_id=568746562 instance=ExtResource("5_checkpoint")]
 position = Vector2(2050, 6848)
@@ -674,19 +747,19 @@ layout_mode = 2
 text = "VOLVER AL MENÚ"
 
 [node name="PajaroPrimigenio5" parent="." unique_id=1684759157 instance=ExtResource("3_primigenio")]
-position = Vector2(4200, 1040)
+position = Vector2(4374, 256)
 
 [node name="PajaroPrimigenio6" parent="." unique_id=515877550 instance=ExtResource("3_primigenio")]
 position = Vector2(5400, 3140)
 
 [node name="JabaliMusgoso5" parent="." unique_id=406585776 instance=ExtResource("4_jabali")]
-position = Vector2(4650, 1197)
+position = Vector2(4783, 639)
 
 [node name="JabaliMusgoso6" parent="." unique_id=565177389 instance=ExtResource("4_jabali")]
 position = Vector2(2100, 3821)
 
 [node name="RanaSaltadora1" parent="." unique_id=743440314 instance=ExtResource("10_saltador")]
-position = Vector2(900, 1197)
+position = Vector2(4486, 3283)
 velocidad_salto = 145.0
 descanso = 0.65
 
@@ -694,36 +767,100 @@ descanso = 0.65
 position = Vector2(5850, 2413)
 mirar_izquierda = true
 
-[node name="RanaSaltadora3" parent="." unique_id=840961740 instance=ExtResource("10_saltador")]
-position = Vector2(3350, 6189)
+[node name="RanaSaltadora2" parent="RanaSaltadora2" unique_id=285834184 instance=ExtResource("10_saltador")]
+position = Vector2(-1918, 4436)
+mirar_izquierda = true
 
-[node name="Checkpoint5" parent="." unique_id=1865678921 instance=ExtResource("5_checkpoint")]
-position = Vector2(2200, 6208)
+[node name="RanaSaltadora3" parent="." unique_id=840961740 instance=ExtResource("10_saltador")]
+position = Vector2(1028, 7610)
+
+[node name="RanaSaltadora2" parent="RanaSaltadora3" unique_id=150983624 instance=ExtResource("10_saltador")]
+position = Vector2(-1145, -10)
+mirar_izquierda = true
+
+[node name="RanaSaltadora2" parent="RanaSaltadora3/RanaSaltadora2" unique_id=1496442621 instance=ExtResource("10_saltador")]
+position = Vector2(2781, -5061)
+mirar_izquierda = true
 
 [node name="Nico" parent="." unique_id=1757337390 instance=ExtResource("14_m10yf")]
 position = Vector2(318, 7534)
 radio_explosion = 1000.0
 
-[node name="RocasEntrada" parent="." instance=ExtResource("15_rocas")]
-position = Vector2(1010, 640)
+[node name="RocasEntrada" parent="." unique_id=506787417 instance=ExtResource("15_rocas")]
+position = Vector2(1090, 657)
 configuracion = SubResource("Resource_rocas_entrada")
 
-[node name="RocasRamaAlta" parent="." instance=ExtResource("15_rocas")]
-position = Vector2(1400, 1216)
+[node name="RocasRamaAlta" parent="." unique_id=593439020 instance=ExtResource("15_rocas")]
+position = Vector2(4392, 646)
 configuracion = SubResource("Resource_rocas_rama")
 
-[node name="TrampaGaleria" parent="." instance=ExtResource("17_pareja")]
-position = Vector2(1760, 3818)
-configuracion = SubResource("Resource_trampa_media")
+[node name="TrampaGaleria3" parent="." unique_id=305074636 instance=ExtResource("17_pareja")]
+position = Vector2(4373, 6600.9995)
+rotation = 4.6843505
+configuracion = SubResource("Resource_n5l7p")
 
-[node name="TrampaDescenso" parent="." instance=ExtResource("17_pareja")]
-position = Vector2(3300, 5162)
-configuracion = SubResource("Resource_trampa_media")
+[node name="TrampaGaleria5" parent="." unique_id=632146358 instance=ExtResource("17_pareja")]
+position = Vector2(6540, 3958)
+rotation = -0.011192919
+configuracion = SubResource("Resource_r7aks")
 
-[node name="RocasGaleriaProfunda" parent="." instance=ExtResource("15_rocas")]
-position = Vector2(5040, 6848)
+[node name="TrampaGaleria6" parent="." unique_id=2127664294 instance=ExtResource("17_pareja")]
+position = Vector2(6517, 3396)
+rotation = -0.056546338
+configuracion = SubResource("Resource_pdkfu")
+
+[node name="TrampaGaleria4" parent="." unique_id=786474115 instance=ExtResource("17_pareja")]
+position = Vector2(6548.9995, 2837)
+rotation = 3.135996
+configuracion = SubResource("Resource_r7aks")
+
+[node name="TrampaGaleria2" parent="." unique_id=1927278139 instance=ExtResource("17_pareja")]
+position = Vector2(3503, 6588)
+rotation = -1.5735946
+configuracion = SubResource("Resource_pwp7y")
+
+[node name="TrampaGaleria" parent="." unique_id=691758670 instance=ExtResource("17_pareja")]
+position = Vector2(2465, 6600)
+rotation = 1.5918196
+configuracion = SubResource("Resource_8emkt")
+
+[node name="RocasGaleriaProfunda6" parent="." unique_id=1382169752 instance=ExtResource("15_rocas")]
+position = Vector2(5586, 5754)
+rotation = -1.5668551
+scale = Vector2(0.99999994, 0.99999994)
+configuracion = SubResource("Resource_oe4k0")
+
+[node name="RocasGaleriaProfunda5" parent="." unique_id=1305020419 instance=ExtResource("15_rocas")]
+position = Vector2(5182, 5749)
+rotation = 1.5756408
+configuracion = SubResource("Resource_oe4k0")
+
+[node name="RocasGaleriaProfunda4" parent="." unique_id=1435503972 instance=ExtResource("15_rocas")]
+position = Vector2(6544, 4553)
+configuracion = SubResource("Resource_ec2is")
+
+[node name="RocasGaleriaProfunda3" parent="." unique_id=465594363 instance=ExtResource("15_rocas")]
+position = Vector2(2759, 6856)
 configuracion = SubResource("Resource_rocas_profundas")
 
-[node name="TrampaGaleriaProfunda" parent="." instance=ExtResource("17_pareja")]
-position = Vector2(3080, 6823)
-configuracion = SubResource("Resource_trampa_profunda")
+[node name="RocasGaleriaProfunda7" parent="." unique_id=755569184 instance=ExtResource("15_rocas")]
+position = Vector2(4757, 5200)
+configuracion = SubResource("Resource_rocas_profundas")
+
+[node name="RocasGaleriaProfunda2" parent="RocasGaleriaProfunda7" unique_id=2145624308 instance=ExtResource("15_rocas")]
+position = Vector2(-1810, 0)
+configuracion = SubResource("Resource_nl60e")
+
+[node name="RocasGaleriaProfunda2" parent="." unique_id=1382292598 instance=ExtResource("15_rocas")]
+position = Vector2(3154, 6868)
+configuracion = SubResource("Resource_rocas_profundas")
+
+[node name="RocasGaleriaProfunda" parent="." unique_id=99935944 instance=ExtResource("15_rocas")]
+position = Vector2(5044, 6859)
+configuracion = SubResource("Resource_rocas_profundas")
+
+[node name="PajaroPrimigenio9" parent="." unique_id=1728882531 instance=ExtResource("3_primigenio")]
+position = Vector2(3153, 6510)
+
+[node name="TiendaEspiritus" parent="." unique_id=989217944 instance=ExtResource("22_r5m8d")]
+position = Vector2(5250, 639)
