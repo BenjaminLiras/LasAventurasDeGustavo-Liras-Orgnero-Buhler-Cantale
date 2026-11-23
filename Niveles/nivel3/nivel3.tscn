@@ -12,6 +12,10 @@
 [ext_resource type="Theme" uid="uid://w5xhdmnjwdsn" path="res://ui/menu_theme.tres" id="9_theme"]
 [ext_resource type="PackedScene" path="res://enemigosBase/nivel3/RanaSaltadora.tscn" id="10_saltador"]
 [ext_resource type="PackedScene" path="res://jefes/jefeTres/Main/jefeTres.tscn" id="14_m10yf"]
+[ext_resource type="PackedScene" path="res://piezasEscenario/pinchosRoca/PinchosRoca.tscn" id="15_rocas"]
+[ext_resource type="Script" uid="uid://dk2gotatery2f" path="res://piezasEscenario/pinchosRoca/configuracion_pinchos_roca.gd" id="16_datos_rocas"]
+[ext_resource type="PackedScene" path="res://piezasEscenario/pinchosPareja/PinchosPareja.tscn" id="17_pareja"]
+[ext_resource type="Script" uid="uid://cyipkfewiae71" path="res://piezasEscenario/pinchosPareja/configuracion_pinchos.gd" id="18_datos_pareja"]
 [ext_resource type="PackedScene" path="res://piezasEscenario/salida/SalidaNivel.tscn" id="98_salida"]
 [ext_resource type="PackedScene" path="res://Niveles/nivel3/fondo_parallax.tscn" id="100_parallax"]
 
@@ -491,6 +495,40 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="Resource" id="Resource_rocas_entrada"]
+script = ExtResource("16_datos_rocas")
+cantidad = 2
+separacion = 36.0
+ancho = 34.0
+altura = 40.0
+
+[sub_resource type="Resource" id="Resource_rocas_rama"]
+script = ExtResource("16_datos_rocas")
+cantidad = 3
+separacion = 38.0
+ancho = 36.0
+altura = 48.0
+
+[sub_resource type="Resource" id="Resource_trampa_media"]
+script = ExtResource("18_datos_pareja")
+separacion = 200.0
+altura_pincho = 38.0
+tiempo_abierto = 1.9
+retraso_inicial = 0.3
+
+[sub_resource type="Resource" id="Resource_rocas_profundas"]
+script = ExtResource("16_datos_rocas")
+cantidad = 4
+ancho = 38.0
+altura = 54.0
+
+[sub_resource type="Resource" id="Resource_trampa_profunda"]
+script = ExtResource("18_datos_pareja")
+separacion = 260.0
+altura_pincho = 44.0
+tiempo_abierto = 1.7
+retraso_inicial = 1.0
+
 [node name="Nivel3" type="Node2D" unique_id=1858207980]
 script = ExtResource("8_level_script")
 
@@ -665,3 +703,27 @@ position = Vector2(2200, 6208)
 [node name="Nico" parent="." unique_id=1757337390 instance=ExtResource("14_m10yf")]
 position = Vector2(318, 7534)
 radio_explosion = 1000.0
+
+[node name="RocasEntrada" parent="." instance=ExtResource("15_rocas")]
+position = Vector2(1010, 640)
+configuracion = SubResource("Resource_rocas_entrada")
+
+[node name="RocasRamaAlta" parent="." instance=ExtResource("15_rocas")]
+position = Vector2(1400, 1216)
+configuracion = SubResource("Resource_rocas_rama")
+
+[node name="TrampaGaleria" parent="." instance=ExtResource("17_pareja")]
+position = Vector2(1760, 3818)
+configuracion = SubResource("Resource_trampa_media")
+
+[node name="TrampaDescenso" parent="." instance=ExtResource("17_pareja")]
+position = Vector2(3300, 5162)
+configuracion = SubResource("Resource_trampa_media")
+
+[node name="RocasGaleriaProfunda" parent="." instance=ExtResource("15_rocas")]
+position = Vector2(5040, 6848)
+configuracion = SubResource("Resource_rocas_profundas")
+
+[node name="TrampaGaleriaProfunda" parent="." instance=ExtResource("17_pareja")]
+position = Vector2(3080, 6823)
+configuracion = SubResource("Resource_trampa_profunda")

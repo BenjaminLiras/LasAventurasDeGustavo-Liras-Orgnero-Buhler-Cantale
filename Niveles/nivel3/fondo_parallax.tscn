@@ -4,7 +4,7 @@
 
 [sub_resource type="Gradient" id="Gradient_moss"]
 offsets = PackedFloat32Array(0, 0.43, 0.76, 1)
-colors = PackedColorArray(0.067, 0.027, 0.03, 1, 0.29, 0.17, 0.18, 1, 0.16, 0.085, 0.09, 1, 0.05, 0.023, 0.025, 1)
+colors = PackedColorArray(0.038, 0.009, 0.019, 1, 0.14, 0.028, 0.042, 1, 0.082, 0.016, 0.032, 1, 0.035, 0.008, 0.016, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture_moss"]
 gradient = SubResource("Gradient_moss")
@@ -16,7 +16,6 @@ fill_to = Vector2(0, 1)
 
 [node name="FondoPrincipal" type="CanvasLayer" parent="."]
 layer = -100
-visible = false
 
 [node name="TextureRect" type="TextureRect" parent="FondoPrincipal"]
 anchors_preset = 15
@@ -31,7 +30,7 @@ expand_mode = 1
 [node name="Paralax" type="Parallax2D" parent="."]
 z_index = -90
 scroll_scale = Vector2(0.18, 0.16)
-repeat_size = Vector2(1800, 0)
+repeat_size = Vector2(1800, 1560)
 repeat_times = 3
 
 [node name="Pasto1" type="Sprite2D" parent="Paralax"]
